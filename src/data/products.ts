@@ -2,10 +2,10 @@ export interface Product {
   id: string;
   name: string;
   hindiName?: string;
-  category: 'pooja' | 'jewellery' | 'dining' | 'bullion' | 'bangles';
+  category: 'jewellery' | 'pooja' | 'dining' | 'bullion' | 'bangles';
   categoryLabel: string;
-  purity: '925 Sterling Silver' | '999 Pure Silver';
-  purityCode: '925' | '999';
+  purity: '925 Sterling Silver' | '999 Pure Silver' | '835 Silverware';
+  purityCode: '925' | '999' | '835';
   weightGrams: number;
   price: number;
   originalPrice?: number;
@@ -18,6 +18,7 @@ export interface Product {
   inStock: boolean;
   featured?: boolean;
   isAkshayTritiyaSpecial?: boolean;
+  occasion?: string;
 }
 
 export const PRODUCTS: Product[] = [
@@ -35,19 +36,20 @@ export const PRODUCTS: Product[] = [
     makingChargesPerGram: 18,
     image: '/src/assets/images/product_silver_lakshmi_idol_1792246703419.jpg',
     description: 'Consecrated pure 999 silver Lakshmi and Ganesha idols seated upon an intricately engraved floral silver chowki pedestal. Meticulously handcrafted by master silversmiths to invite eternal wealth and wisdom into your home.',
-    auspiciousSignificance: 'Purchased during Akshay Tritiya to invoke everlasting prosperity, remove obstacles, and sanctify your home mandir for generations.',
+    auspiciousSignificance: 'Purchased for home mandir sanctification, housewarmings, and festive prosperity.',
     hallmarkCode: 'BIS-999-ASH-7721',
     dimensions: 'Idols 3.8 inches height · Chowki 5.5 inches diameter',
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Pooja & Housewarming',
   },
   {
     id: 'asha-temple-nakshi-choker-925',
     name: 'Antique Nakshi Temple Choker Necklace with Guttapusalu Drops',
     hindiName: 'विरासत नक्शी चोकर हार',
     category: 'jewellery',
-    categoryLabel: 'Temple Jewellery',
+    categoryLabel: 'Fine Jewellery',
     purity: '925 Sterling Silver',
     purityCode: '925',
     weightGrams: 88,
@@ -56,12 +58,13 @@ export const PRODUCTS: Product[] = [
     makingChargesPerGram: 35,
     image: '/src/assets/images/product_temple_silver_choker_1792246704567.jpg',
     description: 'A masterpiece of royal heritage featuring embossed Goddess Lakshmi central medallion flanked by dancing peacocks, accented with antique silver bead jhumkis. Finished in oxidised vintage silver with adjustable silk cord link.',
-    auspiciousSignificance: 'Royal bridal temple jewellery blessed for eternal marital bliss and timeless regal elegance.',
+    auspiciousSignificance: 'Royal bridal temple jewellery blessed for timeless elegance and festive celebrations.',
     hallmarkCode: 'BIS-925-ASH-3104',
     dimensions: 'Length: 7.5 inches choker curve + adjustable silver extender',
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Bridal & Festive Wear',
   },
   {
     id: 'asha-royal-dining-thali-set',
@@ -77,17 +80,18 @@ export const PRODUCTS: Product[] = [
     makingChargesPerGram: 22,
     image: '/src/assets/images/product_silver_thali_set_1792246704896.jpg',
     description: 'Complete 7-piece royal silver banquet and pooja thali set with embossed floral borders. Includes heavy silver platter, embossed water tumbler, pooja deepam, silver bell, and 3 condiment katoris with silver spoon.',
-    auspiciousSignificance: 'Eating and offering naivedyam in pure silver brings ayurvedic cooling benefits and supreme spiritual dignity to family celebrations.',
+    auspiciousSignificance: 'Eating and offering naivedyam in pure silver brings ayurvedic cooling benefits and supreme spiritual dignity.',
     hallmarkCode: 'BIS-925-ASH-8902',
     dimensions: 'Thali Diameter: 11.2 inches · Glass Height: 3.8 inches',
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Royal Dining & Weddings',
   },
   {
-    id: 'asha-silver-coin-akshay-tritiya',
-    name: 'Auspicious Akshay Tritiya 999 Pure Silver Bullion Coin (50g)',
-    hindiName: 'अक्षय तृतीया शुभ चांदी सिक्का',
+    id: 'asha-silver-coin-50g-999',
+    name: 'Auspicious Lakshmi-Ganesh 999 Pure Silver Bullion Coin (50g)',
+    hindiName: 'श्री लक्ष्मी गणेश शुभ चांदी सिक्का (50 ग्राम)',
     category: 'bullion',
     categoryLabel: 'Coins & Bullion',
     purity: '999 Pure Silver',
@@ -98,19 +102,42 @@ export const PRODUCTS: Product[] = [
     makingChargesPerGram: 10,
     image: '/src/assets/images/product_silver_coin_akshay_tritiya_1792246722997.jpg',
     description: 'Certified 99.9% fine silver coin with deep-relief engraving of Shree Ganesha & Goddess Lakshmi, presented in a royal crimson velvet commemorative box with tamper-evident assay certification card.',
-    auspiciousSignificance: 'The premier purchase token for Akshay Tritiya 2026. Tradition holds that silver bought on this day multiplies your fortune continuously.',
+    auspiciousSignificance: 'The premier token of timeless wealth preservation, sacred gifting, and generational savings.',
     hallmarkCode: 'BIS-999-FINE-9912',
     dimensions: 'Diameter: 42mm · Thickness: 3.2mm',
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Savings & Sacred Gifting',
+  },
+  {
+    id: 'asha-silver-coin-100g-999',
+    name: 'Lakshmi-Kuber 999 Pure Silver Cast Bullion Bar (100g)',
+    hindiName: 'लक्ष्मी कुबेर शुद्ध चांदी बार (100 ग्राम)',
+    category: 'bullion',
+    categoryLabel: 'Coins & Bullion',
+    purity: '999 Pure Silver',
+    purityCode: '999',
+    weightGrams: 100,
+    price: 10450,
+    originalPrice: 11200,
+    makingChargesPerGram: 8,
+    image: '/src/assets/images/product_silver_coin_akshay_tritiya_1792246722997.jpg',
+    description: 'Heirloom grade 100-gram pure 999 cast silver investment bullion bar stamped with the Asha Silver assay seal, serial number, and BIS hallmark insignia in tamper-proof assay packing.',
+    auspiciousSignificance: 'Ideal for wealth locking and family inheritance.',
+    hallmarkCode: 'BIS-999-BAR-1008',
+    dimensions: '58mm × 32mm × 5.2mm',
+    inStock: true,
+    featured: false,
+    isAkshayTritiyaSpecial: false,
+    occasion: 'Investment & Bullion Locking',
   },
   {
     id: 'asha-kundan-jhumka-925',
     name: 'Handcrafted Heritage Filigree Silver Jhumkas with Seed Pearls',
     hindiName: 'पारंपरिक झुमकी कर्णफूल',
     category: 'jewellery',
-    categoryLabel: 'Temple Jewellery',
+    categoryLabel: 'Fine Jewellery',
     purity: '925 Sterling Silver',
     purityCode: '925',
     weightGrams: 34,
@@ -123,8 +150,9 @@ export const PRODUCTS: Product[] = [
     hallmarkCode: 'BIS-925-ASH-5521',
     dimensions: 'Drop Length: 2.8 inches · Width: 1.2 inches',
     inStock: true,
-    featured: false,
+    featured: true,
     isAkshayTritiyaSpecial: false,
+    occasion: 'Festive & Traditional Wear',
   },
   {
     id: 'asha-peacock-diya-deepam',
@@ -140,12 +168,13 @@ export const PRODUCTS: Product[] = [
     makingChargesPerGram: 26,
     image: '/src/assets/images/product_silver_diya_deepam_1792246724083.jpg',
     description: 'Sculpted single-wick oil deepam adorned with an ornate royal peacock crest with feather engraving and stepped lotus oil basin. Designed for steady flame burn and lifelong pooja sanctity.',
-    auspiciousSignificance: 'Lighting a pure silver diya on Akshay Tritiya dispels negativity and welcomes Mahalakshmi into the sanctum sanctorum.',
+    auspiciousSignificance: 'Lighting a pure silver diya dispels negativity and welcomes Mahalakshmi into the sanctum sanctorum.',
     hallmarkCode: 'BIS-925-ASH-4419',
     dimensions: 'Height: 4.6 inches · Base Width: 3.4 inches',
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Daily Mandir Puja & Festivals',
   },
   {
     id: 'asha-elephant-antique-kada-pair',
@@ -167,13 +196,14 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Statement Traditional Adornment',
   },
   {
     id: 'asha-royal-antique-necklace-set',
     name: 'Maharani Multi-Tier Antique Silver Royal Choker & Earring Suite',
     hindiName: 'महारानी नवलखा रजत हार सेट',
     category: 'jewellery',
-    categoryLabel: 'Temple Jewellery',
+    categoryLabel: 'Fine Jewellery',
     purity: '925 Sterling Silver',
     purityCode: '925',
     weightGrams: 145,
@@ -188,18 +218,20 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     isAkshayTritiyaSpecial: true,
+    occasion: 'Bridal Grandeur',
   }
 ];
 
 export const LIVE_SILVER_RATES = {
   purity999: 98.50, // Rs per gram 999 Fine Silver
   purity925: 91.20, // Rs per gram 925 Sterling Silver
-  lastUpdated: 'Today, 10:15 AM IST (MCX Spot Rate)',
-  city: 'Mumbai / Delhi Bullion Benchmark',
+  purity835: 82.40, // Rs per gram 835 Utensil Silver
+  lastUpdated: 'Live Benchmark (MCX Spot Rate)',
+  city: 'Mumbai / Delhi / Jaipur Bullion Benchmark',
   muhurat: {
     title: 'Akshay Tritiya Auspicious Muhurat',
     date: 'Wednesday, May 06, 2026',
     timeWindow: '05:46 AM to 12:21 PM IST',
-    tithi: 'Shukla Paksha Tritiya (Auspicious Rohini Nakshatra)',
+    tithi: 'Shukla Paksha Tritiya (Rohini Nakshatra)',
   }
 };

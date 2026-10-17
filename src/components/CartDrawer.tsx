@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, ShieldCheck, Sparkles, Truck, CheckCircle2, ArrowRight, ArrowLeft, Printer, Gift } from 'lucide-react';
+import { X, Trash2, ShieldCheck, Sparkles, Truck, CheckCircle2, ArrowRight, ArrowLeft, Printer, Gift, Lock } from 'lucide-react';
 import { CartItem, CustomerOrder } from '../types/cart';
 
 interface CartDrawerProps {
@@ -10,6 +10,7 @@ interface CartDrawerProps {
   onRemoveItem: (productId: string) => void;
   onClearCart: () => void;
   onOrderSuccess: (order: CustomerOrder) => void;
+  onBrowseMore: () => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -20,6 +21,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
   onClearCart,
   onOrderSuccess,
+  onBrowseMore,
 }) => {
   const [step, setStep] = useState<'cart' | 'checkout' | 'confirmed'>('cart');
   const [formData, setFormData] = useState({
@@ -39,11 +41,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const subtotal = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const qualifiesForFreeCoin = subtotal >= FREE_COIN_THRESHOLD;
   const remainingForFreeCoin = Math.max(0, FREE_COIN_THRESHOLD - subtotal);
-  const shipping = 0; // Free insured shipping across India
   const total = subtotal;
+
+  const handleClose = () => {
+    if (step === 'confirmed') {
+      setStep('cart');
+    }
+    onClose();
+  };
 
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name || !formData.phone || !formData.address) return;
+
     const orderNumber = 'ASH-' + Math.floor(100000 + Math.random() * 900000);
     const order: CustomerOrder = {
       orderId: orderNumber,
@@ -55,10 +65,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       total,
       customerName: formData.name,
       customerPhone: formData.phone,
-      customerEmail: formData.email,
+      customerEmail: formData.email || 'customer@ashasilver.com',
       deliveryAddress: formData.address,
-      city: formData.city,
-      pincode: formData.pincode,
+      city: formData.city || 'Mumbai',
+      pincode: formData.pincode || '400001',
       paymentMethod: formData.paymentMethod,
       paymentStatus: formData.paymentMethod === 'cod' ? 'pending_cod' : 'paid',
       createdAt: new Date().toLocaleDateString('en-IN', {
@@ -82,7 +92,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="Shopping Bag & Checkout"
-      className="fixed inset-0 z-50 overflow-hidden bg-stone-950/60 backdrop-blur-sm flex justify-end"
+      className="fixed inset-0 z-50 overflow-hidden bg-stone-950/60 backdrop-blur-sm flex justify-end animate-fade-in"
     >
       <div className="w-full max-w-lg bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden">
         {/* Header */}
@@ -94,13 +104,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {step === 'confirmed' && 'Order Confirmed'}
             </span>
             {step === 'cart' && (
-              <span className="text-xs text-stone-500">
-                ({items.reduce((sum, item) => sum + item.quantity, 0)} items)
+              <span className="text-xs text-stone-500 font-medium">
+                ({items.reduce((sum, item) => sum + item.quantity, 0)} {items.length === 1 ? 'item' : 'items'})
               </span>
             )}
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-1.5 text-stone-500 hover:text-stone-900 rounded-md transition-colors cursor-pointer"
             aria-label="Close bag"
           >
@@ -110,12 +120,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {/* Auspicious Silver Coin Offer Meter (When in cart or checkout) */}
         {step !== 'confirmed' && items.length > 0 && (
-          <div className="bg-amber-50/80 px-6 py-2.5 border-b border-amber-200/60 text-xs">
+          <div className="bg-amber-50/90 px-6 py-2.5 border-b border-amber-200/60 text-xs">
             {qualifiesForFreeCoin ? (
-              <div className="flex items-center gap-2 text-amber-900 font-medium">
+              <div className="flex items-center gap-2 text-amber-950 font-medium">
                 <Sparkles className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>
-                  🎉 You unlocked a <strong>Free 5g Pure 999 Silver Coin</strong> for Akshay Tritiya!
+                  🎉 You unlocked a <strong>Complimentary 5g Pure 999 Silver Coin</strong> with BIS Hallmarking!
                 </span>
               </div>
             ) : (
@@ -143,25 +153,38 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {step === 'cart' && (
             <>
               {items.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
+                <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-16">
                   <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
                     <Gift className="w-8 h-8" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-serif text-lg font-medium text-stone-800">Your bag is empty</h3>
+                    <h3 className="font-serif text-lg font-medium text-stone-800">Your shopping bag is empty</h3>
                     <p className="text-xs text-stone-500 max-w-xs">
-                      Explore our handcrafted 925 sterling silver temple jewellery and Akshay Tritiya pooja idols.
+                      Explore our handcrafted 925 sterling silver temple jewellery, consecrated pooja idols, and silver rate lock options.
                     </p>
                   </div>
                   <button
-                    onClick={onClose}
-                    className="mt-2 px-5 py-2.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 cursor-pointer"
+                    onClick={() => {
+                      handleClose();
+                      onBrowseMore();
+                    }}
+                    className="mt-2 px-5 py-2.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 cursor-pointer shadow-sm"
                   >
-                    Start Exploring
+                    Explore Fine Silverware
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
+                  <div className="flex justify-between items-center text-xs text-stone-500 pb-1 border-b border-stone-100">
+                    <span>Selected Ornaments &amp; Vouchers</span>
+                    <button
+                      onClick={onClearCart}
+                      className="text-stone-400 hover:text-red-700 transition-colors cursor-pointer"
+                    >
+                      Empty Bag
+                    </button>
+                  </div>
+
                   {items.map((item) => (
                     <div
                       key={item.product.id}
@@ -182,37 +205,50 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             onClick={() => onRemoveItem(item.product.id)}
                             className="text-stone-400 hover:text-red-700 p-1 cursor-pointer transition-colors"
                             title="Remove item"
+                            aria-label={`Remove ${item.product.name}`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
-                        <div className="text-xs text-stone-500">
-                          {item.product.purity} · {item.product.weightGrams}g
+
+                        <div className="text-xs text-stone-500 flex items-center gap-1.5">
+                          <span>{item.product.purity}</span>
+                          <span>·</span>
+                          <span>{item.product.weightGrams}g</span>
+                          {item.isPriceLockItem && (
+                            <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.2 rounded font-medium flex items-center gap-0.5">
+                              <Lock className="w-2.5 h-2.5" /> Rate Lock
+                            </span>
+                          )}
                         </div>
+
                         {item.giftBoxRequested && (
                           <div className="text-[11px] text-amber-900 flex items-center gap-1 font-medium">
-                            <span>🎁 Complimentary Velvet Gift Box</span>
+                            <span>🎁 Complimentary Velvet Gift Box Included</span>
                           </div>
                         )}
-                        <div className="flex items-center justify-between pt-1">
-                          <div className="flex items-center border border-stone-200 rounded-md bg-stone-50">
+
+                        <div className="flex items-center justify-between pt-2">
+                          <div className="flex items-center border border-stone-300 rounded-md bg-stone-50">
                             <button
                               onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                              className="px-2 py-0.5 text-xs text-stone-600 hover:bg-stone-200 cursor-pointer"
+                              className="px-2.5 py-1 text-xs text-stone-700 hover:bg-stone-200 cursor-pointer font-bold"
+                              aria-label="Decrease quantity"
                             >
                               -
                             </button>
-                            <span className="px-2 py-0.5 text-xs font-semibold tabular-nums text-stone-900">
+                            <span className="px-2.5 py-1 text-xs font-semibold tabular-nums text-stone-900">
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                              className="px-2 py-0.5 text-xs text-stone-600 hover:bg-stone-200 cursor-pointer"
+                              className="px-2.5 py-1 text-xs text-stone-700 hover:bg-stone-200 cursor-pointer font-bold"
+                              aria-label="Increase quantity"
                             >
                               +
                             </button>
                           </div>
-                          <span className="font-medium text-sm text-stone-900 tabular-nums">
+                          <span className="font-semibold text-sm text-stone-900 tabular-nums">
                             ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -222,19 +258,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                   {/* Free Silver Coin Item Card if qualified */}
                   {qualifiesForFreeCoin && (
-                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-800 shrink-0 font-serif font-bold text-sm">
+                    <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-900 shrink-0 font-serif font-bold text-sm border border-amber-300">
                         999
                       </div>
                       <div className="flex-1 text-xs">
-                        <div className="font-semibold text-amber-950 flex items-center gap-1">
-                          <span>Akshay Tritiya 5g Silver Bullion Coin</span>
-                          <span className="text-[10px] bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded font-sans">
+                        <div className="font-semibold text-amber-950 flex items-center gap-1.5">
+                          <span>Auspicious 5g Pure 999 Bullion Coin</span>
+                          <span className="text-[10px] bg-amber-200 text-amber-950 px-1.5 py-0.2 rounded font-sans font-bold">
                             FREE
                           </span>
                         </div>
-                        <div className="text-amber-800 text-[11px]">
-                          Consecrated pure silver token of perpetual prosperity · BIS Hallmarked
+                        <div className="text-amber-800 text-[11px] mt-0.5">
+                          Consecrated pure silver token · BIS Hallmarked with HUID
                         </div>
                       </div>
                       <span className="text-xs font-semibold text-stone-400 line-through">₹550</span>
@@ -250,12 +286,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
               <div className="space-y-3">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                  Recipient &amp; Delivery Information
+                  Delivery Address &amp; Patron Details
                 </h4>
+
                 <div>
-                  <label htmlFor="customer-name-input" className="block text-xs font-medium text-stone-700 mb-1">Full Name *</label>
+                  <label htmlFor="checkout-name" className="block text-xs font-medium text-stone-700 mb-1">Full Name *</label>
                   <input
-                    id="customer-name-input"
+                    id="checkout-name"
                     type="text"
                     required
                     placeholder="e.g. Ramesh Chandra Sharma"
@@ -264,11 +301,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     className="w-full text-xs px-3 py-2 border border-stone-300 rounded-lg focus:ring-1 focus:ring-stone-900 focus:outline-none"
                   />
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label htmlFor="customer-phone-input" className="block text-xs font-medium text-stone-700 mb-1">Phone Number (SMS updates) *</label>
+                    <label htmlFor="checkout-phone" className="block text-xs font-medium text-stone-700 mb-1">Phone (SMS updates) *</label>
                     <input
-                      id="customer-phone-input"
+                      id="checkout-phone"
                       type="tel"
                       required
                       placeholder="+91 98765 43210"
@@ -278,11 +316,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     />
                   </div>
                   <div>
-                    <label htmlFor="customer-email-input" className="block text-xs font-medium text-stone-700 mb-1">Email (Certificate &amp; Invoice) *</label>
+                    <label htmlFor="checkout-email" className="block text-xs font-medium text-stone-700 mb-1">Email (Certificate &amp; Invoice)</label>
                     <input
-                      id="customer-email-input"
+                      id="checkout-email"
                       type="email"
-                      required
                       placeholder="ramesh@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -292,9 +329,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
 
                 <div>
-                  <label htmlFor="delivery-address-input" className="block text-xs font-medium text-stone-700 mb-1">Detailed Street Address / Landmark *</label>
+                  <label htmlFor="checkout-address" className="block text-xs font-medium text-stone-700 mb-1">Street Address / Landmark *</label>
                   <input
-                    id="delivery-address-input"
+                    id="checkout-address"
                     type="text"
                     required
                     placeholder="House/Flat No., Apartment, Street, Landmark"
@@ -306,9 +343,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label htmlFor="city-input" className="block text-xs font-medium text-stone-700 mb-1">City *</label>
+                    <label htmlFor="checkout-city" className="block text-xs font-medium text-stone-700 mb-1">City *</label>
                     <input
-                      id="city-input"
+                      id="checkout-city"
                       type="text"
                       required
                       placeholder="e.g. Mumbai / Jaipur / Delhi"
@@ -318,9 +355,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     />
                   </div>
                   <div>
-                    <label htmlFor="pincode-input" className="block text-xs font-medium text-stone-700 mb-1">PIN Code *</label>
+                    <label htmlFor="checkout-pincode" className="block text-xs font-medium text-stone-700 mb-1">PIN Code *</label>
                     <input
-                      id="pincode-input"
+                      id="checkout-pincode"
                       type="text"
                       required
                       placeholder="e.g. 400001"
@@ -410,7 +447,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   Dhanyavaad! Order Confirmed
                 </h3>
                 <p className="text-xs text-stone-500">
-                  May Goddess Mahalakshmi bless your family with boundless health, joy, and prosperity.
+                  Thank you for placing your faith in Asha Silver. May peace and everlasting abundance grace your home.
                 </p>
               </div>
 
@@ -437,12 +474,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="flex justify-between items-center pb-2 border-b border-stone-200">
                   <span className="text-stone-500">Payment Status</span>
                   <span className="text-emerald-700 font-medium">
-                    {confirmedOrder.paymentMethod === 'cod' ? 'Cash on Delivery (Pending)' : 'Paid Online'}
+                    {confirmedOrder.paymentMethod === 'cod' ? 'Cash on Delivery (Pending Doorstep Verification)' : 'Paid Online'}
                   </span>
                 </div>
                 {confirmedOrder.freeSilverCoinAwarded && (
                   <div className="flex justify-between items-center pb-2 border-b border-stone-200 text-amber-900">
-                    <span className="font-medium">Akshay Tritiya Gift</span>
+                    <span className="font-medium">Festive Gift</span>
                     <span>Free 5g 999 Pure Silver Coin Included</span>
                   </div>
                 )}
@@ -459,7 +496,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <span>Insured Transit &amp; Certificate of Authenticity</span>
                 </div>
                 <p>
-                  Your silver jewellery has been packed under dual-camera CCTV supervision in a sealed security vault. The BIS Hallmark certificate card is placed inside the velvet box.
+                  Your silverware has been packaged in a sealed tamper-proof security box. The BIS Hallmark certificate card is included in the velvet box.
                 </p>
               </div>
 
@@ -474,11 +511,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   onClick={() => {
                     setStep('cart');
-                    onClose();
+                    handleClose();
+                    onBrowseMore();
                   }}
                   className="flex-1 py-2.5 bg-stone-900 text-stone-50 rounded-lg text-xs font-medium hover:bg-stone-800 cursor-pointer"
                 >
-                  Continue Shopping
+                  Continue Browsing
                 </button>
               </div>
             </div>
@@ -547,7 +585,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <span>100% Purity Guarantee</span>
               </span>
               <span>·</span>
-              <span>Legacy Since 1989</span>
+              <span>Founded by Mahesh Agarwal in 1989</span>
             </div>
           </div>
         )}

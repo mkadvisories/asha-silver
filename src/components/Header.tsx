@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Heart, Sparkles, X, Menu } from 'lucide-react';
+import { ShoppingBag, Search, Heart, Sparkles, X, Menu, Lock } from 'lucide-react';
 import { LIVE_SILVER_RATES } from '../data/products';
 
 interface HeaderProps {
@@ -36,23 +36,24 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span className="font-medium tracking-wide">
-                Akshay Tritiya Mahotsav: Complimentary 5g Pure 999 Silver Coin on orders above ₹15,000
+                Akshay Tritiya Mahotsav: Free 5g Pure 999 Silver Coin on orders &gt; ₹15,000
               </span>
               <span className="hidden md:inline text-stone-400">·</span>
               <span className="hidden md:inline text-stone-300">
-                Auspicious Muhurat: {LIVE_SILVER_RATES.muhurat.timeWindow}
+                Purity Guaranteed Since 1989 by Mahesh Agarwal
               </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <button
-                onClick={() => onNavigateToSection('rate-calculator')}
-                className="hidden sm:inline-block text-amber-300 hover:text-amber-200 underline underline-offset-2 transition-colors cursor-pointer"
+                onClick={() => onNavigateToSection('price-lock')}
+                className="hidden sm:inline-flex items-center gap-1 text-amber-300 hover:text-amber-200 underline underline-offset-2 transition-colors cursor-pointer"
               >
-                Live Silver Rate: ₹{LIVE_SILVER_RATES.purity925}/g
+                <Lock className="w-3 h-3" />
+                <span>Lock In Silver Rate (e.g. 200g)</span>
               </button>
               <button
                 onClick={() => setShowBanner(false)}
-                className="text-stone-400 hover:text-stone-200 p-0.5"
+                className="text-stone-400 hover:text-stone-200 p-0.5 cursor-pointer"
                 aria-label="Dismiss banner"
               >
                 <X className="w-3.5 h-3.5" />
@@ -69,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-stone-700 hover:text-stone-900"
+              className="lg:hidden p-2 text-stone-700 hover:text-stone-900 cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               <Menu className="w-5 h-5" />
@@ -83,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Zone 2: 4-5 concise single-line text navigation links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-stone-600">
+          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-stone-600">
             <button
               onClick={() => {
                 onSelectCategory('all');
@@ -91,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer text-stone-900 font-semibold"
             >
-              Akshay Tritiya
+              Silver Jewellery
             </button>
             <button
               onClick={() => {
@@ -100,36 +101,31 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              Pooja Silverware
+              Pooja &amp; Silverware
             </button>
             <button
-              onClick={() => {
-                onSelectCategory('jewellery');
-                onNavigateToSection('collection');
-              }}
+              onClick={() => onNavigateToSection('metal-by-purity')}
               className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              Temple Jewellery
+              Metal by Purity
             </button>
             <button
-              onClick={() => {
-                onSelectCategory('bullion');
-                onNavigateToSection('collection');
-              }}
-              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              onClick={() => onNavigateToSection('price-lock')}
+              className="text-amber-900 hover:text-amber-950 font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
             >
-              Coins & Bullion
+              <Lock className="w-3.5 h-3.5 text-amber-700" />
+              <span>Lock Silver Price</span>
             </button>
             <button
-              onClick={() => onNavigateToSection('heritage')}
+              onClick={() => onNavigateToSection('about-us')}
               className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              Since 1989
+              About Mahesh Agarwal
             </button>
           </nav>
 
           {/* Zone 3: 1 primary action (Bag & secondary utility triggers) */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <button
               onClick={onOpenSearch}
               className="p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer"
@@ -178,14 +174,14 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex flex-col space-y-2 text-sm font-medium text-stone-800">
             <button
               onClick={() => {
-                onSelectCategory('all');
+                onSelectCategory('jewellery');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
               className="text-left py-2 border-b border-stone-100 flex items-center justify-between"
             >
-              <span>Akshay Tritiya Special</span>
-              <span className="text-xs text-amber-700">Auspicious</span>
+              <span>Fine Silver Jewellery</span>
+              <span className="text-xs text-stone-400">925 Hallmarked</span>
             </button>
             <button
               onClick={() => {
@@ -195,17 +191,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="text-left py-2 border-b border-stone-100"
             >
-              Pooja Silverware & Idols
-            </button>
-            <button
-              onClick={() => {
-                onSelectCategory('jewellery');
-                onNavigateToSection('collection');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left py-2 border-b border-stone-100"
-            >
-              Temple Jewellery
+              Pooja Silverware &amp; Sacred Idols
             </button>
             <button
               onClick={() => {
@@ -215,7 +201,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="text-left py-2 border-b border-stone-100"
             >
-              Royal Dining Sets
+              Rajwada Silver Dining Thalis
             </button>
             <button
               onClick={() => {
@@ -225,30 +211,40 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="text-left py-2 border-b border-stone-100"
             >
-              999 Pure Silver Coins
+              999 Pure Silver Bullion Coins
             </button>
             <button
               onClick={() => {
-                onNavigateToSection('rate-calculator');
+                onNavigateToSection('metal-by-purity');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100 text-amber-900 font-semibold"
+              className="text-left py-2 border-b border-stone-100"
             >
-              Live Silver Rate Calculator
+              Metal by Purity Guide
             </button>
             <button
               onClick={() => {
-                onNavigateToSection('heritage');
+                onNavigateToSection('price-lock');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2"
+              className="text-left py-2 border-b border-stone-100 text-amber-900 font-semibold flex items-center justify-between"
             >
-              Our Heritage (Since 1989)
+              <span>Lock Silver Rate (200g etc.)</span>
+              <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded">Suraksha</span>
+            </button>
+            <button
+              onClick={() => {
+                onNavigateToSection('about-us');
+                setMobileMenuOpen(false);
+              }}
+              className="text-left py-2 text-stone-900 font-medium"
+            >
+              About Founder Mahesh Agarwal (1989)
             </button>
           </div>
           <div className="pt-2 text-xs text-stone-500 flex items-center justify-between border-t border-stone-200">
-            <span>BIS Hallmarked 925 & 999</span>
-            <span>Est. 1989</span>
+            <span>BIS Hallmarked 925 &amp; 999</span>
+            <span>Est. 1989 by Mahesh Agarwal</span>
           </div>
         </div>
       )}

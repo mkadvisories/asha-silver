@@ -32,7 +32,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Quick actions overlay */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
           <button
-            onClick={() => onToggleWishlist(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleWishlist(product);
+            }}
             className={`p-2 rounded-full backdrop-blur-md transition-colors cursor-pointer ${
               isWishlisted
                 ? 'bg-amber-800 text-white shadow-sm'
@@ -48,7 +51,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Quick View Button on Hover */}
         <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden sm:flex gap-2">
           <button
-            onClick={() => onQuickView(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickView(product);
+            }}
             className="flex-1 py-2 px-3 bg-white/95 backdrop-blur-md text-stone-900 text-xs font-medium rounded-lg hover:bg-white shadow-md flex items-center justify-center gap-1.5 cursor-pointer transition-all"
           >
             <Eye className="w-3.5 h-3.5 text-stone-600" />
@@ -106,7 +112,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
             className="py-2 px-3.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
             aria-label={`Add ${product.name} to bag`}
           >

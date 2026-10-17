@@ -5,6 +5,14 @@ export interface CartItem {
   quantity: number;
   giftBoxRequested?: boolean;
   giftNote?: string;
+  isPriceLockItem?: boolean;
+  lockDetails?: {
+    certificateId: string;
+    lockedGrams: number;
+    lockedRatePerGram: number;
+    purity: '925' | '999';
+    validityDays: number;
+  };
 }
 
 export interface CustomerOrder {
@@ -25,4 +33,21 @@ export interface CustomerOrder {
   paymentStatus: 'paid' | 'pending_cod';
   createdAt: string;
   freeSilverCoinAwarded: boolean;
+}
+
+export interface SilverPriceLock {
+  id: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  purity: '925' | '999';
+  ratePerGram: number;
+  grams: number;
+  totalAmount: number;
+  advanceAmountPaid: number;
+  lockDurationDays: number;
+  expiryDate: string;
+  bookingDate: string;
+  status: 'active' | 'redeemed';
+  certificateNumber: string;
 }

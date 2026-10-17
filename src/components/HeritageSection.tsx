@@ -43,7 +43,7 @@ export const HeritageSection: React.FC = () => {
             </h2>
 
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              Founded in 1989 by master silversmith Smt. Asha and her family, our atelier was born from a singular pledge: to bring back the royal reverence of fine Indian silverware with absolute transparency of metal purity.
+              Founded in 1989 by Shri Mahesh Agarwal and his family, our atelier was born from a singular pledge: to bring back the royal reverence of fine Indian silverware with absolute transparency of metal purity.
             </p>
 
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">

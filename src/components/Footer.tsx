@@ -34,11 +34,11 @@ export const Footer: React.FC<FooterProps> = ({
                 Asha Silver
               </span>
               <div className="text-xs text-amber-400 font-medium tracking-widest uppercase">
-                Legacy of Trust Since 1989
+                Founded by Mahesh Agarwal in 1989
               </div>
             </div>
             <p className="text-xs sm:text-sm text-stone-400 leading-relaxed">
-              Crafting certified 925 sterling silver jewelry, royal silverware, and auspicious Akshay Tritiya divine tokens for over 37 years with steadfast dedication to authentic metallurgical purity.
+              Founded in 1989 by Shri Mahesh Agarwal, crafting certified 925 sterling silver jewelry, royal silverware, and sacred pooja tokens for over 37 years with steadfast dedication to authentic metallurgical purity and generational trust.
             </p>
             <div className="flex items-center gap-3 pt-1 text-xs text-stone-400">
               <span className="flex items-center gap-1 text-stone-300">
@@ -122,6 +122,30 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
                 <button
+                  onClick={() => onNavigateToSection('price-lock')}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Suraksha Silver Rate Lock
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigateToSection('metal-by-purity')}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Metal by Purity (999 &amp; 925)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigateToSection('about-us')}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Mahesh Agarwal Heritage
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigateToSection('rate-calculator')}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
@@ -135,21 +159,6 @@ export const Footer: React.FC<FooterProps> = ({
                 >
                   Decode Your BIS Hallmark
                 </button>
-              </li>
-              <li>
-                <span className="hover:text-stone-300 transition-colors">
-                  100% Lifetime Buyback Policy
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-stone-300 transition-colors">
-                  Insured Transit with Sequel
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-stone-300 transition-colors">
-                  Anti-Tarnish Silver Care
-                </span>
               </li>
             </ul>
           </div>
