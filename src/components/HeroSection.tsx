@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Award, RefreshCw, Truck, ArrowRight, Clock, Lock } from 'lucide-react';
 import { LIVE_SILVER_RATES } from '../data/products';
+import { ASSET_IMAGES } from '../assets/images';
 
 interface HeroSectionProps {
   onExploreCollection: () => void;
@@ -88,7 +89,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[16/10] bg-stone-200 border border-stone-200">
               <img
-                src="/src/assets/images/hero_asha_silver_banner_1792246702916.jpg"
+                src={ASSET_IMAGES.heroBanner}
                 alt="Asha Silver Royal Handcrafted Jewellery Collection"
                 className="w-full h-full object-cover"
                 loading="eager"

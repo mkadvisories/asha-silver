@@ -13,6 +13,7 @@ import { AboutMaheshAgarwal } from './components/AboutMaheshAgarwal';
 import { HeritageSection } from './components/HeritageSection';
 import { Footer } from './components/Footer';
 import { PRODUCTS, Product } from './data/products';
+import { ASSET_IMAGES } from './assets/images';
 import { CartItem, CustomerOrder, SilverPriceLock } from './types/cart';
 import { Sparkles, SlidersHorizontal, Check, Filter, X } from 'lucide-react';
 
@@ -129,7 +130,7 @@ export default function App() {
       weightGrams: lockData.grams,
       price: lockData.totalAmount,
       makingChargesPerGram: 0,
-      image: '/src/assets/images/product_silver_coin_akshay_tritiya_1792246722997.jpg',
+      image: ASSET_IMAGES.silverCoin,
       description: `Official advance rate lock certificate for ${lockData.grams} grams of ${lockData.purity} pure silver at ₹${lockData.ratePerGram.toFixed(2)}/g. Valid for ${lockData.durationDays} days against any jewellery or bullion redemption.`,
       auspiciousSignificance: 'Guarantees lower purchase price against bullion inflation with 100% money-back safety.',
       hallmarkCode: certCode,
