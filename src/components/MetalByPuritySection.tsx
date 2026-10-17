@@ -18,11 +18,11 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
       subtitle: '99.9% Metallurgical Fineness',
       rate: LIVE_SILVER_RATES.purity999,
       icon: Coins,
-      badge: 'Maximum Purity',
+      badge: 'Sacred Purity',
       description:
-        'Unalloyed, pristine bullion-grade silver. Extremely lustrous and ductile, traditionally reserved for consecrated temple idols, Lakshmi-Ganesha puja sculptures, and wealth-preservation bullion coins.',
-      bestFor: ['Sacred Mandir Idols & Murtis', '999 Auspicious Bullion Coins', 'Charan Padukas & Shree Yantras', 'Long-term Bullion Savings'],
-      hallmark: 'BIS Triangle + 999 Stamp',
+        'Unalloyed, pristine bullion-grade silver. Extremely lustrous and radiant, traditionally reserved for consecrated temple idols, Lakshmi-Ganesha puja sculptures, and wealth-preservation Dhanteras coins.',
+      bestFor: ['Sacred Mandir Idols (Lakshmi-Ganesh)', 'Dhanteras 999 Auspicious Coins', 'Charan Padukas & Sinhasan Thrones', 'Bullion Rate Lock & Savings'],
+      standard: 'Pure 999 Grade Fine Silver',
       color: 'border-amber-400 bg-amber-50/40',
       tagColor: 'bg-amber-100 text-amber-900',
     },
@@ -31,26 +31,26 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
       title: '925 Sterling Silver',
       subtitle: '92.5% Silver + 7.5% Reinforcing Alloy',
       rate: LIVE_SILVER_RATES.purity925,
-      icon: Gem,
-      badge: 'Fine Jewellery Benchmark',
+      icon: Utensils,
+      badge: 'Silver Utensils Benchmark',
       description:
-        'The global gold standard for precious silver jewellery. Balancing divine luster with exceptional tensile strength, allowing master silversmiths to execute intricate filigree, gem-setting, and antique Nakshi carvings.',
-      bestFor: ['Antique Temple Chokers & Necklaces', 'Filigree Jhumkas & Chandbalis', 'Elephant Head Kadas & Bangles', 'Traditional Payals & Anklets'],
-      hallmark: 'BIS Triangle + 925 Hallmark',
+        'The premier standard for durable fine silver utensils, puja deepams, and gift items. Balances bright silver sheen with structural resilience, ensuring everyday use without denting or distortion.',
+      bestFor: ['Rajwada Dining Thalis & Bowls', 'Handcrafted Water Jugs & Tumblers', 'Mayur Pooja Diyas & Deepams', 'Silver Gift Keepsakes & Photo Frames'],
+      standard: 'Standard 925 Pure Silver Grade',
       color: 'border-stone-300 bg-white',
       tagColor: 'bg-stone-100 text-stone-900',
     },
     {
       code: '835' as const,
-      title: '835 / 800 Silverware Grade',
-      subtitle: '83.5% Traditional Dining Formulation',
+      title: '835 / 800 Traditional Silverware',
+      subtitle: '83.5% Heritage Tableware Formulation',
       rate: LIVE_SILVER_RATES.purity835,
       icon: Utensils,
-      badge: 'Heirloom Tableware',
+      badge: 'Heavy Banquet Tableware',
       description:
-        'Engineered specifically for heavy royal dining and pooja utensils. The specialized alloy structure ensures resistance to dents, scratches, and daily dining wear while conferring Ayurvedic cooling health benefits.',
-      bestFor: ['Rajwada Dining Thali Platters', 'Engraved Water Tumblers & Jugs', 'Aarti Deepams & Incense Stands', 'Newborn Baby Silver Feeding Sets'],
-      hallmark: 'Assay Certified 835 Stamping',
+        'Engineered specifically for heavy royal dining and traditional Indian feast utensils. The reinforced alloy structure ensures lifelong durability while conferring ancient Ayurvedic wellness benefits.',
+      bestFor: ['Heavy Dining Thali Platters', 'Engraved Drinking Glasses & Katoris', 'Aarti Deepams & Incense Holders', 'Traditional Baby Feeding Spoons'],
+      standard: 'Traditional 835 Utensil Silver',
       color: 'border-stone-300 bg-white',
       tagColor: 'bg-stone-100 text-stone-900',
     },
@@ -70,7 +70,7 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
               Metal by Purity Guide
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 max-w-xl">
-              At Asha Silver, we strictly classify and hallmark our metal by fineness so you always know exactly what you are investing in.
+              At Asha Silver, we strictly categorize our silver utensils, god items, and coins by metal purity so you always know the exact fineness of your purchase.
             </p>
           </div>
 
@@ -81,7 +81,7 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
             }}
             className="text-xs font-semibold text-amber-950 hover:text-amber-800 underline underline-offset-4 self-start md:self-auto cursor-pointer"
           >
-            View Entire Hallmarked Catalog →
+            View Entire Silver Catalog →
           </button>
         </div>
 
@@ -136,8 +136,8 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
 
                 <div className="pt-4 border-t border-stone-200 space-y-3">
                   <div className="flex items-center justify-between text-[11px] text-stone-500">
-                    <span className="font-medium">Govt. Hallmark:</span>
-                    <span className="font-mono text-stone-800">{item.hallmark}</span>
+                    <span className="font-medium">Purity Benchmark:</span>
+                    <span className="font-mono text-stone-800 font-semibold">{item.standard}</span>
                   </div>
 
                   <button
@@ -145,64 +145,15 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
                       onSelectPurityFilter(item.code);
                       onNavigateToCollection();
                     }}
-                    className="w-full py-2.5 px-3 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    className="w-full py-2.5 px-4 bg-stone-900 hover:bg-stone-800 text-stone-50 text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <span>Browse {item.title}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Filter {item.code} Grade Pieces</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        {/* Comparative Metallurgy Matrix */}
-        <div className="bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm">
-          <div className="p-4 sm:p-5 bg-stone-50 border-b border-stone-200">
-            <h4 className="font-serif text-lg font-semibold text-stone-900">
-              Technical Fineness &amp; Buyback Comparison Matrix
-            </h4>
-            <p className="text-xs text-stone-500">
-              All Asha Silver purchases are backed by 100% lifetime buyback on fine metal weight.
-            </p>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-stone-700">
-              <thead className="bg-stone-100/70 text-stone-800 uppercase font-semibold text-[11px] tracking-wider border-b border-stone-200">
-                <tr>
-                  <th className="py-3 px-4">Purity Grade</th>
-                  <th className="py-3 px-4">Silver Content</th>
-                  <th className="py-3 px-4">Hardness / Texture</th>
-                  <th className="py-3 px-4">Mandatory Stamping</th>
-                  <th className="py-3 px-4">Lifetime Buyback Rule</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-100">
-                <tr className="hover:bg-stone-50/50">
-                  <td className="py-3 px-4 font-semibold text-stone-900">999 Fine Silver</td>
-                  <td className="py-3 px-4 tabular-nums">99.9%</td>
-                  <td className="py-3 px-4">Lustrous &amp; Ductile</td>
-                  <td className="py-3 px-4 font-mono">BIS Logo + 999</td>
-                  <td className="py-3 px-4 text-emerald-800 font-medium">100% of live 999 rate with zero melting loss</td>
-                </tr>
-                <tr className="hover:bg-stone-50/50">
-                  <td className="py-3 px-4 font-semibold text-stone-900">925 Sterling Silver</td>
-                  <td className="py-3 px-4 tabular-nums">92.5%</td>
-                  <td className="py-3 px-4">Resilient &amp; Wearable</td>
-                  <td className="py-3 px-4 font-mono">BIS Logo + 925</td>
-                  <td className="py-3 px-4 text-emerald-800 font-medium">100% value of 92.5% net silver content</td>
-                </tr>
-                <tr className="hover:bg-stone-50/50">
-                  <td className="py-3 px-4 font-semibold text-stone-900">835 Silverware</td>
-                  <td className="py-3 px-4 tabular-nums">83.5%</td>
-                  <td className="py-3 px-4">Dent-Resistant &amp; Heavy</td>
-                  <td className="py-3 px-4 font-mono">Assayed 835</td>
-                  <td className="py-3 px-4 text-emerald-800 font-medium">100% value of 83.5% net silver content</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </section>

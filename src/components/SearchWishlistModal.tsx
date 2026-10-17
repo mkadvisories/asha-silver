@@ -78,7 +78,7 @@ export const SearchWishlistModal: React.FC<SearchWishlistModalProps> = ({
               <input
                 type="text"
                 autoFocus
-                placeholder="Search by deity, ornament, choker, thali, diya, coin..."
+                placeholder="Search by silver utensils, Lakshmi-Ganesh idol, thali set, diya, gift coin..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-2.5 text-sm border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900"
@@ -96,7 +96,7 @@ export const SearchWishlistModal: React.FC<SearchWishlistModalProps> = ({
             {/* Popular quick searches */}
             <div className="flex items-center gap-2 mt-2.5 text-xs text-stone-500 overflow-x-auto pb-1">
               <span className="shrink-0 text-stone-400">Popular:</span>
-              {['Lakshmi Ganesh', '999 Silver Coin', 'Temple Choker', 'Silver Thali', 'Diya', 'Elephant Kada'].map(
+              {['Lakshmi Ganesh', '999 Silver Coin', 'Silver Thali Set', 'Water Pitcher', 'Diya Deepam', 'Dhanteras Gifts'].map(
                 (term) => (
                   <button
                     key={term}

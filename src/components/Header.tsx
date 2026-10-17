@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Heart, Sparkles, X, Menu, Lock } from 'lucide-react';
+import { ShoppingBag, Search, Heart, Sparkles, X, Menu, Lock, Video } from 'lucide-react';
 import { LIVE_SILVER_RATES } from '../data/products';
 
 interface HeaderProps {
@@ -9,6 +9,7 @@ interface HeaderProps {
   onOpenCart: () => void;
   onOpenWishlist: () => void;
   onOpenSearch: () => void;
+  onOpenContact: () => void;
   activeCategory: string;
   onSelectCategory: (category: string) => void;
   onNavigateToSection: (sectionId: string) => void;
@@ -21,6 +22,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCart,
   onOpenWishlist,
   onOpenSearch,
+  onOpenContact,
+  activeCategory,
   onSelectCategory,
   onNavigateToSection,
 }) => {
@@ -36,11 +39,11 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span className="font-medium tracking-wide">
-                Akshay Tritiya Mahotsav: Free 5g Pure 999 Silver Coin on orders &gt; ₹15,000
+                Dhanteras Mahotsav: Free 5g Pure 999 Silver Coin on orders &gt; ₹15,000
               </span>
               <span className="hidden md:inline text-stone-400">·</span>
-              <span className="hidden md:inline text-stone-300">
-                Purity Guaranteed Since 1989 by Mahesh Agarwal
+              <span className="hidden md:inline text-amber-300 font-normal">
+                A legacy of trust since 1989 · Started by Mahesh Agarwal
               </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
@@ -63,10 +66,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
-      {/* Main Top Bar (Conforming to Top Bar Contract) */}
+      {/* Main Top Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-8 h-20">
-          {/* Zone 1: Single text element wordmark */}
+        <div className="flex items-center justify-between gap-6 h-20">
+          {/* Brand Wordmark & Tagline */}
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -75,33 +78,53 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Menu className="w-5 h-5" />
             </button>
-            <a
-              href="#"
-              className="font-serif text-2xl sm:text-3xl font-semibold tracking-wider text-stone-900 whitespace-nowrap shrink-0 hover:text-amber-950 transition-colors"
-            >
-              Asha Silver
-            </a>
+            <div className="flex flex-col">
+              <a
+                href="#"
+                className="font-serif text-2xl sm:text-3xl font-semibold tracking-wider text-stone-900 whitespace-nowrap shrink-0 hover:text-amber-950 transition-colors"
+              >
+                Asha Silver
+              </a>
+              <span className="text-[10px] text-amber-900 font-medium tracking-wider uppercase -mt-0.5">
+                A legacy of trust since 1989
+              </span>
+            </div>
           </div>
 
-          {/* Zone 2: 4-5 concise single-line text navigation links */}
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-stone-600">
+          {/* Navigation Links including tab name "About us" */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-xs xl:text-sm font-medium text-stone-600">
             <button
               onClick={() => {
-                onSelectCategory('all');
+                onSelectCategory('utensils');
                 onNavigateToSection('collection');
               }}
-              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer text-stone-900 font-semibold"
+              className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                activeCategory === 'utensils' ? 'text-stone-950 font-bold' : ''
+              }`}
             >
-              Silver Jewellery
+              Silver Utensils
             </button>
             <button
               onClick={() => {
-                onSelectCategory('pooja');
+                onSelectCategory('god-items');
                 onNavigateToSection('collection');
               }}
-              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                activeCategory === 'god-items' ? 'text-stone-950 font-bold' : ''
+              }`}
             >
-              Pooja &amp; Silverware
+              Items of God
+            </button>
+            <button
+              onClick={() => {
+                onSelectCategory('gifts');
+                onNavigateToSection('collection');
+              }}
+              className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                activeCategory === 'gifts' ? 'text-stone-950 font-bold' : ''
+              }`}
+            >
+              Silver Gifts
             </button>
             <button
               onClick={() => onNavigateToSection('metal-by-purity')}
@@ -118,14 +141,21 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => onNavigateToSection('about-us')}
-              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer font-medium"
             >
-              About Mahesh Agarwal
+              About us
+            </button>
+            <button
+              onClick={onOpenContact}
+              className="px-3 py-1.5 rounded-lg bg-amber-100/80 hover:bg-amber-200/80 text-amber-950 font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 border border-amber-300/60"
+            >
+              <Video className="w-3.5 h-3.5 text-amber-800" />
+              <span>Contact Us</span>
             </button>
           </nav>
 
-          {/* Zone 3: 1 primary action (Bag & secondary utility triggers) */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          {/* Action triggers: Search, Wishlist, Bag */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={onOpenSearch}
               className="p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer"
@@ -151,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={onOpenCart}
-              className="flex items-center gap-2.5 px-4 py-2.5 bg-stone-900 text-stone-50 rounded-lg hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap shrink-0 cursor-pointer group"
+              className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 bg-stone-900 text-stone-50 rounded-lg hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap shrink-0 cursor-pointer group"
               aria-label="View shopping bag"
             >
               <ShoppingBag className="w-4 h-4 text-amber-300 group-hover:scale-105 transition-transform" />
@@ -159,8 +189,8 @@ export const Header: React.FC<HeaderProps> = ({
                 Bag {cartCount > 0 && `(${cartCount})`}
               </span>
               {cartTotal > 0 && (
-                <span className="text-xs font-semibold text-stone-200 tabular-nums border-l border-stone-700 pl-2">
-                  ₹{cartTotal.toLocaleString('en-IN')}
+                <span className="hidden sm:inline text-xs text-stone-400 font-mono">
+                  · ₹{cartTotal.toLocaleString()}
                 </span>
               )}
             </button>
@@ -168,83 +198,87 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-stone-200 bg-[#FAF9F5] px-6 py-4 space-y-3">
-          <div className="flex flex-col space-y-2 text-sm font-medium text-stone-800">
+        <div className="lg:hidden border-t border-stone-200 bg-[#FAF9F5] px-4 py-4 space-y-3">
+          <div className="flex flex-col space-y-2 text-sm font-medium text-stone-700">
             <button
               onClick={() => {
-                onSelectCategory('jewellery');
+                onSelectCategory('all');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100 flex items-center justify-between"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer"
             >
-              <span>Fine Silver Jewellery</span>
-              <span className="text-xs text-stone-400">925 Hallmarked</span>
+              All Silverware
             </button>
             <button
               onClick={() => {
-                onSelectCategory('pooja');
+                onSelectCategory('utensils');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer font-medium"
             >
-              Pooja Silverware &amp; Sacred Idols
+              Silver Utensils (Thali Sets &amp; Tableware)
             </button>
             <button
               onClick={() => {
-                onSelectCategory('dining');
+                onSelectCategory('god-items');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer font-medium"
             >
-              Rajwada Silver Dining Thalis
+              Silver Items of God (Lakshmi-Ganesh Idols)
             </button>
             <button
               onClick={() => {
-                onSelectCategory('bullion');
+                onSelectCategory('gifts');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer font-medium"
             >
-              999 Pure Silver Bullion Coins
+              Silver Gift Items &amp; 999 Coins
             </button>
             <button
               onClick={() => {
                 onNavigateToSection('metal-by-purity');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer"
             >
-              Metal by Purity Guide
+              Metal by Purity (999, 925, 835)
             </button>
             <button
               onClick={() => {
                 onNavigateToSection('price-lock');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 border-b border-stone-100 text-amber-900 font-semibold flex items-center justify-between"
+              className="text-left py-2 text-amber-900 font-semibold cursor-pointer"
             >
-              <span>Lock Silver Rate (200g etc.)</span>
-              <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded">Suraksha</span>
+              Lock Silver Price (e.g. 200g)
             </button>
             <button
               onClick={() => {
                 onNavigateToSection('about-us');
                 setMobileMenuOpen(false);
               }}
-              className="text-left py-2 text-stone-900 font-medium"
+              className="text-left py-2 hover:text-stone-950 cursor-pointer font-semibold"
             >
-              About Founder Mahesh Agarwal (1989)
+              About us
             </button>
-          </div>
-          <div className="pt-2 text-xs text-stone-500 flex items-center justify-between border-t border-stone-200">
-            <span>BIS Hallmarked 925 &amp; 999</span>
-            <span>Est. 1989 by Mahesh Agarwal</span>
+            <button
+              onClick={() => {
+                onOpenContact();
+                setMobileMenuOpen(false);
+              }}
+              className="text-left py-2.5 px-3 bg-amber-100 text-amber-950 font-bold rounded-lg cursor-pointer flex items-center gap-2"
+            >
+              <Video className="w-4 h-4 text-amber-800" />
+              <span>Contact Us (Schedule Video Call)</span>
+            </button>
           </div>
         </div>
       )}

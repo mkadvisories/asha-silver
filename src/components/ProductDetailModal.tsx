@@ -33,14 +33,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const silverMetalValue = product.weightGrams * (product.purityCode === '999' ? 98.50 : 91.20);
   const totalMaking = product.weightGrams * product.makingChargesPerGram;
-  const hallmarkGovtFee = 45;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={product.name}
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fade-in"
     >
       <div className="relative bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-hidden shadow-2xl flex flex-col border border-stone-200">
         {/* Modal Header */}
@@ -50,7 +49,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <span aria-hidden="true">/</span>
             <span>{product.categoryLabel}</span>
             <span aria-hidden="true">/</span>
-            <span className="text-stone-900">{product.purity}</span>
+            <span className="text-stone-900 font-semibold">{product.purity}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -74,9 +73,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
         {/* Modal Body: Split 2-Column Gallery + Purchase Module */}
         <div className="overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-200">
-          {/* Left: Product Image & Hallmark Stamp */}
+          {/* Left: Product Image & Purity Assurance */}
           <div className="p-6 sm:p-8 bg-stone-50/50 flex flex-col justify-between space-y-6">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-200 border border-stone-200">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-200 border border-stone-200 shadow-sm">
               <img
                 src={product.image}
                 alt={product.name}
@@ -85,23 +84,23 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               />
               <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded text-[11px] font-semibold text-stone-800 shadow-sm flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-800" />
-                <span>BIS Hallmarked: {product.hallmarkCode}</span>
+                <span>{product.purity} Guarantee</span>
               </div>
             </div>
 
-            {/* Hallmark & Purity Assurance Box */}
+            {/* Purity & Craftsmanship Box */}
             <div className="p-4 bg-white rounded-xl border border-stone-200 space-y-2 text-xs">
               <div className="font-semibold text-stone-900 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-700" />
-                <span>Asha Silver Purity Seal · 100% Tested &amp; Certified</span>
+                <span>Asha Silver Purity Seal · Since 1989</span>
               </div>
               <p className="text-stone-600 leading-relaxed">
-                Every piece undergoes strict fire assay testing in our certified lab, bearing the official BIS triangular stamp, 925/999 fineness mark, and Asha Silver Jeweller identification logo.
+                Started by Mahesh Agarwal in 1989. Handcrafted by master silversmiths with pure metal weight and honest gram-by-gram billing.
               </p>
               <div className="flex items-center gap-4 pt-1 text-[11px] text-stone-500 font-medium">
                 <span>· 100% Pure Silver Weight</span>
                 <span>· Lifetime Exchange</span>
-                <span>· Zero Deduction on Bullion</span>
+                <span>· Zero Deduction Buyback</span>
               </div>
             </div>
           </div>
@@ -114,7 +113,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <div className="flex items-center gap-2 text-xs font-semibold text-amber-900 tracking-wider uppercase mb-1">
                   <span>{product.purity}</span>
                   <span aria-hidden="true">·</span>
-                  <span>{product.weightGrams}g</span>
+                  <span>{product.weightGrams}g Weight</span>
                 </div>
                 <h2 className="font-serif text-2xl font-semibold text-stone-900 leading-tight">
                   {product.name}
@@ -137,7 +136,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   </span>
                 )}
                 <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded">
-                  Akshay Tritiya Special Offer
+                  Dhanteras Auspicious Offer
                 </span>
               </div>
 
@@ -189,8 +188,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         <span className="font-medium text-stone-800">{product.dimensions}</span>
                       </div>
                       <div>
-                        <span className="text-stone-400 block">BIS Stamping</span>
-                        <span className="font-medium text-stone-800">{product.hallmarkCode}</span>
+                        <span className="text-stone-400 block">Occasion</span>
+                        <span className="font-medium text-stone-800">{product.occasion || 'Dhanteras & Daily Sacred Use'}</span>
                       </div>
                       <div>
                         <span className="text-stone-400 block">Availability</span>
@@ -207,15 +206,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       <span className="font-semibold text-stone-800">₹{Math.round(silverMetalValue).toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Karigari / Handcrafting:</span>
+                      <span>Handcrafting / Karigari:</span>
                       <span className="font-semibold text-stone-800">₹{Math.round(totalMaking).toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Govt. BIS Hallmarking:</span>
-                      <span className="font-semibold text-stone-800">₹{hallmarkGovtFee}</span>
-                    </div>
                     <div className="flex justify-between border-t border-stone-200 pt-1 font-semibold text-stone-900">
-                      <span>Net Inclusive of 3% GST:</span>
+                      <span>Net Inclusive of GST:</span>
                       <span>₹{product.price.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
@@ -224,12 +219,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 {activeTab === 'care' && (
                   <div className="space-y-2 text-xs text-stone-600">
                     <p>
-                      Asha Silver ornaments and utensils are crafted from genuine precious silver. To maintain lasting luster:
+                      Asha Silver utensils, idols, and gift items are crafted from genuine precious silver. To maintain lasting shine:
                     </p>
                     <ul className="list-disc pl-4 space-y-1">
-                      <li>Store in the provided anti-tarnish velvet jewel box when not in use.</li>
-                      <li>Avoid direct contact with perfumes, harsh chemicals, and chlorine.</li>
-                      <li>Wipe gently with the microfiber polishing cloth provided with your order.</li>
+                      <li>Store in the provided anti-tarnish velvet gift box when not in use.</li>
+                      <li>For silver utensils, wash with gentle warm water and mild liquid soap.</li>
+                      <li>Wipe dry with a soft lint-free cotton cloth to preserve specular gleam.</li>
                     </ul>
                   </div>
                 )}
@@ -242,15 +237,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     type="checkbox"
                     checked={giftBox}
                     onChange={(e) => setGiftBox(e.target.checked)}
-                    className="accent-stone-900 rounded"
+                    className="accent-stone-900 rounded cursor-pointer"
                   />
-                  <span>Include Complimentary Red Velvet Heritage Box &amp; Akshay Tritiya Roli-Akshat</span>
+                  <span>Include Complimentary Red Velvet Box &amp; Dhanteras Sacred Roli-Chawal</span>
                 </label>
 
                 {giftBox && (
                   <input
                     type="text"
-                    placeholder="Add personalized blessings or gift message (optional)"
+                    placeholder="Add personalized Dhanteras blessings or gift note (optional)"
                     value={giftNote}
                     onChange={(e) => setGiftNote(e.target.value)}
                     className="w-full text-xs px-3 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900"
@@ -313,7 +308,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1">
                 <span className="flex items-center gap-1">
                   <Truck className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Free insured express shipping across India</span>
+                  <span>Free express delivery across India</span>
                 </span>
                 <span>Dispatch within 24 Hours</span>
               </div>

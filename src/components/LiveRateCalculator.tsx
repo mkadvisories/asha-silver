@@ -16,9 +16,8 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
   const currentRatePerGram = purity === '999' ? LIVE_SILVER_RATES.purity999 : LIVE_SILVER_RATES.purity925;
   const silverBaseValue = weight * currentRatePerGram;
   const makingChargesTotal = weight * makingChargeRate;
-  const hallmarkFee = 45; // Government BIS hallmarking charge
-  const subtotalBeforeGst = silverBaseValue + makingChargesTotal + hallmarkFee;
-  const gstAmount = subtotalBeforeGst * 0.03; // 3% standard bullion & jewellery GST
+  const subtotalBeforeGst = silverBaseValue + makingChargesTotal;
+  const gstAmount = subtotalBeforeGst * 0.03; // 3% standard bullion & silver GST
   const estimatedTotalPrice = Math.round(subtotalBeforeGst + gstAmount);
 
   const presets = [
@@ -38,7 +37,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-900 uppercase">
                   <Calculator className="w-4 h-4 text-amber-700" />
-                  <span>Transparent Purity &amp; Value Engine</span>
+                  <span>Transparent Value Engine</span>
                 </div>
                 <h2 className="font-serif text-2xl sm:text-3xl text-stone-900">
                   Live Silver Price Calculator
@@ -83,7 +82,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   >
                     <div className="font-semibold text-stone-900 text-sm">925 Sterling Silver</div>
                     <div className="text-xs text-stone-500 mt-0.5">
-                      ₹{LIVE_SILVER_RATES.purity925.toFixed(2)}/g · Jewellery &amp; Utensils
+                      ₹{LIVE_SILVER_RATES.purity925.toFixed(2)}/g · Utensils &amp; Deepams
                     </div>
                   </button>
 
@@ -98,7 +97,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   >
                     <div className="font-semibold text-stone-900 text-sm">999 Fine Pure Silver</div>
                     <div className="text-xs text-stone-500 mt-0.5">
-                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g · Coins &amp; Sacred Idols
+                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g · Sacred Idols &amp; Coins
                     </div>
                   </button>
                 </div>
@@ -133,7 +132,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   aria-label="Gross weight in grams slider"
                 />
                 <div className="flex justify-between text-[11px] text-stone-400">
-                  <span>5g (Coin/Ring)</span>
+                  <span>5g (Coin)</span>
                   <span>100g (Idol/Diya)</span>
                   <span>500g (Full Dinner Thali)</span>
                 </div>
@@ -186,15 +185,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   </div>
 
                   <div className="flex items-center justify-between pb-2 border-b border-stone-200/80">
-                    <span className="flex items-center gap-1">
-                      <span>Govt. BIS Hallmarking &amp; HUID</span>
-                      <Info className="w-3.5 h-3.5 text-stone-400" />
-                    </span>
-                    <span className="font-medium text-stone-900 tabular-nums">₹{hallmarkFee}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between pb-2 border-b border-stone-200/80">
-                    <span>Applicable GST (3% Standard Bullion)</span>
+                    <span>Applicable GST (3% Standard Silver)</span>
                     <span className="font-medium text-stone-900 tabular-nums">
                       ₹{Math.round(gstAmount).toLocaleString('en-IN')}
                     </span>
@@ -220,11 +211,11 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   onClick={onSelectPoojaCategory}
                   className="w-full py-3 bg-stone-900 text-stone-50 font-medium text-sm rounded-lg hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Browse Ready Hallmarked Ornaments</span>
+                  <span>Browse Ready Silverware</span>
                   <ArrowUpRight className="w-4 h-4 text-amber-300" />
                 </button>
                 <div className="text-center text-[11px] text-stone-400">
-                  Want custom weight or consecrated pooja engraving? Contact our silversmiths directly.
+                  Looking for custom weights or family thali engravings? Schedule a live video call.
                 </div>
               </div>
             </div>

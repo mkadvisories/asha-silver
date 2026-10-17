@@ -1,16 +1,18 @@
 import React from 'react';
-import { ShieldCheck, Award, RefreshCw, Truck, ArrowRight, Clock, Lock } from 'lucide-react';
+import { ShieldCheck, Award, RefreshCw, Truck, ArrowRight, Clock, Lock, Sparkles } from 'lucide-react';
 import { LIVE_SILVER_RATES } from '../data/products';
 import { ASSET_IMAGES } from '../assets/images';
 
 interface HeroSectionProps {
   onExploreCollection: () => void;
   onOpenPriceLock: () => void;
+  onOpenContact?: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreCollection,
   onOpenPriceLock,
+  onOpenContact,
 }) => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#FAF9F5] via-[#F4EFE6]/60 to-[#FAF9F5] pt-4 pb-12 sm:pb-16 border-b border-stone-200/60">
@@ -19,45 +21,45 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Brand Story & Call to Action */}
           <div className="lg:col-span-6 space-y-6 lg:py-6">
-            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-amber-900/80">
-              <span>Fine Silver Jewellery &amp; Utensils</span>
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-amber-900">
+              <span className="bg-amber-100/90 px-2.5 py-1 rounded text-amber-950 font-bold">Asha Silver</span>
               <span aria-hidden="true">·</span>
-              <span>Founded in 1989 by Mahesh Agarwal</span>
+              <span className="text-amber-950">A legacy of trust since 1989</span>
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-stone-900 leading-[1.12] text-balance">
-              Where Pure Silver Meets <br />
-              <span className="italic font-medium text-amber-950">Generations of Trust</span>
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-stone-900 leading-[1.14] text-balance">
+              Pure Silver Utensils, <br />
+              <span className="italic font-medium text-amber-950">Deities &amp; Auspicious Gifts</span>
             </h1>
 
-            <p className="text-stone-600 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
-              For 37 years, Asha Silver has been the trusted destination for authentic 925 sterling silver jewelry, consecrated temple pooja silverware, royal dining thalis, and certified bullion tokens of enduring prosperity.
+            <p className="text-stone-700 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
+              <strong>A legacy of trust since 1989</strong>: Founded by Mahesh Agarwal, Asha Silver brings you handcrafted pure silver utensils, consecrated silver items of god, and auspicious Dhanteras gift tokens built on decades of hard work, honest weight, and uncompromised quality.
             </p>
 
             {/* Live Rate Preview Card with direct Price Lock Callout */}
-            <div className="bg-white/90 backdrop-blur-sm border border-stone-200 rounded-xl p-4 max-w-lg shadow-sm">
+            <div className="bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl p-4 max-w-lg shadow-sm">
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-stone-100 text-xs">
                 <div className="flex items-center gap-1.5 text-stone-600 font-medium">
                   <Clock className="w-3.5 h-3.5 text-amber-700" />
-                  <span>Bullion Benchmark · {LIVE_SILVER_RATES.lastUpdated}</span>
+                  <span>Silver Benchmark · {LIVE_SILVER_RATES.lastUpdated}</span>
                 </div>
                 <button
                   onClick={onOpenPriceLock}
                   className="text-amber-800 hover:text-amber-950 font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <Lock className="w-3 h-3" />
-                  <span>Lock Rates Today →</span>
+                  <span>Lock Rates (e.g. 200g) →</span>
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">925 Sterling Silver</div>
+                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">925 Silver Utensils</div>
                   <div className="text-lg font-semibold text-stone-900 tabular-nums">
                     ₹{LIVE_SILVER_RATES.purity925.toFixed(2)} <span className="text-xs font-normal text-stone-500">/ gram</span>
                   </div>
                 </div>
                 <div className="border-l border-stone-100 pl-4">
-                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">999 Fine Pure Bullion</div>
+                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">999 Pure Silver Idols &amp; Coins</div>
                   <div className="text-lg font-semibold text-stone-900 tabular-nums">
                     ₹{LIVE_SILVER_RATES.purity999.toFixed(2)} <span className="text-xs font-normal text-stone-500">/ gram</span>
                   </div>
@@ -71,7 +73,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onClick={onExploreCollection}
                 className="px-6 py-3.5 bg-stone-900 text-stone-50 text-sm font-medium rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center gap-2 group cursor-pointer whitespace-nowrap"
               >
-                <span>Explore Fine Silverware</span>
+                <span>Explore Silverware</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform text-amber-300" />
               </button>
 
@@ -82,6 +84,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <Lock className="w-4 h-4 text-amber-800" />
                 <span>Lock Silver Price (e.g. 200g)</span>
               </button>
+
+              {onOpenContact && (
+                <button
+                  onClick={onOpenContact}
+                  className="px-4 py-3.5 border border-stone-300 text-stone-800 text-sm font-medium rounded-lg hover:bg-stone-100 transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  Schedule Video Call
+                </button>
+              )}
             </div>
           </div>
 
@@ -90,22 +101,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[16/10] bg-stone-200 border border-stone-200">
               <img
                 src={ASSET_IMAGES.heroBanner}
-                alt="Asha Silver Royal Handcrafted Jewellery Collection"
+                alt="Asha Silver Royal Handcrafted Silver Utensils and Sacred Idols Collection"
                 className="w-full h-full object-cover"
                 loading="eager"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/75 via-stone-950/20 to-transparent flex flex-col justify-end p-6 text-white">
-                <div className="text-xs uppercase tracking-widest text-amber-200 font-medium">
-                  Atelier Masterpiece
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/25 to-transparent flex flex-col justify-end p-6 text-white">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-amber-300 font-semibold">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Dhanteras Mahotsav Specialty</span>
                 </div>
                 <div className="font-serif text-xl sm:text-2xl font-light tracking-wide text-white">
-                  The Royal Antique Maharani Suite
+                  Pure Silver Utensils, Sacred Deities &amp; Gift Coins
                 </div>
                 <div className="text-xs text-stone-300 mt-1 flex items-center gap-2">
-                  <span>BIS Hallmarked 925 Pure Silver</span>
+                  <span>925 &amp; 999 Pure Silver</span>
                   <span aria-hidden="true">·</span>
-                  <span>Handcrafted by Rajasthani Karigars</span>
+                  <span>Handcrafted by Traditional Silversmiths</span>
                 </div>
               </div>
             </div>
@@ -119,8 +131,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <ShieldCheck className="w-5 h-5 text-amber-800" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-stone-900">100% BIS Hallmarked</h2>
-              <p className="text-xs text-stone-500 mt-0.5">Every piece certified with government HUID stamp.</p>
+              <h2 className="text-sm font-semibold text-stone-900">100% Tested Purity</h2>
+              <p className="text-xs text-stone-500 mt-0.5">Every piece tested and guaranteed for pure silver weight.</p>
             </div>
           </div>
 
@@ -129,8 +141,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Award className="w-5 h-5 text-amber-800" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-stone-900">Mahesh Agarwal (1989)</h2>
-              <p className="text-xs text-stone-500 mt-0.5">37 years of authentic family trust &amp; uncompromised purity.</p>
+              <h2 className="text-sm font-semibold text-stone-900">A Legacy of Trust Since 1989</h2>
+              <p className="text-xs text-stone-500 mt-0.5">Started by Mahesh Agarwal. Built on hard work and reliable quality.</p>
             </div>
           </div>
 
@@ -139,8 +151,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <RefreshCw className="w-5 h-5 text-amber-800" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-stone-900">Lifetime Buyback</h2>
-              <p className="text-xs text-stone-500 mt-0.5">100% transparent silver weight value exchange.</p>
+              <h2 className="text-sm font-semibold text-stone-900">Transparent Silver Value</h2>
+              <p className="text-xs text-stone-500 mt-0.5">Gram-by-gram billing with clear live rates and 100% buyback.</p>
             </div>
           </div>
 
@@ -149,8 +161,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Truck className="w-5 h-5 text-amber-800" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-stone-900">Insured Delivery</h2>
-              <p className="text-xs text-stone-500 mt-0.5">Tamper-evident luxury packaging nationwide.</p>
+              <h2 className="text-sm font-semibold text-stone-900">Safe Insured Delivery</h2>
+              <p className="text-xs text-stone-500 mt-0.5">Tamper-evident velvet gift packaging with tracking.</p>
             </div>
           </div>
         </div>

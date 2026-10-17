@@ -109,7 +109,7 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
                 >
                   <div className="font-semibold text-white text-sm">925 Sterling Silver</div>
                   <div className="text-xs text-stone-400 mt-1">
-                    Jewellery, Utensils &amp; Kadas
+                    Utensils, Tableware &amp; Gifting
                   </div>
                   <div className="text-amber-300 font-mono font-bold text-sm mt-1">
                     ₹{LIVE_SILVER_RATES.purity925.toFixed(2)} / g

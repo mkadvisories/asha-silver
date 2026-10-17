@@ -74,7 +74,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <span aria-hidden="true">·</span>
             <span className="flex items-center gap-0.5 text-amber-900">
               <ShieldCheck className="w-3 h-3" />
-              <span>BIS Certified</span>
+              <span>100% Pure Silver</span>
             </span>
           </div>
 
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               )}
             </div>
             <div className="text-[11px] text-stone-400">
-              Incl. GST &amp; BIS Stamping
+              Inclusive of GST
             </div>
           </div>
 

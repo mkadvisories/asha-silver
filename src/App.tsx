@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
-import { AkshayTritiyaBanner } from './components/AkshayTritiyaBanner';
+import { DhanterasBanner } from './components/DhanterasBanner';
 import { SilverPriceLockSection } from './components/SilverPriceLockSection';
 import { MetalByPuritySection } from './components/MetalByPuritySection';
 import { LiveRateCalculator } from './components/LiveRateCalculator';
@@ -11,11 +11,13 @@ import { CartDrawer } from './components/CartDrawer';
 import { SearchWishlistModal } from './components/SearchWishlistModal';
 import { AboutMaheshAgarwal } from './components/AboutMaheshAgarwal';
 import { HeritageSection } from './components/HeritageSection';
+import { ContactUsSection } from './components/ContactUsSection';
+import { ContactUsModal, VideoCallBooking } from './components/ContactUsModal';
 import { Footer } from './components/Footer';
 import { PRODUCTS, Product } from './data/products';
 import { ASSET_IMAGES } from './assets/images';
 import { CartItem, CustomerOrder, SilverPriceLock } from './types/cart';
-import { Sparkles, SlidersHorizontal, Check, Filter, X } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, Check, Filter, X, Video } from 'lucide-react';
 
 export default function App() {
   const [products] = useState<Product[]>(PRODUCTS);
@@ -33,10 +35,10 @@ export default function App() {
     }
     return [
       {
-        product: PRODUCTS[3], // 50g 999 pure silver coin
+        product: PRODUCTS[5], // 50g 999 pure silver Dhanteras coin
         quantity: 1,
         giftBoxRequested: true,
-        giftNote: 'Auspicious silver blessings for the family'
+        giftNote: 'Shubh Dhanteras blessings for the family'
       }
     ];
   });
@@ -49,7 +51,7 @@ export default function App() {
     } catch (e) {
       console.error(e);
     }
-    return [PRODUCTS[1].id];
+    return [PRODUCTS[0].id];
   });
 
   // Synchronize cart to localStorage
@@ -73,6 +75,7 @@ export default function App() {
   // Modal States
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
   const [searchModal, setSearchModal] = useState<{ isOpen: boolean; mode: 'search' | 'wishlist' }>({
     isOpen: false,
     mode: 'search',
@@ -107,7 +110,7 @@ export default function App() {
       return [...prev, { product, quantity, giftBoxRequested: giftBox, giftNote }];
     });
     showToast(`Added ${product.name} to your bag`);
-    setIsCartOpen(true); // Open bag immediately so user has zero ambiguity
+    setIsCartOpen(true);
   };
 
   // Add Silver Price Lock to Cart
@@ -118,7 +121,7 @@ export default function App() {
     totalAmount: number;
     durationDays: number;
   }) => {
-    const certCode = 'ASL-VOUCHER-' + Math.floor(100000 + Math.random() * 900000);
+    const certCode = 'ASL-LOCK-' + Math.floor(100000 + Math.random() * 900000);
     const lockProduct: Product = {
       id: `lock-${certCode}`,
       name: `Suraksha Silver Price Lock (${lockData.grams}g - ${lockData.purity} Grade)`,
@@ -131,10 +134,9 @@ export default function App() {
       price: lockData.totalAmount,
       makingChargesPerGram: 0,
       image: ASSET_IMAGES.silverCoin,
-      description: `Official advance rate lock certificate for ${lockData.grams} grams of ${lockData.purity} pure silver at ₹${lockData.ratePerGram.toFixed(2)}/g. Valid for ${lockData.durationDays} days against any jewellery or bullion redemption.`,
-      auspiciousSignificance: 'Guarantees lower purchase price against bullion inflation with 100% money-back safety.',
-      hallmarkCode: certCode,
-      dimensions: `${lockData.grams}g Bullion Backing`,
+      description: `Official advance rate lock certificate for ${lockData.grams} grams of ${lockData.purity} pure silver at ₹${lockData.ratePerGram.toFixed(2)}/g. Valid for ${lockData.durationDays} days against silver utensils, god items, or bullion redemption.`,
+      auspiciousSignificance: 'Guarantees locked rate against silver market inflation with 100% money-back safety.',
+      dimensions: `${lockData.grams}g Silver Bullion Backing`,
       inStock: true,
     };
 
@@ -197,8 +199,8 @@ export default function App() {
     let result = products;
 
     // Filter by category
-    if (activeCategory === 'akshay-special') {
-      result = result.filter((p) => p.isAkshayTritiyaSpecial);
+    if (activeCategory === 'dhanteras-special') {
+      result = result.filter((p) => p.isDhanterasSpecial);
     } else if (activeCategory !== 'all') {
       result = result.filter((p) => p.category === activeCategory);
     }
@@ -212,7 +214,6 @@ export default function App() {
       if (sortBy === 'price-asc') return a.price - b.price;
       if (sortBy === 'price-desc') return b.price - a.price;
       if (sortBy === 'weight-desc') return b.weightGrams - a.weightGrams;
-      // Default: featured first
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
   }, [products, activeCategory, purityFilter, sortBy]);
@@ -237,7 +238,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Bar Navigation */}
+      {/* Top Bar Navigation with Tab "About us" & "Contact Us" */}
       <Header
         cartCount={cartItemCount}
         cartTotal={cartTotal}
@@ -245,6 +246,7 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenWishlist={() => setSearchModal({ isOpen: true, mode: 'wishlist' })}
         onOpenSearch={() => setSearchModal({ isOpen: true, mode: 'search' })}
+        onOpenContact={() => setIsContactModalOpen(true)}
         activeCategory={activeCategory}
         onSelectCategory={(cat) => {
           setActiveCategory(cat);
@@ -254,17 +256,18 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Landing Hero Section: "A legacy of trust since 1989" */}
         <HeroSection
           onExploreCollection={() => scrollToSection('collection')}
           onOpenPriceLock={() => scrollToSection('price-lock')}
+          onOpenContact={() => setIsContactModalOpen(true)}
         />
 
         {/* Dedicated Silver Price Lock Section (e.g. 200g lock-in basis rate) */}
         <SilverPriceLockSection
           onAddLockToCart={handleAddLockToCart}
           onCertificateGenerated={(cert: SilverPriceLock) => {
-            showToast(`Official Certificate #${cert.certificateNumber} generated for ${cert.customerName}`);
+            showToast(`Rate lock certificate #${cert.certificateNumber} generated for ${cert.customerName}`);
           }}
         />
 
@@ -277,21 +280,21 @@ export default function App() {
           onNavigateToCollection={() => scrollToSection('collection')}
         />
 
-        {/* Auspicious Akshay Tritiya Banner & Muhurat Card */}
-        <AkshayTritiyaBanner
+        {/* Auspicious Dhanteras Banner & Shubh Muhurat Card */}
+        <DhanterasBanner
           onExploreAuspicious={() => {
-            setActiveCategory('akshay-special');
+            setActiveCategory('dhanteras-special');
             setPurityFilter('all');
             scrollToSection('collection');
           }}
-          onSelectCoin={() => {
-            setActiveCategory('bullion');
-            setPurityFilter('999');
+          onSelectUtensils={() => {
+            setActiveCategory('utensils');
+            setPurityFilter('all');
             scrollToSection('collection');
           }}
         />
 
-        {/* Featured Silverware & Jewellery Catalog Grid */}
+        {/* Catalog Grid: Silver Utensils, Silver Items of God, Silver Gift Items */}
         <section id="collection" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-20">
           <div className="space-y-8">
             {/* Section Header */}
@@ -299,13 +302,13 @@ export default function App() {
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-xs font-semibold text-amber-900 uppercase tracking-widest">
                   <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-                  <span>Certified Hallmarked Fine Silver</span>
+                  <span>A Legacy of Trust Since 1989</span>
                 </div>
                 <h2 className="font-serif text-3xl sm:text-4xl text-stone-900 tracking-tight">
-                  Handcrafted Silver Creations
+                  Handcrafted Silver Utensils, Deities &amp; Gifts
                 </h2>
                 <p className="text-xs sm:text-sm text-stone-500 max-w-xl">
-                  Explore pure 925 sterling silver temple jewellery, consecrated pooja idols, royal banquet thalis, and pure bullion coins.
+                  Specializing in pure silver dining thali sets, consecrated Lakshmi-Ganesh idols, deepams, and Dhanteras gift coins.
                 </p>
               </div>
 
@@ -344,13 +347,11 @@ export default function App() {
             {/* Interactive Category Filter Tabs (Segmented Controls) */}
             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
               {[
-                { id: 'all', label: 'All Creations' },
-                { id: 'jewellery', label: 'Temple & Fine Jewellery' },
-                { id: 'pooja', label: 'Pooja Idols & Diyas' },
-                { id: 'dining', label: 'Royal Dining Thali Sets' },
-                { id: 'bullion', label: '999 Pure Coins & Bars' },
-                { id: 'bangles', label: 'Elephant Head Kadas' },
-                { id: 'akshay-special', label: 'Akshay Tritiya Specials' },
+                { id: 'all', label: 'All Silverware' },
+                { id: 'utensils', label: 'Silver Utensils (Thalis & Glasses)' },
+                { id: 'god-items', label: 'Silver Items of God (Lakshmi-Ganesh)' },
+                { id: 'gifts', label: 'Silver Gift Items & 999 Coins' },
+                { id: 'dhanteras-special', label: 'Dhanteras Specials' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -385,16 +386,23 @@ export default function App() {
         {/* Live Transparent Silver Rate Calculator */}
         <LiveRateCalculator
           onSelectPoojaCategory={() => {
-            setActiveCategory('pooja');
+            setActiveCategory('god-items');
             scrollToSection('collection');
           }}
         />
 
-        {/* Dedicated About Us Section - Founded by Mahesh Agarwal in 1989 */}
+        {/* Dedicated About Us Section - Started by Mahesh Agarwal in 1989 */}
         <AboutMaheshAgarwal />
 
-        {/* Heritage Section: 37 Years Lineage, Hallmark Decoder, & Multi-decade Testimonials */}
+        {/* Heritage Section: 37 Years Lineage & Decades of Patron Trust */}
         <HeritageSection />
+
+        {/* Contact Us Section: Schedule Video Call Appointment */}
+        <ContactUsSection
+          onBookingSuccess={(booking: VideoCallBooking) => {
+            showToast(`Video call appointment scheduled for ${booking.date}`);
+          }}
+        />
       </main>
 
       {/* Product Detail Modal (PDP) */}
@@ -432,7 +440,13 @@ export default function App() {
         onAddToCart={(p) => handleAddToCart(p, 1)}
       />
 
-      {/* Luxury Footer */}
+      {/* Contact Us & Schedule Video Call Modal */}
+      <ContactUsModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
+
+      {/* Luxury Footer with Contact Us & Video Call link */}
       <Footer
         onNavigateToSection={scrollToSection}
         onSelectCategory={(cat) => {
@@ -440,6 +454,7 @@ export default function App() {
           setPurityFilter('all');
           scrollToSection('collection');
         }}
+        onOpenContact={() => setIsContactModalOpen(true)}
       />
     </div>
   );

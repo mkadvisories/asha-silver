@@ -125,7 +125,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="flex items-center gap-2 text-amber-950 font-medium">
                 <Sparkles className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>
-                  🎉 You unlocked a <strong>Complimentary 5g Pure 999 Silver Coin</strong> with BIS Hallmarking!
+                  🎉 You unlocked a <strong>Complimentary 5g Pure 999 Silver Coin</strong> with Purity Certificate!
                 </span>
               </div>
             ) : (
@@ -270,7 +270,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </span>
                         </div>
                         <div className="text-amber-800 text-[11px] mt-0.5">
-                          Consecrated pure silver token · BIS Hallmarked with HUID
+                          Consecrated pure silver token · 100% Certified Pure Silver
                         </div>
                       </div>
                       <span className="text-xs font-semibold text-stone-400 line-through">₹550</span>
@@ -389,7 +389,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         onChange={() => setFormData({ ...formData, paymentMethod: 'upi' })}
                         className="accent-stone-900"
                       />
-                      <span className="font-medium text-stone-900">UPI / QR (Instant Akshay Tritiya Blessing)</span>
+                      <span className="font-medium text-stone-900">UPI / QR (Instant Dhanteras Blessing)</span>
                     </div>
                     <span className="text-[11px] text-emerald-700 font-medium">Zero Surcharge</span>
                   </label>
@@ -496,7 +496,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <span>Insured Transit &amp; Certificate of Authenticity</span>
                 </div>
                 <p>
-                  Your silverware has been packaged in a sealed tamper-proof security box. The BIS Hallmark certificate card is included in the velvet box.
+                  Your silverware has been packaged in a sealed tamper-proof security box. The Asha Silver Authenticity &amp; Purity certificate card is included in the velvet box.
                 </p>
               </div>
 

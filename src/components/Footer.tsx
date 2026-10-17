@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Phone, MapPin, Mail, Award, Clock, Check, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Phone, MapPin, Mail, Award, Clock, Check, MessageCircle, Video } from 'lucide-react';
 
 interface FooterProps {
   onNavigateToSection: (sectionId: string) => void;
   onSelectCategory: (category: string) => void;
+  onOpenContact?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onNavigateToSection,
   onSelectCategory,
+  onOpenContact,
 }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -34,26 +36,26 @@ export const Footer: React.FC<FooterProps> = ({
                 Asha Silver
               </span>
               <div className="text-xs text-amber-400 font-medium tracking-widest uppercase">
-                Founded by Mahesh Agarwal in 1989
+                A legacy of trust since 1989 · Started by Mahesh Agarwal
               </div>
             </div>
             <p className="text-xs sm:text-sm text-stone-400 leading-relaxed">
-              Founded in 1989 by Shri Mahesh Agarwal, crafting certified 925 sterling silver jewelry, royal silverware, and sacred pooja tokens for over 37 years with steadfast dedication to authentic metallurgical purity and generational trust.
+              Started in 1989 by Shri Mahesh Agarwal, crafting genuine silver utensils, sacred silver items of god, and auspicious silver gift items through decades of hard work and uncompromised quality.
             </p>
             <div className="flex items-center gap-3 pt-1 text-xs text-stone-400">
               <span className="flex items-center gap-1 text-stone-300">
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
-                <span>BIS Govt. Hallmarked</span>
+                <span>100% Tested Pure Silver</span>
               </span>
               <span>·</span>
-              <span>IBJA Registered</span>
+              <span>Generational Silversmiths</span>
             </div>
           </div>
 
           {/* Quick Collection Links */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-semibold text-stone-100 uppercase tracking-wider">
-              Festive Collections
+              Silver Specialties
             </h4>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
@@ -64,68 +66,74 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Akshay Tritiya Auspicious Specials
+                  Dhanteras Auspicious Silverware &amp; Utensils
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('pooja');
+                    onSelectCategory('utensils');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Consecrated Pooja Idols &amp; Diyas
+                  Silver Utensils (Thali Sets, Glasses, Pitchers)
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('jewellery');
+                    onSelectCategory('god-items');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Antique Temple Chokers &amp; Jhumkas
+                  Silver Items of God (Lakshmi-Ganesh Idols, Diyas)
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('dining');
+                    onSelectCategory('gifts');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Rajwada Silver Dining Thali Sets
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    onSelectCategory('bullion');
-                    onNavigateToSection('collection');
-                  }}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
-                >
-                  999 Fine Pure Silver Bullion Coins
+                  Silver Gift Items (999 Coins, Frames &amp; Keepsakes)
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Trust Policies & Atelier Contacts */}
+          {/* Trust Policies & Video Call Assistance */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-semibold text-stone-100 uppercase tracking-wider">
-              Assurance &amp; Care
+              Assistance &amp; About
             </h4>
             <ul className="space-y-2 text-xs text-stone-400">
+              <li>
+                <button
+                  onClick={onOpenContact}
+                  className="text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left font-medium flex items-center gap-1.5"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Contact Us (Schedule Video Call)</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigateToSection('about-us')}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  About Us (Mahesh Agarwal Legacy)
+                </button>
+              </li>
               <li>
                 <button
                   onClick={() => onNavigateToSection('price-lock')}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Suraksha Silver Rate Lock
+                  Lock Silver Price (e.g. 200g)
                 </button>
               </li>
               <li>
@@ -138,26 +146,10 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => onNavigateToSection('about-us')}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
-                >
-                  Mahesh Agarwal Heritage
-                </button>
-              </li>
-              <li>
-                <button
                   onClick={() => onNavigateToSection('rate-calculator')}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Live Bullion Rate Engine
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onNavigateToSection('heritage')}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
-                >
-                  Decode Your BIS Hallmark
+                  Live Silver Rate Calculator
                 </button>
               </li>
             </ul>
@@ -166,12 +158,12 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Showroom & VIP Concierge */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-semibold text-stone-100 uppercase tracking-wider">
-              Flagship Atelier
+              Flagship Atelier &amp; Video Call
             </h4>
             <div className="space-y-2 text-xs text-stone-400">
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                <span>Asha Silver Heritage Mansion, Johari Bazaar &amp; Bandra West, Mumbai 400050</span>
+                <span>Asha Silver Ateliers, Mumbai · Delhi · Jaipur</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -181,15 +173,22 @@ export const Footer: React.FC<FooterProps> = ({
                 <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                 <span>+91 (022) 2640-1989 / +91 98201 19890</span>
               </div>
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col gap-2">
+                <button
+                  onClick={onOpenContact}
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-xs font-medium transition-colors cursor-pointer"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Book Live Video Shopping Call</span>
+                </button>
                 <a
-                  href="https://wa.me/919820119890?text=Namaste%20Asha%20Silver%2C%20I%20would%20like%20to%20inquire%20about%20Akshay%20Tritiya%20silverware"
+                  href="https://wa.me/919820119890?text=Namaste%20Asha%20Silver%2C%20I%20would%20like%20to%20inquire%20about%20Dhanteras%20silver%20utensils%2C%20god%20items%20and%20gifts"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-900/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 rounded-md text-xs font-medium transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-900/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 rounded-md text-xs font-medium transition-colors cursor-pointer"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  <span>WhatsApp VIP Concierge</span>
+                  <span>WhatsApp Concierge</span>
                 </a>
               </div>
             </div>
@@ -201,7 +200,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="space-y-1 text-center md:text-left">
             <h4 className="text-sm font-serif text-white">Join the Asha Silver Heirloom Circle</h4>
             <p className="text-xs text-stone-400">
-              Receive auspicious muhurat alerts, annual festival silver coins, and private preview access.
+              Receive auspicious Dhanteras muhurat updates, new silver utensil arrivals, and private festive previews.
             </p>
           </div>
           <form onSubmit={handleSubscribe} className="flex w-full md:w-auto gap-2">
@@ -222,17 +221,13 @@ export const Footer: React.FC<FooterProps> = ({
           </form>
         </div>
 
-        {/* Bottom Bar: Copyright & Purity Seal */}
+        {/* Bottom Bar: Clean Copyright - Appendix 1 Removed */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500 pt-4">
           <div>
-            © 1989–2026 Asha Silver Jewellers Private Limited. All rights reserved.
+            © 1989–2026 Asha Silver Jewellers. All rights reserved.
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>BIS Registration: CM/L-7892104</span>
-            <span>·</span>
-            <span>Hallmarking Assayer License: AHC-MUM-89</span>
-            <span>·</span>
-            <span>100% Insured Bullion Logistics</span>
+          <div className="text-[11px] text-stone-400">
+            A legacy of trust since 1989 · Built on hard work &amp; quality products
           </div>
         </div>
       </div>
