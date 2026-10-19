@@ -231,7 +231,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                           For pure 92.5 silver utensils, thali sets, and pitchers, prices are calculated transparently during live consultation:
                         </p>
                         <div className="pt-1 space-y-1 text-stone-700">
-                          <div>· <strong>Base Weight:</strong> ~{product.weightGrams}g certified sterling silver</div>
+                          <div>· <strong>Base Weight:</strong> ~{product.weightGrams}g genuine hallmarked sterling silver</div>
                           <div>· <strong>Karigari:</strong> Traditional hand-hammering &amp; royal nakshi engraving</div>
                           <div>· <strong>Custom Quote:</strong> Fixed prices removed — quote tailored to your required pieces &amp; today's MCX rate via Video Call</div>
                         </div>

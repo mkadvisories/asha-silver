@@ -1,0 +1,69 @@
+[
+  {
+    "Order ID": "ASH-739266",
+    "Payment Method": "Cash on Delivery (COD) - Doorstep Settlement",
+    "Customer Name": "Ankit Ah",
+    "Mobile / WhatsApp": "929299292",
+    "Customer Email ID": "customer@ashasilver.com",
+    "Delivery Address": "135b beliaghata main road, Kolka - 3883999",
+    "Ordered Items List": "1. Auspicious Dhanteras Lakshmi-Ganesh 999 Pure Silver Coin (50g) (Qty: 1, Purity: 999 Pure Silver, Wt: 50g) - ₹5,250",
+    "Order Subtotal": "₹5,250",
+    "GST (3%)": "₹158",
+    "Total Payable (COD)": "₹5,250",
+    "Free Coin Included": "No",
+    "Order Timestamp": "19/10/2026, 1:26:28 pm",
+    "_subject": "New Order Confirmed: #ASH-739266 - Ankit Ah (₹5,250) [Cash on Delivery]",
+    "_replyto": "customer@ashasilver.com",
+    "_template": "table",
+    "_captcha": "false",
+    "rawOrder": {
+      "orderId": "ASH-739266",
+      "items": [
+        {
+          "product": {
+            "id": "asha-silver-coin-50g-999",
+            "name": "Auspicious Dhanteras Lakshmi-Ganesh 999 Pure Silver Coin (50g)",
+            "hindiName": "शुभ धनतेरस महालक्ष्मी चांदी सिक्का (50 ग्राम)",
+            "category": "gifts",
+            "categoryLabel": "Silver Gift Items",
+            "purity": "999 Pure Silver",
+            "purityCode": "999",
+            "weightGrams": 50,
+            "price": 5250,
+            "originalPrice": 5600,
+            "makingChargesPerGram": 10,
+            "image": "/src/assets/images/product_silver_coin_akshay_tritiya_1792246722997.jpg",
+            "description": "Pure 99.9% fine bullion coin with deep-relief engraving of Shree Ganesha & Goddess Lakshmi, presented in a royal crimson velvet commemorative box with hallmarked purity assurance.",
+            "auspiciousSignificance": "The classic Dhanteras investment token. Tradition holds that silver coin purchases on Dhanteras multiply wealth thirteen-fold.",
+            "dimensions": "Diameter: 42mm · Thickness: 3.2mm",
+            "inStock": true,
+            "featured": true,
+            "isDhanterasSpecial": true,
+            "occasion": "Dhanteras Savings & Sacred Family Gifting"
+          },
+          "quantity": 1,
+          "giftBoxRequested": true,
+          "giftNote": "Shubh Dhanteras blessings for the family"
+        }
+      ],
+      "subtotal": 5250,
+      "discount": 0,
+      "tax": 158,
+      "shipping": 0,
+      "total": 5250,
+      "customerName": "Ankit Ah",
+      "customerPhone": "929299292",
+      "customerEmail": "customer@ashasilver.com",
+      "deliveryAddress": "135b beliaghata main road",
+      "city": "Kolka",
+      "pincode": "3883999",
+      "paymentMethod": "cod",
+      "paymentStatus": "pending_cod",
+      "createdAt": "19 Oct 2026, 01:26 pm",
+      "freeSilverCoinAwarded": false,
+      "destination": "mkadvisories@gmail.com"
+    },
+    "recipient": "mkadvisories@gmail.com",
+    "dispatchedAt": "2026-10-19T07:56:28.253Z"
+  }
+]

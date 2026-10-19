@@ -22,7 +22,7 @@ import { Sparkles, SlidersHorizontal, Check, Filter, X, Video } from 'lucide-rea
 export default function App() {
   const [products] = useState<Product[]>(PRODUCTS);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [purityFilter, setPurityFilter] = useState<'all' | '925' | '999' | '835'>('all');
+  const [purityFilter, setPurityFilter] = useState<'all' | '925' | '999' | '880'>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'weight-desc'>('featured');
 
   // Load cart from localStorage or default
@@ -122,25 +122,25 @@ export default function App() {
   // Add Silver Price Lock to Cart
   const handleAddLockToCart = (lockData: {
     grams: number;
-    purity: '925' | '999';
+    purity: '999' | '880' | '925';
     ratePerGram: number;
     totalAmount: number;
     durationDays: number;
   }) => {
-    const certCode = 'ASL-LOCK-' + Math.floor(100000 + Math.random() * 900000);
+    const lockCode = 'ASL-LOCK-' + Math.floor(100000 + Math.random() * 900000);
     const lockProduct: Product = {
-      id: `lock-${certCode}`,
+      id: `lock-${lockCode}`,
       name: `Suraksha Silver Price Lock (${lockData.grams}g - ${lockData.purity} Grade)`,
       hindiName: `सुरक्षा चांदी भाव लॉक वाउचर (${lockData.grams} ग्राम)`,
       category: 'bullion',
       categoryLabel: 'Silver Rate Lock',
-      purity: lockData.purity === '999' ? '999 Pure Silver' : '925 Sterling Silver',
-      purityCode: lockData.purity,
+      purity: lockData.purity === '999' ? '999 Pure Silver' : lockData.purity === '880' ? '880 Traditional Silverware' : '925 Sterling Silver',
+      purityCode: lockData.purity as any,
       weightGrams: lockData.grams,
       price: lockData.totalAmount,
       makingChargesPerGram: 0,
       image: ASSET_IMAGES.silverCoin,
-      description: `Official advance rate lock certificate for ${lockData.grams} grams of ${lockData.purity} pure silver at ₹${lockData.ratePerGram.toFixed(2)}/g. Valid for ${lockData.durationDays} days against silver utensils, god items, or bullion redemption.`,
+      description: `Official advance rate lock booking for ${lockData.grams} grams of ${lockData.purity} pure silver at ₹${lockData.ratePerGram.toFixed(2)}/g. Valid for ${lockData.durationDays} days against silver utensils, god items, or bullion redemption.`,
       auspiciousSignificance: 'Guarantees locked rate against silver market inflation with 100% money-back safety.',
       dimensions: `${lockData.grams}g Silver Bullion Backing`,
       inStock: true,
@@ -153,10 +153,10 @@ export default function App() {
         quantity: 1,
         isPriceLockItem: true,
         lockDetails: {
-          certificateId: certCode,
+          lockBookingId: lockCode,
           lockedGrams: lockData.grams,
           lockedRatePerGram: lockData.ratePerGram,
-          purity: lockData.purity,
+          purity: lockData.purity as any,
           validityDays: lockData.durationDays,
         },
       },
@@ -272,12 +272,12 @@ export default function App() {
         {/* Dedicated Silver Price Lock Section (e.g. 200g lock-in basis rate) */}
         <SilverPriceLockSection
           onAddLockToCart={handleAddLockToCart}
-          onCertificateGenerated={(cert: SilverPriceLock) => {
-            showToast(`Rate lock certificate #${cert.certificateNumber} generated for ${cert.customerName}`);
+          onLockGenerated={(lock: SilverPriceLock) => {
+            showToast(`Rate lock request #${lock.confirmationNumber} initiated! We will call you shortly.`);
           }}
         />
 
-        {/* Dedicated Metal by Purity Section (999, 925, 835) */}
+        {/* Dedicated Metal by Purity Section (999, 925, 880) */}
         <MetalByPuritySection
           onSelectPurityFilter={(purityCode) => {
             setPurityFilter(purityCode);

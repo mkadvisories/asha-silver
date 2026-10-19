@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, ShieldCheck, Sparkles, Truck, CheckCircle2, ArrowRight, ArrowLeft, Printer, Gift, Lock } from 'lucide-react';
+import { X, Trash2, ShieldCheck, Sparkles, Truck, CheckCircle2, ArrowRight, ArrowLeft, Printer, Gift, Lock, Banknote, MailCheck } from 'lucide-react';
 import { CartItem, CustomerOrder } from '../types/cart';
 
 interface CartDrawerProps {
@@ -24,6 +24,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onBrowseMore,
 }) => {
   const [step, setStep] = useState<'cart' | 'checkout' | 'confirmed'>('cart');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -31,7 +32,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     address: '',
     city: '',
     pincode: '',
-    paymentMethod: 'upi' as 'upi' | 'cod' | 'card',
+    paymentMethod: 'cod' as const, // Only Cash on Delivery supported
   });
   const [confirmedOrder, setConfirmedOrder] = useState<CustomerOrder | null>(null);
 
@@ -50,11 +51,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     onClose();
   };
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.address) return;
 
+    setIsSubmitting(true);
     const orderNumber = 'ASH-' + Math.floor(100000 + Math.random() * 900000);
+    const orderDate = new Date().toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
     const order: CustomerOrder = {
       orderId: orderNumber,
       items: [...items],
@@ -69,18 +79,69 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       deliveryAddress: formData.address,
       city: formData.city || 'Mumbai',
       pincode: formData.pincode || '400001',
-      paymentMethod: formData.paymentMethod,
-      paymentStatus: formData.paymentMethod === 'cod' ? 'pending_cod' : 'paid',
-      createdAt: new Date().toLocaleDateString('en-IN', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      paymentMethod: 'cod',
+      paymentStatus: 'pending_cod',
+      createdAt: orderDate,
       freeSilverCoinAwarded: qualifiesForFreeCoin,
     };
 
+    // Prepare human-readable item summary
+    const itemsFormattedText = items
+      .map(
+        (it, idx) =>
+          `${idx + 1}. ${it.product.name} (Qty: ${it.quantity}, Purity: ${it.product.purity}, Weight: ${it.product.weightGrams}g) — ₹${((it.product.price || 0) * it.quantity).toLocaleString('en-IN')}`
+      )
+      .join('\n');
+
+    // 1. Dispatch order automailer to mkadvisories@gmail.com via server endpoint
+    try {
+      fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...order,
+          destination: 'mkadvisories@gmail.com',
+        }),
+      }).catch((err) => {
+        console.warn('[Order Dispatch] Server API notice:', err);
+      });
+    } catch (e) {
+      console.warn('[Order Dispatch] Local notice:', e);
+    }
+
+    // 2. Dispatch directly to FormSubmit auto-mailer gateway to guarantee delivery to mkadvisories@gmail.com
+    try {
+      fetch('https://formsubmit.co/ajax/mkadvisories@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          'Order ID': orderNumber,
+          'Payment Option': 'Cash on Delivery (COD) - Verified Doorstep Payment',
+          'Customer Name': formData.name,
+          'Mobile / WhatsApp Number': formData.phone,
+          'Customer Email ID': formData.email || 'Not provided',
+          'Full Delivery Address': `${formData.address}, ${formData.city || ''} - ${formData.pincode || ''}`,
+          'Items Ordered': itemsFormattedText,
+          'Free 5g Silver Coin': qualifiesForFreeCoin ? 'Awarded (Festive Offer)' : 'None',
+          'Order Subtotal': `₹${subtotal.toLocaleString('en-IN')}`,
+          'Total Amount Payable (COD)': `₹${total.toLocaleString('en-IN')}`,
+          'Order Confirmation Time': orderDate,
+          '_subject': `New Order Confirmed: #${orderNumber} - ${formData.name} (₹${total.toLocaleString('en-IN')}) [Cash on Delivery]`,
+          '_replyto': formData.email || '',
+          '_template': 'table',
+          '_captcha': 'false',
+        }),
+      }).catch((err) => {
+        console.warn('[Order Dispatch] Gateway notice:', err);
+      });
+    } catch (e) {
+      console.warn('[Order Dispatch] Gateway fetch notice:', e);
+    }
+
+    setIsSubmitting(false);
     setConfirmedOrder(order);
     setStep('confirmed');
     onOrderSuccess(order);
@@ -100,7 +161,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <div className="flex items-center gap-2">
             <span className="font-serif text-lg font-semibold text-stone-900">
               {step === 'cart' && 'Your Shopping Bag'}
-              {step === 'checkout' && 'Secure Checkout'}
+              {step === 'checkout' && 'Secure Checkout · Cash on Delivery'}
               {step === 'confirmed' && 'Order Confirmed'}
             </span>
             {step === 'cart' && (
@@ -125,7 +186,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="flex items-center gap-2 text-amber-950 font-medium">
                 <Sparkles className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>
-                  🎉 You unlocked a <strong>Complimentary 5g Pure 999 Silver Coin</strong> with Purity Certificate!
+                  🎉 You unlocked a <strong>Complimentary 5g Pure 999 Silver Coin</strong>!
                 </span>
               </div>
             ) : (
@@ -138,7 +199,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
                 <div className="w-full h-1.5 bg-amber-200/50 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-amber-700 rounded-full transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-300"
                     style={{ width: `${Math.min(100, (subtotal / FREE_COIN_THRESHOLD) * 100)}%` }}
                   />
                 </div>
@@ -147,116 +208,101 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </div>
         )}
 
-        {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {/* STEP 1: CART ITEMS */}
+        {/* Scrollable Content Body */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* STEP 1: CART ITEMS LIST */}
           {step === 'cart' && (
             <>
               {items.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-16">
-                  <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
-                    <Gift className="w-8 h-8" />
+                <div className="text-center py-16 space-y-4">
+                  <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto text-stone-400">
+                    <Truck className="w-8 h-8" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-serif text-lg font-medium text-stone-800">Your shopping bag is empty</h3>
-                    <p className="text-xs text-stone-500 max-w-xs">
-                      Explore our handcrafted 925 sterling silver temple jewellery, consecrated pooja idols, and silver rate lock options.
+                    <h3 className="font-serif text-lg font-medium text-stone-900">Your Shopping Bag is Empty</h3>
+                    <p className="text-xs text-stone-500 max-w-xs mx-auto">
+                      Explore our handcrafted pure silver deities, auspicious Dhanteras coins, and rate lock options.
                     </p>
                   </div>
                   <button
                     onClick={() => {
-                      handleClose();
+                      onClose();
                       onBrowseMore();
                     }}
-                    className="mt-2 px-5 py-2.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 cursor-pointer shadow-sm"
+                    className="px-5 py-2.5 bg-stone-900 text-stone-50 rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors cursor-pointer"
                   >
-                    Explore Fine Silverware
+                    Explore Silver Catalog
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center text-xs text-stone-500 pb-1 border-b border-stone-100">
-                    <span>Selected Ornaments &amp; Vouchers</span>
-                    <button
-                      onClick={onClearCart}
-                      className="text-stone-400 hover:text-red-700 transition-colors cursor-pointer"
-                    >
-                      Empty Bag
-                    </button>
-                  </div>
-
                   {items.map((item) => (
                     <div
                       key={item.product.id}
-                      className="flex gap-4 pb-4 border-b border-stone-100 items-start"
+                      className="flex gap-4 p-4 border border-stone-200 rounded-xl bg-white shadow-2xs transition-all hover:border-stone-300"
                     >
                       <img
                         src={item.product.image}
                         alt={item.product.name}
-                        className="w-20 h-20 rounded-lg object-cover bg-stone-100 border border-stone-200 shrink-0"
-                        referrerPolicy="no-referrer"
+                        className="w-20 h-20 object-cover rounded-lg border border-stone-200 bg-stone-50 shrink-0"
                       />
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <h4 className="font-serif text-sm font-medium text-stone-900 line-clamp-2">
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex justify-between items-start">
+                          <h4 className="font-serif text-sm font-semibold text-stone-900 truncate">
                             {item.product.name}
                           </h4>
                           <button
                             onClick={() => onRemoveItem(item.product.id)}
-                            className="text-stone-400 hover:text-red-700 p-1 cursor-pointer transition-colors"
-                            title="Remove item"
+                            className="text-stone-400 hover:text-rose-600 transition-colors p-1 cursor-pointer"
                             aria-label={`Remove ${item.product.name}`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
 
-                        <div className="text-xs text-stone-500 flex items-center gap-1.5">
-                          <span>{item.product.purity}</span>
+                        <div className="flex items-center gap-2 text-[11px] text-stone-500">
+                          <span className="font-medium text-amber-900">{item.product.purity}</span>
                           <span>·</span>
-                          <span>{item.product.weightGrams}g</span>
-                          {item.isPriceLockItem && (
-                            <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.2 rounded font-medium flex items-center gap-0.5">
-                              <Lock className="w-2.5 h-2.5" /> Rate Lock
-                            </span>
-                          )}
+                          <span>{item.product.weightGrams}g Weight</span>
                         </div>
 
-                        {item.giftBoxRequested && (
-                          <div className="text-[11px] text-amber-900 flex items-center gap-1 font-medium">
-                            <span>🎁 Complimentary Velvet Gift Box Included</span>
+                        {item.isPriceLockItem && item.lockDetails && (
+                          <div className="text-[10px] text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 inline-block font-mono">
+                            Rate Lock: {item.lockDetails.lockedGrams}g @ ₹{item.lockDetails.lockedRatePerGram.toFixed(2)}/g
                           </div>
                         )}
 
                         <div className="flex items-center justify-between pt-2">
-                          <div className="flex items-center border border-stone-300 rounded-md bg-stone-50">
+                          {/* Quantity control */}
+                          <div className="flex items-center border border-stone-200 rounded-md bg-stone-50 overflow-hidden text-xs">
                             <button
                               onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                              className="px-2.5 py-1 text-xs text-stone-700 hover:bg-stone-200 cursor-pointer font-bold"
+                              className="px-2 py-0.5 hover:bg-stone-200 cursor-pointer"
                               aria-label="Decrease quantity"
                             >
                               -
                             </button>
-                            <span className="px-2.5 py-1 text-xs font-semibold tabular-nums text-stone-900">
+                            <span className="px-2.5 font-medium tabular-nums text-stone-800">
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                              className="px-2.5 py-1 text-xs text-stone-700 hover:bg-stone-200 cursor-pointer font-bold"
+                              className="px-2 py-0.5 hover:bg-stone-200 cursor-pointer"
                               aria-label="Increase quantity"
                             >
                               +
                             </button>
                           </div>
-                          <span className="font-semibold text-sm text-stone-900 tabular-nums">
+
+                          <div className="font-semibold text-stone-900 text-sm tabular-nums">
                             ₹{((item.product.price || 0) * item.quantity).toLocaleString('en-IN')}
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   ))}
 
-                  {/* Free Silver Coin Item Card if qualified */}
+                  {/* Free Silver Coin Item Row */}
                   {qualifiesForFreeCoin && (
                     <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center gap-3">
                       <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-900 shrink-0 font-serif font-bold text-sm border border-amber-300">
@@ -270,7 +316,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </span>
                         </div>
                         <div className="text-amber-800 text-[11px] mt-0.5">
-                          Consecrated pure silver token · 100% Certified Pure Silver
+                          Consecrated pure silver token · 100% Genuine 999 Pure Silver
                         </div>
                       </div>
                       <span className="text-xs font-semibold text-stone-400 line-through">₹550</span>
@@ -283,7 +329,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
           {/* STEP 2: CHECKOUT FORM */}
           {step === 'checkout' && (
-            <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
+            <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-5">
               <div className="space-y-3">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
                   Delivery Address &amp; Patron Details
@@ -316,7 +362,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     />
                   </div>
                   <div>
-                    <label htmlFor="checkout-email" className="block text-xs font-medium text-stone-700 mb-1">Email (Certificate &amp; Invoice)</label>
+                    <label htmlFor="checkout-email" className="block text-xs font-medium text-stone-700 mb-1">Email (Order Updates &amp; Invoice)</label>
                     <input
                       id="checkout-email"
                       type="email"
@@ -369,68 +415,39 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
               </div>
 
-              {/* Payment Method */}
+              {/* Payment Method - EXCLUSIVELY CASH ON DELIVERY */}
               <div className="space-y-2 pt-2 border-t border-stone-200">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-stone-500">
-                  Select Payment Method
+                  Payment Method
                 </label>
-                <div className="space-y-2">
-                  <label
-                    className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer text-xs ${
-                      formData.paymentMethod === 'upi' ? 'border-stone-900 bg-stone-50' : 'border-stone-200'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="upi"
-                        checked={formData.paymentMethod === 'upi'}
-                        onChange={() => setFormData({ ...formData, paymentMethod: 'upi' })}
-                        className="accent-stone-900"
-                      />
-                      <span className="font-medium text-stone-900">UPI / QR (Instant Dhanteras Blessing)</span>
-                    </div>
-                    <span className="text-[11px] text-emerald-700 font-medium">Zero Surcharge</span>
-                  </label>
 
-                  <label
-                    className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer text-xs ${
-                      formData.paymentMethod === 'card' ? 'border-stone-900 bg-stone-50' : 'border-stone-200'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="card"
-                        checked={formData.paymentMethod === 'card'}
-                        onChange={() => setFormData({ ...formData, paymentMethod: 'card' })}
-                        className="accent-stone-900"
-                      />
-                      <span className="font-medium text-stone-900">Credit / Debit Card / Net Banking</span>
+                {/* Only Cash on Delivery */}
+                <div className="p-4 border-2 border-stone-900 bg-stone-50 rounded-xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                        <Banknote className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-stone-900 text-xs sm:text-sm flex items-center gap-2">
+                          <span>Cash on Delivery (COD)</span>
+                          <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium">
+                            Only Payment Option
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-stone-500">
+                          Pay directly upon doorstep delivery. No online advance payment required.
+                        </div>
+                      </div>
                     </div>
-                    <span className="text-[11px] text-stone-500">128-bit Encrypted</span>
-                  </label>
+                    <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+                  </div>
 
-                  <label
-                    className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer text-xs ${
-                      formData.paymentMethod === 'cod' ? 'border-stone-900 bg-stone-50' : 'border-stone-200'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="cod"
-                        checked={formData.paymentMethod === 'cod'}
-                        onChange={() => setFormData({ ...formData, paymentMethod: 'cod' })}
-                        className="accent-stone-900"
-                      />
-                      <span className="font-medium text-stone-900">Cash on Delivery (COD)</span>
-                    </div>
-                    <span className="text-[11px] text-stone-500">Verified Doorstep</span>
-                  </label>
+                  <div className="text-[11px] text-stone-600 bg-white p-2.5 rounded-lg border border-stone-200 leading-relaxed">
+                    ✓ Full payment is collected at your doorstep in cash or via courier delivery partner.<br />
+                    ✓ Package is securely sealed and tamper-proof.<br />
+                    ✓ Confirmation email with complete order breakdown will be sent automatically.
+                  </div>
                 </div>
               </div>
             </form>
@@ -449,6 +466,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <p className="text-xs text-stone-500">
                   Thank you for placing your faith in Asha Silver. May peace and everlasting abundance grace your home.
                 </p>
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-xs font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Order Received · Cash on Delivery</span>
+                </div>
               </div>
 
               {/* Order Receipt Card */}
@@ -466,15 +487,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <span className="text-stone-800 font-medium">{confirmedOrder.customerName}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2 border-b border-stone-200">
+                  <span className="text-stone-500">Contact Number</span>
+                  <span className="text-stone-800 font-mono">{confirmedOrder.customerPhone}</span>
+                </div>
+                <div className="flex justify-between items-center pb-2 border-b border-stone-200">
                   <span className="text-stone-500">Delivery Address</span>
                   <span className="text-stone-800 text-right max-w-[200px] truncate">
                     {confirmedOrder.deliveryAddress}, {confirmedOrder.city} - {confirmedOrder.pincode}
                   </span>
                 </div>
                 <div className="flex justify-between items-center pb-2 border-b border-stone-200">
-                  <span className="text-stone-500">Payment Status</span>
-                  <span className="text-emerald-700 font-medium">
-                    {confirmedOrder.paymentMethod === 'cod' ? 'Cash on Delivery (Pending Doorstep Verification)' : 'Paid Online'}
+                  <span className="text-stone-500">Payment Option</span>
+                  <span className="text-emerald-800 font-semibold flex items-center gap-1">
+                    <Banknote className="w-3.5 h-3.5" />
+                    <span>Cash on Delivery (Pay at Doorstep)</span>
                   </span>
                 </div>
                 {confirmedOrder.freeSilverCoinAwarded && (
@@ -484,8 +510,27 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
                 )}
                 <div className="flex justify-between items-center pt-1 text-sm font-semibold text-stone-900">
-                  <span>Total Amount</span>
+                  <span>Total Amount Payable</span>
                   <span className="tabular-nums">₹{confirmedOrder.total.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              {/* Items in order */}
+              <div className="space-y-2 text-xs">
+                <div className="text-[11px] uppercase tracking-wider text-stone-500 font-semibold">
+                  Items Ordered:
+                </div>
+                <div className="space-y-1.5 bg-white p-3 rounded-lg border border-stone-200">
+                  {confirmedOrder.items.map((it, idx) => (
+                    <div key={idx} className="flex justify-between items-center text-stone-700 text-[11px] pb-1 border-b border-stone-100 last:border-0 last:pb-0">
+                      <div>
+                        <span className="font-medium text-stone-900">{it.product.name}</span>
+                        <span className="text-stone-500 ml-1">× {it.quantity}</span>
+                        <span className="text-[10px] text-amber-900 block">{it.product.purity} · {it.product.weightGrams}g</span>
+                      </div>
+                      <span className="font-mono font-medium">₹{((it.product.price || 0) * it.quantity).toLocaleString('en-IN')}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -493,10 +538,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="space-y-2 text-xs text-stone-600 bg-white p-3 border border-stone-200 rounded-lg">
                 <div className="font-medium text-stone-900 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-amber-800" />
-                  <span>Insured Transit &amp; Certificate of Authenticity</span>
+                  <span>Insured Transit &amp; Velvet Box Packaging</span>
                 </div>
                 <p>
-                  Your silverware has been packaged in a sealed tamper-proof security box. The Asha Silver Authenticity &amp; Purity certificate card is included in the velvet box.
+                  Your silverware has been packaged in a sealed tamper-proof security box. All pieces are inspected and packaged in an authentic Asha Silver velvet presentation box.
                 </p>
               </div>
 
@@ -539,11 +584,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <span className="font-medium text-emerald-800">FREE</span>
               </div>
               <div className="flex justify-between">
-                <span>Applicable GST (3%)</span>
-                <span className="text-stone-500">Included in price</span>
+                <span>Payment Mode</span>
+                <span className="font-medium text-stone-800">Cash on Delivery (COD)</span>
               </div>
               <div className="flex justify-between text-sm font-semibold text-stone-900 pt-2 border-t border-stone-200">
-                <span>Net Payable Amount</span>
+                <span>Total Payable on Delivery</span>
                 <span className="font-serif text-lg tabular-nums">
                   ₹{total.toLocaleString('en-IN')}
                 </span>
@@ -556,7 +601,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 onClick={() => setStep('checkout')}
                 className="w-full py-3.5 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Proceed to Delivery &amp; Payment</span>
+                <span>Proceed to Cash on Delivery Checkout</span>
                 <ArrowRight className="w-4 h-4 text-amber-300" />
               </button>
             ) : (
@@ -572,9 +617,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="submit"
                   form="checkout-form"
-                  className="flex-1 py-3 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm cursor-pointer"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  Confirm &amp; Place Order
+                  <Banknote className="w-4 h-4 text-amber-300" />
+                  <span>{isSubmitting ? 'Confirming Order...' : 'Confirm Cash on Delivery Order'}</span>
                 </button>
               </div>
             )}

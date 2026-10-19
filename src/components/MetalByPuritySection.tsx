@@ -3,7 +3,7 @@ import { Layers, CheckCircle2, ShieldCheck, ArrowRight, Sparkles, Utensils, Coin
 import { LIVE_SILVER_RATES } from '../data/products';
 
 interface MetalByPuritySectionProps {
-  onSelectPurityFilter: (purityCode: 'all' | '925' | '999' | '835') => void;
+  onSelectPurityFilter: (purityCode: 'all' | '925' | '999' | '880') => void;
   onNavigateToCollection: () => void;
 }
 
@@ -34,23 +34,22 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
       icon: Utensils,
       badge: 'Utensils: Custom Quote',
       description:
-        'The premier standard for durable fine silver utensils, royal thali sets, and tableware. Due to custom weight and intricate karigari, direct fixed prices on 92.5 utensils and thalis are removed and quoted via personal video call.',
+        'The premier standard for durable fine silver utensils, royal thali sets, and tableware. Due to custom weight and intricate karigari, direct fixed prices on 92.5 utensils and thalis are removed from the website and quoted exclusively via personal video call.',
       bestFor: ['Rajwada Dining Thalis (Price on Request)', 'Pure Silver Water Jugs & Tumblers', 'Auspicious Deepams & Temple Lamps', 'Silver Keepsake Gift Boxes'],
       standard: 'Standard 925 Sterling Silver',
       color: 'border-stone-300 bg-white',
       tagColor: 'bg-stone-100 text-stone-900',
     },
     {
-      code: '835' as const,
-      title: '835 / 800 Traditional Silverware',
-      subtitle: '83.5% Heritage Tableware Formulation',
-      rate: LIVE_SILVER_RATES.purity835,
+      code: '880' as const,
+      title: '880 Traditional Silverware',
+      subtitle: '88.0% Traditional Silverware · Price on Request',
       icon: Utensils,
-      badge: 'Heavy Banquet Tableware',
+      badge: 'Traditional 880 Silverware',
       description:
-        'Engineered specifically for heavy royal dining and traditional Indian feast utensils. The reinforced alloy structure ensures lifelong durability while conferring ancient Ayurvedic wellness benefits.',
+        'Engineered specifically for heavy royal dining and traditional Indian feast utensils. The 880 purity grade ensures superior strength and lifelong durability while conferring ancient Ayurvedic wellness benefits.',
       bestFor: ['Heavy Dining Thali Platters', 'Engraved Drinking Glasses & Katoris', 'Aarti Deepams & Incense Holders', 'Traditional Baby Feeding Spoons'],
-      standard: 'Traditional 835 Utensil Silver',
+      standard: 'Traditional 880 Utensil Silver',
       color: 'border-stone-300 bg-white',
       tagColor: 'bg-stone-100 text-stone-900',
     },
@@ -70,7 +69,7 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
               Metal by Purity Guide
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 max-w-xl">
-              At Asha Silver, we strictly categorize our silver utensils, god items, and coins by metal purity so you always know the exact fineness of your purchase.
+              At Asha Silver, we strictly categorize our silver utensils, god items, and coins by metal purity (999, 925, and 880) so you always know the exact fineness of your purchase.
             </p>
           </div>
 
@@ -109,12 +108,31 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
                       {item.title}
                     </h3>
                     <div className="text-xs text-stone-500 mt-0.5">{item.subtitle}</div>
-                    <div className="text-sm font-semibold text-amber-950 mt-1 tabular-nums">
-                      Live Rate: ₹{item.rate.toFixed(2)} / g <span className="text-xs font-normal text-stone-500">(₹{(item.rate * 1000).toLocaleString('en-IN')}/kg{item.code === '999' ? ' · MCX + 3%' : ''})</span>
-                    </div>
-                    {item.code === '925' && (
-                      <div className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded mt-1 inline-block">
-                        Utensils &amp; Thalis: Price on Request
+
+                    {/* Price display: live rate shown strictly for 999 pure silver, removed for 880 and 92.5 */}
+                    {item.code === '999' ? (
+                      <div className="text-sm font-semibold text-amber-950 mt-1 tabular-nums">
+                        Live Rate: ₹{item.rate.toFixed(2)} / g <span className="text-xs font-normal text-stone-500">(₹{(item.rate * 1000).toLocaleString('en-IN')}/kg · MCX + 3%)</span>
+                      </div>
+                    ) : item.code === '880' ? (
+                      <div className="mt-2 space-y-1">
+                        <div className="text-sm font-semibold text-amber-900 flex items-center gap-1.5">
+                          <span>Price on Request</span>
+                          <span className="text-[10px] font-normal bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-sans">Traditional Silverware</span>
+                        </div>
+                        <div className="text-xs text-stone-500 leading-relaxed">
+                          Custom quotation provided based on finished weight, metal purity, and royal karigari via video call consultation.
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-2 space-y-1">
+                        <div className="text-sm font-semibold text-amber-900 flex items-center gap-1.5">
+                          <span>Price on Request</span>
+                          <span className="text-[10px] font-normal bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-sans">Custom Karigari</span>
+                        </div>
+                        <div className="text-xs text-stone-500 leading-relaxed">
+                          Direct fixed prices on 92.5 utensils and thalis are removed. Custom quotation provided based on assayed weight and hand karigari via video call consultation.
+                        </div>
                       </div>
                     )}
                   </div>

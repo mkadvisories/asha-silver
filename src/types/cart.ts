@@ -7,10 +7,10 @@ export interface CartItem {
   giftNote?: string;
   isPriceLockItem?: boolean;
   lockDetails?: {
-    certificateId: string;
+    lockBookingId: string;
     lockedGrams: number;
     lockedRatePerGram: number;
-    purity: '925' | '999';
+    purity: '925' | '999' | '880';
     validityDays: number;
   };
 }
@@ -29,8 +29,8 @@ export interface CustomerOrder {
   deliveryAddress: string;
   city: string;
   pincode: string;
-  paymentMethod: 'cod' | 'upi' | 'card';
-  paymentStatus: 'paid' | 'pending_cod';
+  paymentMethod: 'cod'; // Only Cash on Delivery supported
+  paymentStatus: 'pending_cod' | 'paid';
   createdAt: string;
   freeSilverCoinAwarded: boolean;
 }
@@ -40,7 +40,7 @@ export interface SilverPriceLock {
   customerName: string;
   customerPhone: string;
   customerEmail: string;
-  purity: '925' | '999';
+  purity: '925' | '999' | '880';
   ratePerGram: number;
   grams: number;
   totalAmount: number;
@@ -48,6 +48,7 @@ export interface SilverPriceLock {
   lockDurationDays: number;
   expiryDate: string;
   bookingDate: string;
-  status: 'active' | 'redeemed';
-  certificateNumber: string;
+  status: 'active' | 'redeemed' | 'initiated';
+  requirementNotes?: string;
+  confirmationNumber: string;
 }

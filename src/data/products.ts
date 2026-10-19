@@ -6,8 +6,8 @@ export interface Product {
   hindiName?: string;
   category: 'utensils' | 'god-items' | 'gifts' | 'bullion';
   categoryLabel: string;
-  purity: '925 Sterling Silver' | '999 Pure Silver' | '835 Silverware';
-  purityCode: '925' | '999' | '835';
+  purity: '925 Sterling Silver' | '999 Pure Silver' | '880 Traditional Silverware';
+  purityCode: '925' | '999' | '880';
   weightGrams: number;
   price?: number; // Optional: removed for 92.5 Utensils & Thalis (Price on Request)
   originalPrice?: number;
@@ -234,8 +234,9 @@ export const LIVE_SILVER_RATES = {
   purity925: 196.50,          // Raw 925 bullion metal rate: ₹196.50 / gram
   utensilsNotice: '92.5 Utensils & Thalis: Price on Request (Custom Weight & Design)',
 
-  // 835 Traditional Silverware
-  purity835: 177.40,          // ₹177.40 / gram (835 Traditional Silverware)
+  // 880 Traditional Silverware (88% Silver)
+  purity880: 186.95,          // ₹186.95 / gram (880 Traditional Silverware)
+  purity880PerKg: 186950.00,  // ₹1,86,950 per kg (880 Traditional Silverware)
 
   // MCX Market Trading Metrics
   exchange: 'MCX (Multi Commodity Exchange of India)',
@@ -248,7 +249,7 @@ export const LIVE_SILVER_RATES = {
   prevClose: 211270.00,       // ₹2,11,270.00 / kg
   marketStatus: 'MCX Market Open',
   lastUpdated: 'Live MCX Commodity Feed · Updated 1 min ago',
-  city: 'National Bullion Benchmark (Mumbai / Delhi / Jaipur / Ahmedabad)',
+  city: 'National Bullion Benchmark',
 
   muhurat: {
     title: 'Auspicious Dhanteras Mahotsav Muhurat',

@@ -161,13 +161,13 @@ export const ContactUsSection: React.FC<ContactUsSectionProps> = ({ onBookingSuc
 
             <div className="p-4 bg-stone-900 text-stone-300 rounded-xl space-y-2 border border-stone-800">
               <div className="text-amber-300 text-xs font-semibold uppercase tracking-wider">
-                Direct Atelier Helpdesk
+                Direct Atelier Concierge
               </div>
               <div className="text-sm font-semibold text-white">
-                Phone: +91 (022) 2640-1989 · WhatsApp: +91 98201 19890
+                Live Video Call &amp; Personal Consultation
               </div>
               <div className="text-xs text-stone-400">
-                Asha Silver Ateliers · Mumbai · Delhi · Jaipur
+                Direct Silversmith Consultation · Contact numbers will be shared upon booking confirmation
               </div>
             </div>
           </div>

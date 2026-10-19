@@ -298,7 +298,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="text-left py-2 hover:text-stone-950 cursor-pointer"
             >
-              Metal by Purity (999, 925, 835)
+              Metal by Purity (999, 925, 880)
             </button>
             <button
               onClick={() => {

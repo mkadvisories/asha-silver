@@ -117,6 +117,124 @@ function contactApiPlugin(): Plugin {
           res.end('Method Not Allowed');
         }
       });
+
+      server.middlewares.use('/api/order', async (req, res) => {
+        if (req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk;
+          });
+          req.on('end', async () => {
+            try {
+              const data = JSON.parse(body || '{}');
+              const recipientEmail = 'mkadvisories@gmail.com';
+
+              // Format ordered items into readable text
+              const itemsList = Array.isArray(data.items)
+                ? data.items
+                    .map(
+                      (it: any, idx: number) =>
+                        `${idx + 1}. ${it.product?.name || 'Silver Item'} (Qty: ${it.quantity}, Purity: ${it.product?.purity || '999'}, Wt: ${it.product?.weightGrams || 0}g) - ₹${(it.product?.price ? it.product.price * it.quantity : 0).toLocaleString('en-IN')}`
+                    )
+                    .join('\n')
+                : 'No items detailed';
+
+              // Prepare formatted payload for auto-mailer dispatch
+              const orderMailPayload = {
+                'Order ID': data.orderId || ('ASH-' + Math.floor(100000 + Math.random() * 900000)),
+                'Payment Method': 'Cash on Delivery (COD) - Doorstep Settlement',
+                'Customer Name': data.customerName || 'Not provided',
+                'Mobile / WhatsApp': data.customerPhone || 'Not provided',
+                'Customer Email ID': data.customerEmail || 'Not provided',
+                'Delivery Address': `${data.deliveryAddress || ''}, ${data.city || ''} - ${data.pincode || ''}`,
+                'Ordered Items List': itemsList,
+                'Order Subtotal': `₹${Number(data.subtotal || 0).toLocaleString('en-IN')}`,
+                'GST (3%)': `₹${Number(data.tax || 0).toLocaleString('en-IN')}`,
+                'Total Payable (COD)': `₹${Number(data.total || 0).toLocaleString('en-IN')}`,
+                'Free Coin Included': data.freeSilverCoinAwarded ? 'Yes (5g Pure 999 Silver Coin)' : 'No',
+                'Order Timestamp': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                '_subject': `New Order Confirmed: #${data.orderId || 'NEW'} - ${data.customerName || 'Customer'} (₹${Number(data.total || 0).toLocaleString('en-IN')}) [Cash on Delivery]`,
+                '_replyto': data.customerEmail || '',
+                '_template': 'table',
+                '_captcha': 'false',
+              };
+
+              // Persist order locally in orders.json
+              try {
+                const ordersPath = path.resolve(__dirname, 'src/data/orders.json');
+                let existingOrders = [];
+                if (fs.existsSync(ordersPath)) {
+                  try {
+                    existingOrders = JSON.parse(fs.readFileSync(ordersPath, 'utf8'));
+                  } catch (e) {
+                    existingOrders = [];
+                  }
+                }
+                existingOrders.unshift({
+                  ...orderMailPayload,
+                  rawOrder: data,
+                  recipient: recipientEmail,
+                  dispatchedAt: new Date().toISOString(),
+                });
+                fs.writeFileSync(ordersPath, JSON.stringify(existingOrders, null, 2), 'utf8');
+              } catch (fsErr) {
+                console.error('[Asha Silver] Error saving local order:', fsErr);
+              }
+
+              // Dispatch real email via FormSubmit auto-mailer gateway to mkadvisories@gmail.com
+              let mailerSuccess = false;
+              try {
+                const dispatchResponse = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Referer': 'https://ashasilverjewellers.com',
+                    'Origin': 'https://ashasilverjewellers.com',
+                  },
+                  body: JSON.stringify(orderMailPayload),
+                });
+                const dispatchResult = await dispatchResponse.json();
+                console.log('[Asha Silver Order Auto-Mailer] Gateway response:', dispatchResult);
+                mailerSuccess = true;
+              } catch (dispatchErr) {
+                console.warn('[Asha Silver Order Auto-Mailer] Notice on external gateway:', dispatchErr);
+              }
+
+              res.setHeader('Content-Type', 'application/json');
+              res.statusCode = 200;
+              res.end(
+                JSON.stringify({
+                  success: true,
+                  orderId: data.orderId,
+                  status: 'order_dispatched_to_auto_mailer',
+                  mailerDispatched: mailerSuccess,
+                  recipientConfirmed: recipientEmail,
+                })
+              );
+            } catch (err) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Invalid order data payload' }));
+            }
+          });
+        } else if (req.method === 'GET') {
+          try {
+            const ordersPath = path.resolve(__dirname, 'src/data/orders.json');
+            if (fs.existsSync(ordersPath)) {
+              const orders = fs.readFileSync(ordersPath, 'utf8');
+              res.setHeader('Content-Type', 'application/json');
+              res.end(orders);
+              return;
+            }
+          } catch (e) {}
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ status: 'ok', service: 'Asha Silver Orders API', orders: [] }));
+        } else {
+          res.statusCode = 405;
+          res.end('Method Not Allowed');
+        }
+      });
     },
   };
 }

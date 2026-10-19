@@ -163,15 +163,11 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-2 text-xs text-stone-400">
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                <span>Asha Silver Ateliers, Mumbai · Delhi · Jaipur</span>
+                <span>Asha Silver Flagship Atelier · Silversmith Consultation</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                 <span>Mon – Sun: 10:30 AM to 8:30 PM IST</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>+91 (022) 2640-1989 / +91 98201 19890</span>
               </div>
               <div className="pt-2 flex flex-col gap-2">
                 <button
@@ -181,15 +177,13 @@ export const Footer: React.FC<FooterProps> = ({
                   <Video className="w-3.5 h-3.5" />
                   <span>Book Live Video Shopping Call</span>
                 </button>
-                <a
-                  href="https://wa.me/919820119890?text=Namaste%20Asha%20Silver%2C%20I%20would%20like%20to%20inquire%20about%20Dhanteras%20silver%20utensils%2C%20god%20items%20and%20gifts"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-900/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 rounded-md text-xs font-medium transition-colors cursor-pointer"
+                <button
+                  onClick={onOpenContact}
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 rounded-md text-xs font-medium transition-colors cursor-pointer"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span>WhatsApp Concierge</span>
-                </a>
+                  <MessageCircle className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Request Atelier Concierge</span>
+                </button>
               </div>
             </div>
           </div>
