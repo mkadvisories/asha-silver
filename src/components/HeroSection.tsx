@@ -37,32 +37,53 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </p>
 
             {/* Live Rate Preview Card with direct Price Lock Callout */}
-            <div className="bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl p-4 max-w-lg shadow-sm">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-stone-100 text-xs">
-                <div className="flex items-center gap-1.5 text-stone-600 font-medium">
-                  <Clock className="w-3.5 h-3.5 text-amber-700" />
-                  <span>Silver Benchmark · {LIVE_SILVER_RATES.lastUpdated}</span>
+            <div className="bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl p-4 max-w-lg shadow-sm space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100 text-xs">
+                <div className="flex items-center gap-1.5 text-stone-700 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>MCX Live Silver Benchmark (1 Kg)</span>
                 </div>
                 <button
                   onClick={onOpenPriceLock}
-                  className="text-amber-800 hover:text-amber-950 font-semibold flex items-center gap-1 cursor-pointer"
+                  className="text-amber-800 hover:text-amber-950 font-semibold flex items-center gap-1 cursor-pointer text-xs"
                 >
                   <Lock className="w-3 h-3" />
                   <span>Lock Rates (e.g. 200g) →</span>
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              {/* MCX 1 Kg Headline */}
+              <div className="flex items-baseline justify-between bg-stone-50/80 px-3 py-2 rounded-lg border border-stone-100">
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">925 Silver Utensils</div>
-                  <div className="text-lg font-semibold text-stone-900 tabular-nums">
-                    ₹{LIVE_SILVER_RATES.purity925.toFixed(2)} <span className="text-xs font-normal text-stone-500">/ gram</span>
+                  <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider">MCX Spot Rate</span>
+                  <div className="text-xl font-bold font-mono text-stone-900 tabular-nums">
+                    ₹{LIVE_SILVER_RATES.mcxPerKg.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    <span className="text-xs font-normal text-stone-500 ml-1">/ 1 kg</span>
                   </div>
                 </div>
-                <div className="border-l border-stone-100 pl-4">
-                  <div className="text-[11px] uppercase tracking-wider text-stone-500 font-medium">999 Pure Silver Idols &amp; Coins</div>
-                  <div className="text-lg font-semibold text-stone-900 tabular-nums">
-                    ₹{LIVE_SILVER_RATES.purity999.toFixed(2)} <span className="text-xs font-normal text-stone-500">/ gram</span>
+                <div className="text-right">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    ▲ +₹{LIVE_SILVER_RATES.dayChange.toLocaleString('en-IN')} (+{LIVE_SILVER_RATES.dayChangePercent}%)
+                  </span>
+                  <div className="text-[10px] text-stone-400 mt-0.5">MCX Active Contract</div>
+                </div>
+              </div>
+
+              {/* Per-Gram Breakdown */}
+              <div className="grid grid-cols-2 gap-3 pt-0.5">
+                <div className="bg-white p-2.5 rounded-lg border border-stone-100 shadow-2xs">
+                  <div className="text-[10px] uppercase tracking-wider text-stone-500 font-medium">92.5 Utensils &amp; Thalis</div>
+                  <div className="text-sm font-bold text-stone-900 mt-0.5">
+                    Price on Request
                   </div>
+                  <div className="text-[10px] text-amber-900 font-medium mt-0.5">Custom Weight Quote</div>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-stone-100 shadow-2xs">
+                  <div className="text-[10px] uppercase tracking-wider text-stone-500 font-medium">999 Pure Silver (MCX + 3%)</div>
+                  <div className="text-base font-bold text-stone-900 tabular-nums font-mono">
+                    ₹{LIVE_SILVER_RATES.purity999.toFixed(2)} <span className="text-[11px] font-normal text-stone-500">/ g</span>
+                  </div>
+                  <div className="text-[10px] text-emerald-700 font-medium mt-0.5">MCX ₹212.45 + 3%</div>
                 </div>
               </div>
             </div>

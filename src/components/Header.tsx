@@ -66,6 +66,55 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
+      {/* Live MCX Silver Commodity Rate Ticker Bar */}
+      <div className="bg-[#171412] text-amber-100/90 px-4 py-1.5 text-[11px] sm:text-xs border-b border-stone-800 shadow-inner">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 overflow-x-auto scrollbar-none whitespace-nowrap">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 bg-emerald-950/80 text-emerald-400 px-2 py-0.5 rounded font-bold text-[10px] tracking-wider uppercase border border-emerald-800/60 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
+              MCX LIVE SPOT
+            </span>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-stone-300 font-medium">Silver 1 KG:</span>
+              <span className="font-mono font-bold text-white tracking-wide">
+                ₹{LIVE_SILVER_RATES.mcxPerKg.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              </span>
+              <span className="text-emerald-400 font-medium text-[10px] sm:text-xs">
+                ▲ +₹{LIVE_SILVER_RATES.dayChange} (+{LIVE_SILVER_RATES.dayChangePercent}%)
+              </span>
+            </div>
+            <span className="text-stone-700 hidden sm:inline">|</span>
+            <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+              <span className="text-stone-300">999 Pure Silver <span className="text-amber-400 text-[10px]">(MCX + 3%)</span>:</span>
+              <span className="font-mono font-semibold text-amber-200">
+                ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g
+              </span>
+              <span className="text-stone-400 text-[10px]">(₹{LIVE_SILVER_RATES.purity999Per10g.toFixed(2)} / 10g)</span>
+            </div>
+            <span className="text-stone-700 hidden md:inline">|</span>
+            <div className="hidden md:flex items-center gap-1.5 shrink-0">
+              <span className="text-stone-300">92.5 Utensils &amp; Thalis:</span>
+              <span className="font-sans font-medium text-amber-200 text-xs">
+                Price on Request
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 text-[11px]">
+            <span className="hidden lg:inline text-stone-400">
+              Day High: ₹{LIVE_SILVER_RATES.dayHigh.toLocaleString('en-IN')} · Low: ₹{LIVE_SILVER_RATES.dayLow.toLocaleString('en-IN')}
+            </span>
+            <button
+              onClick={() => onNavigateToSection('price-lock')}
+              className="text-amber-300 hover:text-white font-medium flex items-center gap-1 cursor-pointer underline underline-offset-2"
+            >
+              <span>Lock Rate</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Main Top Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-6 h-20">

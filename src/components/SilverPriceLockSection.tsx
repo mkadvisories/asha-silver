@@ -109,7 +109,7 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
                 >
                   <div className="font-semibold text-white text-sm">925 Sterling Silver</div>
                   <div className="text-xs text-stone-400 mt-1">
-                    Utensils, Tableware &amp; Gifting
+                    Bullion Lock (Utensils &amp; Thalis quoted on request)
                   </div>
                   <div className="text-amber-300 font-mono font-bold text-sm mt-1">
                     ₹{LIVE_SILVER_RATES.purity925.toFixed(2)} / g
@@ -125,9 +125,9 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
                       : 'border-stone-700 bg-stone-900/60 hover:border-stone-600'
                   }`}
                 >
-                  <div className="font-semibold text-white text-sm">999 Fine Pure Bullion</div>
+                  <div className="font-semibold text-white text-sm">999 Pure Bullion (MCX + 3%)</div>
                   <div className="text-xs text-stone-400 mt-1">
-                    Sacred Idols &amp; Bullion Bars
+                    Sacred Idols, Coins &amp; Bullion Bars
                   </div>
                   <div className="text-amber-300 font-mono font-bold text-sm mt-1">
                     ₹{LIVE_SILVER_RATES.purity999.toFixed(2)} / g

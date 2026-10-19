@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Search, Heart, ShoppingBag, Eye, Trash2 } from 'lucide-react';
-import { Product } from '../data/products';
+import { Product, isPriceOnRequest } from '../data/products';
 
 interface SearchWishlistModalProps {
   isOpen: boolean;
@@ -152,9 +152,15 @@ export const SearchWishlistModal: React.FC<SearchWishlistModalProps> = ({
                     >
                       {product.name}
                     </h4>
-                    <div className="text-xs font-semibold text-stone-900 mt-0.5 tabular-nums">
-                      ₹{product.price.toLocaleString('en-IN')}
-                    </div>
+                    {isPriceOnRequest(product) ? (
+                      <div className="text-xs font-semibold text-amber-900 mt-0.5">
+                        Price on Request
+                      </div>
+                    ) : (
+                      <div className="text-xs font-semibold text-stone-900 mt-0.5 tabular-nums">
+                        ₹{product.price?.toLocaleString('en-IN')}
+                      </div>
+                    )}
                   </div>
                 </div>
 

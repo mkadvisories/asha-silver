@@ -15,28 +15,28 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
     {
       code: '999' as const,
       title: '999 Fine Pure Silver',
-      subtitle: '99.9% Metallurgical Fineness',
+      subtitle: '99.9% Metallurgical Fineness · MCX Spot + 3%',
       rate: LIVE_SILVER_RATES.purity999,
       icon: Coins,
-      badge: 'Sacred Purity',
+      badge: 'MCX + 3% Pure Silver',
       description:
-        'Unalloyed, pristine bullion-grade silver. Extremely lustrous and radiant, traditionally reserved for consecrated temple idols, Lakshmi-Ganesha puja sculptures, and wealth-preservation Dhanteras coins.',
+        'Unalloyed, pristine bullion-grade silver priced at MCX benchmark + 3%. Extremely lustrous and radiant, traditionally reserved for consecrated temple idols, Lakshmi-Ganesha puja sculptures, and wealth-preservation Dhanteras coins.',
       bestFor: ['Sacred Mandir Idols (Lakshmi-Ganesh)', 'Dhanteras 999 Auspicious Coins', 'Charan Padukas & Sinhasan Thrones', 'Bullion Rate Lock & Savings'],
-      standard: 'Pure 999 Grade Fine Silver',
+      standard: 'Pure 999 Grade Fine Silver (MCX + 3%)',
       color: 'border-amber-400 bg-amber-50/40',
       tagColor: 'bg-amber-100 text-amber-900',
     },
     {
       code: '925' as const,
       title: '925 Sterling Silver',
-      subtitle: '92.5% Silver + 7.5% Reinforcing Alloy',
+      subtitle: '92.5% Fine Silverware · Utensils & Thalis: Price on Request',
       rate: LIVE_SILVER_RATES.purity925,
       icon: Utensils,
-      badge: 'Silver Utensils Benchmark',
+      badge: 'Utensils: Custom Quote',
       description:
-        'The premier standard for durable fine silver utensils, puja deepams, and gift items. Balances bright silver sheen with structural resilience, ensuring everyday use without denting or distortion.',
-      bestFor: ['Rajwada Dining Thalis & Bowls', 'Handcrafted Water Jugs & Tumblers', 'Mayur Pooja Diyas & Deepams', 'Silver Gift Keepsakes & Photo Frames'],
-      standard: 'Standard 925 Pure Silver Grade',
+        'The premier standard for durable fine silver utensils, royal thali sets, and tableware. Due to custom weight and intricate karigari, direct fixed prices on 92.5 utensils and thalis are removed and quoted via personal video call.',
+      bestFor: ['Rajwada Dining Thalis (Price on Request)', 'Pure Silver Water Jugs & Tumblers', 'Auspicious Deepams & Temple Lamps', 'Silver Keepsake Gift Boxes'],
+      standard: 'Standard 925 Sterling Silver',
       color: 'border-stone-300 bg-white',
       tagColor: 'bg-stone-100 text-stone-900',
     },
@@ -110,8 +110,13 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
                     </h3>
                     <div className="text-xs text-stone-500 mt-0.5">{item.subtitle}</div>
                     <div className="text-sm font-semibold text-amber-950 mt-1 tabular-nums">
-                      Live Rate: ₹{item.rate.toFixed(2)} / gram
+                      Live Rate: ₹{item.rate.toFixed(2)} / g <span className="text-xs font-normal text-stone-500">(₹{(item.rate * 1000).toLocaleString('en-IN')}/kg{item.code === '999' ? ' · MCX + 3%' : ''})</span>
                     </div>
+                    {item.code === '925' && (
+                      <div className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded mt-1 inline-block">
+                        Utensils &amp; Thalis: Price on Request
+                      </div>
+                    )}
                   </div>
 
                   <p className="text-xs text-stone-600 leading-relaxed">

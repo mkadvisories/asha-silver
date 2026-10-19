@@ -1,0 +1,38 @@
+[
+  {
+    "Customer Name": "Pooja Sharma",
+    "Mobile / Phone Number": "+91 98200 12345",
+    "Customer Email ID": "pooja.sharma@example.com",
+    "Preferred Video Call Date": "2026-10-23",
+    "Preferred Time Slot": "11:00 AM - 01:00 PM (Morning Slot)",
+    "Video Platform": "WhatsApp Video Call",
+    "Interested Category": "Silver Utensils (Thali Sets, Glasses, Pitchers)",
+    "Customer Message": "Quotation request for Rajwada Pure Silver Pooja & Royal Dining Thali Set",
+    "Booking Reference ID": "ASL-1792393697112",
+    "Submission Timestamp": "19/10/2026, 12:38:17 pm",
+    "_subject": "New Video Call Scheduled: Pooja Sharma (2026-10-23 at 11:00 AM - 01:00 PM (Morning Slot)) - Asha Silver Jewellers",
+    "_replyto": "pooja.sharma@example.com",
+    "_template": "table",
+    "_captcha": "false",
+    "recipient": "mkadvisories@gmail.com",
+    "dispatchedAt": "2026-10-19T07:08:17.119Z"
+  },
+  {
+    "Customer Name": "Aarav Mehta",
+    "Mobile / Phone Number": "+91 98765 43210",
+    "Customer Email ID": "aarav@example.com",
+    "Preferred Video Call Date": "2026-10-22",
+    "Preferred Time Slot": "03:00 PM - 05:00 PM (Afternoon Slot)",
+    "Video Platform": "WhatsApp Video Call",
+    "Interested Category": "Silver Utensils (Thali Sets, Glasses, Pitchers)",
+    "Customer Message": "Looking for a 7-piece pure silver dinner thali set for Dhanteras.",
+    "Booking Reference ID": "ASL-1792392745401",
+    "Submission Timestamp": "19/10/2026, 12:22:25 pm",
+    "_subject": "New Video Call Scheduled: Aarav Mehta (2026-10-22 at 03:00 PM - 05:00 PM (Afternoon Slot)) - Asha Silver Jewellers",
+    "_replyto": "aarav@example.com",
+    "_template": "table",
+    "_captcha": "false",
+    "recipient": "mkadvisories@gmail.com",
+    "dispatchedAt": "2026-10-19T06:52:25.409Z"
+  }
+]

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { X, Video, Calendar, Clock, Phone, Mail, User, CheckCircle2, Sparkles, MessageSquare, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Video, Calendar, Clock, Phone, Mail, User, CheckCircle2, Sparkles, MessageSquare, ShieldCheck, Tag } from 'lucide-react';
+import { Product } from '../data/products';
 
 interface ContactUsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  inquiryProduct?: Product | null;
 }
 
 export interface VideoCallBooking {
@@ -19,7 +21,7 @@ export interface VideoCallBooking {
   createdAt: string;
 }
 
-export const ContactUsModal: React.FC<ContactUsModalProps> = ({ isOpen, onClose }) => {
+export const ContactUsModal: React.FC<ContactUsModalProps> = ({ isOpen, onClose, inquiryProduct }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -35,6 +37,19 @@ export const ContactUsModal: React.FC<ContactUsModalProps> = ({ isOpen, onClose 
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedBooking, setSubmittedBooking] = useState<VideoCallBooking | null>(null);
+
+  useEffect(() => {
+    if (inquiryProduct) {
+      if (inquiryProduct.category === 'utensils') {
+        setCategory('Silver Utensils (Thali Sets, Glasses, Pitchers)');
+      } else if (inquiryProduct.category === 'god-items') {
+        setCategory('Silver Items of God (Lakshmi-Ganesh Idols, Diyas, Sinhasan)');
+      } else {
+        setCategory('Silver Gift Items (Coins, Boxes, Auspicious Tokens)');
+      }
+      setMessage(`Custom Quotation & Video Consultation Request for: ${inquiryProduct.name} (~${inquiryProduct.weightGrams}g, ${inquiryProduct.purity})`);
+    }
+  }, [inquiryProduct]);
 
   if (!isOpen) return null;
 
@@ -59,22 +74,50 @@ export const ContactUsModal: React.FC<ContactUsModalProps> = ({ isOpen, onClose 
     };
 
     try {
-      // Send to server proxy /api/contact to dispatch details
-      // Note: Recipient mkadvisories@gmail.com is handled server-side / in payload and NEVER displayed to user
-      await fetch('/api/contact', {
+      // 1. Dispatch to server-side auto-mailer gateway (/api/contact)
+      // The server persists the lead and dispatches real email notification to mkadvisories@gmail.com
+      const serverPromise = fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...bookingData,
           destination: 'mkadvisories@gmail.com',
-          subject: `New Video Call Scheduled: ${name} (${date} at ${timeSlot})`,
+          subject: `New Video Call Scheduled: ${name} (${date} at ${timeSlot}) - Asha Silver`,
         }),
       }).catch((err) => {
-        // Fallback gracefully without breaking UI flow
-        console.warn('API dispatch logged:', err);
+        console.warn('[Contact Modal] Server API notice:', err);
       });
 
-      // Save locally for user reference
+      // 2. Direct client-side auto-mailer fallback to FormSubmit gateway for 100% delivery assurance
+      const directMailerPromise = fetch('https://formsubmit.co/ajax/mkadvisories@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          'Customer Name': name,
+          'Mobile / WhatsApp': phone,
+          'Customer Email': email,
+          'Scheduled Date': date,
+          'Preferred Time Slot': timeSlot,
+          'Preferred Video Platform': platform,
+          'Category of Interest': category,
+          'Customer Message': message || 'Customer requested live video call to view silver items.',
+          'Booking Reference ID': bookingId,
+          '_subject': `Video Call Consultation Booking: ${name} (${date} at ${timeSlot})`,
+          '_replyto': email,
+          '_template': 'table',
+          '_captcha': 'false',
+        }),
+      }).catch((err) => {
+        console.warn('[Contact Modal] Direct gateway notice:', err);
+      });
+
+      // Wait for dispatch attempts
+      await Promise.allSettled([serverPromise, directMailerPromise]);
+
+      // Save locally for user reference in browser storage
       try {
         const history = JSON.parse(localStorage.getItem('asha_silver_video_calls') || '[]');
         history.unshift(bookingData);

@@ -21,10 +21,12 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
   const estimatedTotalPrice = Math.round(subtotalBeforeGst + gstAmount);
 
   const presets = [
-    { label: '10g Coin', weight: 10, purity: '999' as const, making: 10 },
-    { label: '50g Diya', weight: 50, purity: '925' as const, making: 24 },
-    { label: '100g Lakshmi Idol', weight: 100, purity: '999' as const, making: 20 },
-    { label: '250g Thali', weight: 250, purity: '925' as const, making: 22 },
+    { label: '10g Coin (999)', weight: 10, purity: '999' as const, making: 15 },
+    { label: '50g Silver Bar (999)', weight: 50, purity: '999' as const, making: 12 },
+    { label: '100g Lakshmi Idol (999)', weight: 100, purity: '999' as const, making: 20 },
+    { label: '250g Bullion Bar (999)', weight: 250, purity: '999' as const, making: 10 },
+    { label: '500g Bullion Bar (999)', weight: 500, purity: '999' as const, making: 8 },
+    { label: '1000g (1 Kg MCX Bar)', weight: 1000, purity: '999' as const, making: 0 },
   ];
 
   return (
@@ -34,22 +36,26 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-stone-200">
             {/* Calculator Controls */}
             <div className="lg:col-span-7 p-6 sm:p-8 space-y-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-900 uppercase">
                   <Calculator className="w-4 h-4 text-amber-700" />
-                  <span>Transparent Value Engine</span>
+                  <span>MCX Live Benchmark Value Engine</span>
                 </div>
                 <h2 className="font-serif text-2xl sm:text-3xl text-stone-900">
                   Live Silver Price Calculator
                 </h2>
+                <div className="inline-flex items-center gap-2 text-xs font-medium text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>MCX Spot: ₹{LIVE_SILVER_RATES.mcxPerKg.toLocaleString('en-IN')}/kg · 999 Pure Silver (MCX + 3%): ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g</span>
+                </div>
                 <p className="text-stone-600 text-sm">
-                  We believe in 100% price transparency with zero hidden markups. Calculate exact silver value based on today's official benchmark rate.
+                  We believe in 100% price transparency. Calculate exact silver value based on today's official MCX benchmark rate (+3% formula for 999 Pure Silver).
                 </p>
               </div>
 
               {/* Quick Presets */}
               <div className="space-y-2">
-                <label className="text-xs font-medium text-stone-600">Quick Popular Presets</label>
+                <label className="text-xs font-medium text-stone-600">Pure Silver &amp; Bullion Presets</label>
                 <div className="flex flex-wrap gap-2">
                   {presets.map((preset) => (
                     <button
@@ -82,7 +88,7 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   >
                     <div className="font-semibold text-stone-900 text-sm">925 Sterling Silver</div>
                     <div className="text-xs text-stone-500 mt-0.5">
-                      ₹{LIVE_SILVER_RATES.purity925.toFixed(2)}/g · Utensils &amp; Deepams
+                      Raw Bullion Benchmark · Utensils &amp; Thalis custom quote on request
                     </div>
                   </button>
 
@@ -95,12 +101,17 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                         : 'border-stone-200 hover:border-stone-300'
                     }`}
                   >
-                    <div className="font-semibold text-stone-900 text-sm">999 Fine Pure Silver</div>
+                    <div className="font-semibold text-stone-900 text-sm">999 Fine Pure Silver (MCX + 3%)</div>
                     <div className="text-xs text-stone-500 mt-0.5">
-                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g · Sacred Idols &amp; Coins
+                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g · Sacred Idols, Coins &amp; Bullion
                     </div>
                   </button>
                 </div>
+                {purity === '925' && (
+                  <div className="text-xs bg-amber-50 text-amber-900 p-2.5 rounded-lg border border-amber-200 mt-2">
+                    📌 <strong>Note on 92.5 Utensils &amp; Thalis:</strong> Direct fixed prices for 92.5 utensils and thalis are removed. Utensil pricing is customized by exact finished weight and royal karigari via video call consultation.
+                  </div>
+                )}
               </div>
 
               {/* Weight Slider & Input */}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Heart, Eye, ShoppingBag, ShieldCheck } from 'lucide-react';
-import { Product } from '../data/products';
+import { Heart, Eye, ShoppingBag, ShieldCheck, Video } from 'lucide-react';
+import { Product, isPriceOnRequest } from '../data/products';
 
 interface ProductCardProps {
   product: Product;
@@ -8,6 +8,7 @@ interface ProductCardProps {
   onToggleWishlist: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product) => void;
+  onRequestQuote?: (product: Product) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -16,7 +17,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onToggleWishlist,
   onQuickView,
   onAddToCart,
+  onRequestQuote,
 }) => {
+  const priceRemoved = isPriceOnRequest(product);
+
   return (
     <article className="group bg-white rounded-xl border border-stone-200/90 overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-stone-300">
       {/* Visual Image Container (65-75% visual prominence) */}
@@ -95,33 +99,62 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Pricing & Cart Action */}
         <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-3">
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-base font-semibold text-stone-900 tabular-nums">
-                ₹{product.price.toLocaleString('en-IN')}
-              </span>
-              {product.originalPrice && (
-                <span className="text-xs text-stone-400 line-through tabular-nums">
-                  ₹{product.originalPrice.toLocaleString('en-IN')}
+          {priceRemoved ? (
+            <div>
+              <div className="text-sm font-semibold text-stone-900">
+                Price on Request
+              </div>
+              <div className="text-[11px] text-amber-800 font-medium">
+                Custom Weight Quote
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-base font-semibold text-stone-900 tabular-nums">
+                  ₹{product.price?.toLocaleString('en-IN')}
                 </span>
-              )}
+                {product.originalPrice && (
+                  <span className="text-xs text-stone-400 line-through tabular-nums">
+                    ₹{product.originalPrice.toLocaleString('en-IN')}
+                  </span>
+                )}
+              </div>
+              <div className="text-[11px] text-stone-500">
+                {product.purityCode === '999' ? 'MCX + 3% · Incl. GST' : 'Inclusive of GST'}
+              </div>
             </div>
-            <div className="text-[11px] text-stone-400">
-              Inclusive of GST
-            </div>
-          </div>
+          )}
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(product);
-            }}
-            className="py-2 px-3.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
-            aria-label={`Add ${product.name} to bag`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
-            <span>Add to Bag</span>
-          </button>
+          {priceRemoved ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onRequestQuote) {
+                  onRequestQuote(product);
+                } else {
+                  onQuickView(product);
+                }
+              }}
+              className="py-2 px-3 bg-amber-950 text-amber-50 text-xs font-medium rounded-lg hover:bg-stone-900 transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
+              aria-label={`Inquire about ${product.name}`}
+            >
+              <Video className="w-3.5 h-3.5 text-amber-300" />
+              <span>Inquire</span>
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(product);
+              }}
+              className="py-2 px-3.5 bg-stone-900 text-stone-50 text-xs font-medium rounded-lg hover:bg-stone-800 transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 shadow-sm"
+              aria-label={`Add ${product.name} to bag`}
+            >
+              <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
+              <span>Add to Bag</span>
+            </button>
+          )}
         </div>
       </div>
     </article>

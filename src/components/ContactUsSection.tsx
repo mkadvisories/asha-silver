@@ -42,18 +42,47 @@ export const ContactUsSection: React.FC<ContactUsSectionProps> = ({ onBookingSuc
     };
 
     try {
-      // Dispatches to backend API route. Recipient mkadvisories@gmail.com is strictly kept server-side and NOT shown to user
-      await fetch('/api/contact', {
+      // 1. Server-side auto-mailer dispatch (/api/contact)
+      const serverPromise = fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...bookingData,
           destination: 'mkadvisories@gmail.com',
-          subject: `Video Call Booking Request: ${name} (${date} at ${timeSlot})`,
+          subject: `Video Call Booking Request: ${name} (${date} at ${timeSlot}) - Asha Silver`,
         }),
       }).catch((err) => {
-        console.warn('Contact API dispatch logged:', err);
+        console.warn('[Contact Section] Server dispatch notice:', err);
       });
+
+      // 2. Direct client-side auto-mailer fallback to FormSubmit gateway
+      const directMailerPromise = fetch('https://formsubmit.co/ajax/mkadvisories@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          'Customer Name': name,
+          'Mobile / WhatsApp': phone,
+          'Customer Email': email,
+          'Scheduled Date': date,
+          'Preferred Time Slot': timeSlot,
+          'Video Call Platform': platform,
+          'Category of Interest': category,
+          'Customer Message': message || 'Requested live video call consultation for silverware / idols.',
+          'Booking Reference ID': bookingId,
+          '_subject': `New Video Consultation Booking: ${name} (${date} at ${timeSlot})`,
+          '_replyto': email,
+          '_template': 'table',
+          '_captcha': 'false',
+        }),
+      }).catch((err) => {
+        console.warn('[Contact Section] Direct mailer gateway notice:', err);
+      });
+
+      // Await both dispatches
+      await Promise.allSettled([serverPromise, directMailerPromise]);
 
       try {
         const history = JSON.parse(localStorage.getItem('asha_silver_video_calls') || '[]');

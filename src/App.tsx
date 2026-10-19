@@ -74,12 +74,18 @@ export default function App() {
 
   // Modal States
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [quoteInquiryProduct, setQuoteInquiryProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false);
   const [searchModal, setSearchModal] = useState<{ isOpen: boolean; mode: 'search' | 'wishlist' }>({
     isOpen: false,
     mode: 'search',
   });
+
+  const handleRequestQuote = (product: Product) => {
+    setQuoteInquiryProduct(product);
+    setIsContactModalOpen(true);
+  };
 
   // Notification Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -211,14 +217,14 @@ export default function App() {
     }
 
     return [...result].sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
+      if (sortBy === 'price-asc') return (a.price || 0) - (b.price || 0);
+      if (sortBy === 'price-desc') return (b.price || 0) - (a.price || 0);
       if (sortBy === 'weight-desc') return b.weightGrams - a.weightGrams;
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
   }, [products, activeCategory, purityFilter, sortBy]);
 
-  const cartTotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const cartTotal = cart.reduce((acc, item) => acc + (item.product.price || 0) * item.quantity, 0);
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const scrollToSection = (id: string) => {
@@ -377,6 +383,7 @@ export default function App() {
                   onToggleWishlist={handleToggleWishlist}
                   onQuickView={(p) => setSelectedProduct(p)}
                   onAddToCart={(p) => handleAddToCart(p, 1)}
+                  onRequestQuote={handleRequestQuote}
                 />
               ))}
             </div>
@@ -412,6 +419,7 @@ export default function App() {
         onAddToCart={handleAddToCart}
         isWishlisted={selectedProduct ? wishlistIds.includes(selectedProduct.id) : false}
         onToggleWishlist={handleToggleWishlist}
+        onRequestQuote={handleRequestQuote}
       />
 
       {/* Cart Drawer & Checkout Flow */}
@@ -443,7 +451,11 @@ export default function App() {
       {/* Contact Us & Schedule Video Call Modal */}
       <ContactUsModal
         isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
+        onClose={() => {
+          setIsContactModalOpen(false);
+          setQuoteInquiryProduct(null);
+        }}
+        inquiryProduct={quoteInquiryProduct}
       />
 
       {/* Luxury Footer with Contact Us & Video Call link */}

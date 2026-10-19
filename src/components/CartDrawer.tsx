@@ -38,7 +38,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   if (!isOpen) return null;
 
   const FREE_COIN_THRESHOLD = 15000;
-  const subtotal = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const subtotal = items.reduce((acc, item) => acc + (item.product.price || 0) * item.quantity, 0);
   const qualifiesForFreeCoin = subtotal >= FREE_COIN_THRESHOLD;
   const remainingForFreeCoin = Math.max(0, FREE_COIN_THRESHOLD - subtotal);
   const total = subtotal;
@@ -249,7 +249,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             </button>
                           </div>
                           <span className="font-semibold text-sm text-stone-900 tabular-nums">
-                            ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
+                            ₹{((item.product.price || 0) * item.quantity).toLocaleString('en-IN')}
                           </span>
                         </div>
                       </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, Heart, ShoppingBag, Sparkles, Truck, Check, Share2, Layers } from 'lucide-react';
-import { Product } from '../data/products';
+import { X, ShieldCheck, Heart, ShoppingBag, Sparkles, Truck, Check, Share2, Layers, Video } from 'lucide-react';
+import { Product, isPriceOnRequest, LIVE_SILVER_RATES } from '../data/products';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -8,6 +8,7 @@ interface ProductDetailModalProps {
   onAddToCart: (product: Product, quantity: number, giftBox: boolean, giftNote: string) => void;
   isWishlisted: boolean;
   onToggleWishlist: (product: Product) => void;
+  onRequestQuote?: (product: Product) => void;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
@@ -16,6 +17,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onAddToCart,
   isWishlisted,
   onToggleWishlist,
+  onRequestQuote,
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [giftBox, setGiftBox] = useState(true);
@@ -25,13 +27,16 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   if (!product) return null;
 
+  const priceRemoved = isPriceOnRequest(product);
+
   const handleShare = () => {
     navigator.clipboard?.writeText?.(window.location.href);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const silverMetalValue = product.weightGrams * (product.purityCode === '999' ? 98.50 : 91.20);
+  const currentRate = product.purityCode === '999' ? LIVE_SILVER_RATES.purity999 : LIVE_SILVER_RATES.purity925;
+  const silverMetalValue = product.weightGrams * currentRate;
   const totalMaking = product.weightGrams * product.makingChargesPerGram;
 
   return (
@@ -126,19 +131,35 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-3 pb-3 border-b border-stone-200">
-                <span className="font-serif text-3xl font-semibold text-stone-900 tabular-nums">
-                  ₹{product.price.toLocaleString('en-IN')}
-                </span>
-                {product.originalPrice && (
-                  <span className="text-sm text-stone-400 line-through tabular-nums">
-                    ₹{product.originalPrice.toLocaleString('en-IN')}
+              {priceRemoved ? (
+                <div className="pb-3 border-b border-stone-200 space-y-1.5">
+                  <div className="flex items-center gap-3">
+                    <span className="font-serif text-2xl sm:text-3xl font-semibold text-stone-900">
+                      Price on Request
+                    </span>
+                    <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      Bespoke Utensil / Thali
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-500">
+                    Prices for pure silver utensils and thali sets are customized based on desired piece count, individual item weights, and master silversmith karigari. Direct prices are removed — schedule a live video call to view the pieces and receive a personalized quote.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-baseline gap-3 pb-3 border-b border-stone-200">
+                  <span className="font-serif text-3xl font-semibold text-stone-900 tabular-nums">
+                    ₹{product.price?.toLocaleString('en-IN')}
                   </span>
-                )}
-                <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded">
-                  Dhanteras Auspicious Offer
-                </span>
-              </div>
+                  {product.originalPrice && (
+                    <span className="text-sm text-stone-400 line-through tabular-nums">
+                      ₹{product.originalPrice.toLocaleString('en-IN')}
+                    </span>
+                  )}
+                  <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    {product.purityCode === '999' ? '999 Pure Silver (MCX + 3%)' : 'Dhanteras Auspicious Offer'}
+                  </span>
+                </div>
+              )}
 
               {/* Tabs for Details, Breakdown, Care */}
               <div className="space-y-3">
@@ -201,18 +222,44 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
                 {activeTab === 'breakdown' && (
                   <div className="space-y-2 text-xs text-stone-600 bg-stone-50 p-3 rounded-lg border border-stone-200">
-                    <div className="flex justify-between">
-                      <span>Pure Silver ({product.weightGrams}g):</span>
-                      <span className="font-semibold text-stone-800">₹{Math.round(silverMetalValue).toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Handcrafting / Karigari:</span>
-                      <span className="font-semibold text-stone-800">₹{Math.round(totalMaking).toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="flex justify-between border-t border-stone-200 pt-1 font-semibold text-stone-900">
-                      <span>Net Inclusive of GST:</span>
-                      <span>₹{product.price.toLocaleString('en-IN')}</span>
-                    </div>
+                    {priceRemoved ? (
+                      <>
+                        <div className="font-semibold text-stone-900 pb-1 border-b border-stone-200">
+                          Bespoke Silverware Pricing Philosophy
+                        </div>
+                        <p className="leading-relaxed">
+                          For pure 92.5 silver utensils, thali sets, and pitchers, prices are calculated transparently during live consultation:
+                        </p>
+                        <div className="pt-1 space-y-1 text-stone-700">
+                          <div>· <strong>Base Weight:</strong> ~{product.weightGrams}g certified sterling silver</div>
+                          <div>· <strong>Karigari:</strong> Traditional hand-hammering &amp; royal nakshi engraving</div>
+                          <div>· <strong>Custom Quote:</strong> Fixed prices removed — quote tailored to your required pieces &amp; today's MCX rate via Video Call</div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between">
+                          <span>
+                            {product.purityCode === '999'
+                              ? `999 Pure Silver (${product.weightGrams}g @ MCX+3% ₹${LIVE_SILVER_RATES.purity999.toFixed(2)}/g):`
+                              : `Pure Silver (${product.weightGrams}g):`}
+                          </span>
+                          <span className="font-semibold text-stone-800">
+                            ₹{Math.round(silverMetalValue).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Handcrafting / Karigari:</span>
+                          <span className="font-semibold text-stone-800">
+                            ₹{Math.round(totalMaking).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex justify-between border-t border-stone-200 pt-1 font-semibold text-stone-900">
+                          <span>Net Inclusive of GST:</span>
+                          <span>₹{product.price?.toLocaleString('en-IN')}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -258,38 +305,55 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             {/* Contiguous Sticky Buy Action Module */}
             <div className="pt-4 border-t border-stone-200 space-y-3">
               <div className="flex items-center gap-3">
-                {/* Quantity Stepper */}
-                <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden bg-stone-50">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 text-stone-700 hover:bg-stone-200 transition-colors font-medium text-sm cursor-pointer"
-                    aria-label="Decrease quantity"
-                  >
-                    -
-                  </button>
-                  <span className="px-3 py-2 text-xs font-semibold text-stone-900 tabular-nums min-w-[32px] text-center">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-3 py-2 text-stone-700 hover:bg-stone-200 transition-colors font-medium text-sm cursor-pointer"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
-                </div>
+                {/* Quantity Stepper (only for priced products) */}
+                {!priceRemoved && (
+                  <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden bg-stone-50">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="px-3 py-2 text-stone-700 hover:bg-stone-200 transition-colors font-medium text-sm cursor-pointer"
+                      aria-label="Decrease quantity"
+                    >
+                      -
+                    </button>
+                    <span className="px-3 py-2 text-xs font-semibold text-stone-900 tabular-nums min-w-[32px] text-center">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="px-3 py-2 text-stone-700 hover:bg-stone-200 transition-colors font-medium text-sm cursor-pointer"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
 
-                {/* Primary Add to Bag CTA */}
-                <button
-                  onClick={() => {
-                    onAddToCart(product, quantity, giftBox, giftNote);
-                    onClose();
-                  }}
-                  className="flex-1 py-3 px-4 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <ShoppingBag className="w-4 h-4 text-amber-300" />
-                  <span>Add to Bag · ₹{(product.price * quantity).toLocaleString('en-IN')}</span>
-                </button>
+                {/* Primary CTA: Schedule Video Call if price removed, else Add to Bag */}
+                {priceRemoved ? (
+                  <button
+                    onClick={() => {
+                      if (onRequestQuote) {
+                        onRequestQuote(product);
+                      }
+                      onClose();
+                    }}
+                    className="flex-1 py-3 px-4 bg-amber-950 text-amber-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-900 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Video className="w-4 h-4 text-amber-300" />
+                    <span>Schedule Video Call for Custom Quote</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      onAddToCart(product, quantity, giftBox, giftNote);
+                      onClose();
+                    }}
+                    className="flex-1 py-3 px-4 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <ShoppingBag className="w-4 h-4 text-amber-300" />
+                    <span>Add to Bag · ₹{((product.price || 0) * quantity).toLocaleString('en-IN')}</span>
+                  </button>
+                )}
 
                 {/* Wishlist Button */}
                 <button
