@@ -61,23 +61,34 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('all');
+                    onSelectCategory('hampers');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Dhanteras Auspicious Silverware &amp; Utensils
+                  Luxury Gifting &amp; Hampers
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('utensils');
+                    onSelectCategory('home-decor');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Silver Utensils (Thali Sets, Glasses, Pitchers)
+                  Home Decor &amp; Pichwai Frames
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    onSelectCategory('barware');
+                    onNavigateToSection('collection');
+                  }}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Barware &amp; Fine Dining Goblets
                 </button>
               </li>
               <li>
@@ -88,7 +99,29 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Silver Items of God (Lakshmi-Ganesh Idols, Diyas)
+                  Items of God (Mandir Idols &amp; Diyas)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    onSelectCategory('utensils');
+                    onNavigateToSection('collection');
+                  }}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Silver Utensils (Thali Sets &amp; Pitchers)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    onSelectCategory('desk');
+                    onNavigateToSection('collection');
+                  }}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                >
+                  Executive Desk Accessories &amp; Bookmarks
                 </button>
               </li>
               <li>
@@ -99,7 +132,7 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Silver Gift Items (999 Coins, Frames &amp; Keepsakes)
+                  999 Pure Silver Coins &amp; Tokens
                 </button>
               </li>
             </ul>

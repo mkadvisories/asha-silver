@@ -1,5 +1,31 @@
 [
   {
+    "Order ID": "TEST-123",
+    "Payment Method": "Cash on Delivery (COD) - Doorstep Settlement",
+    "Customer Name": "Ramesh",
+    "Mobile / WhatsApp": "9876543210",
+    "Customer Email ID": "Not provided",
+    "Delivery Address": ",  - ",
+    "Ordered Items List": "No items detailed",
+    "Order Subtotal": "₹0",
+    "GST (3%)": "₹0",
+    "Total Payable (COD)": "₹15,000",
+    "Free Coin Included": "No",
+    "Order Timestamp": "1/11/2026, 7:05:39 pm",
+    "_subject": "New Order Confirmed: #TEST-123 - Ramesh (₹15,000) [Cash on Delivery]",
+    "_replyto": "",
+    "_template": "table",
+    "_captcha": "false",
+    "rawOrder": {
+      "orderId": "TEST-123",
+      "customerName": "Ramesh",
+      "customerPhone": "9876543210",
+      "total": 15000
+    },
+    "recipient": "mkadvisories@gmail.com",
+    "dispatchedAt": "2026-11-01T13:35:39.183Z"
+  },
+  {
     "Order ID": "ASH-739266",
     "Payment Method": "Cash on Delivery (COD) - Doorstep Settlement",
     "Customer Name": "Ankit Ah",

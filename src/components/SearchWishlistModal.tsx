@@ -36,7 +36,9 @@ export const SearchWishlistModal: React.FC<SearchWishlistModalProps> = ({
           p.categoryLabel.toLowerCase().includes(query) ||
           p.purity.toLowerCase().includes(query) ||
           (p.hindiName && p.hindiName.toLowerCase().includes(query)) ||
-          p.description.toLowerCase().includes(query)
+          p.description.toLowerCase().includes(query) ||
+          (p.occasion && p.occasion.toLowerCase().includes(query)) ||
+          (p.craftStyle && p.craftStyle.toLowerCase().includes(query))
         );
       })
     : products.filter((p) => wishlistIds.includes(p.id));

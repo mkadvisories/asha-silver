@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, Calendar, Clock, Gift, Sun, ChevronRight, UtensilsCrossed } from 'lucide-react';
-import { LIVE_SILVER_RATES } from '../data/products';
+import { useSilverRates } from '../context/SilverRateContext';
 
 interface DhanterasBannerProps {
   onExploreAuspicious: () => void;
@@ -11,6 +11,7 @@ export const DhanterasBanner: React.FC<DhanterasBannerProps> = ({
   onExploreAuspicious,
   onSelectUtensils,
 }) => {
+  const { rates } = useSilverRates();
   return (
     <section className="py-12 bg-stone-900 text-stone-100 relative overflow-hidden">
       {/* Subtle background ambient motif */}
@@ -60,7 +61,7 @@ export const DhanterasBanner: React.FC<DhanterasBannerProps> = ({
                   <Calendar className="w-4 h-4" />
                   <span>Dhanteras Shubh Muhurat</span>
                 </div>
-                <span className="text-xs text-stone-400 font-medium">{LIVE_SILVER_RATES.muhurat.date}</span>
+                <span className="text-xs text-stone-400 font-medium">{rates.muhurat.date}</span>
               </div>
 
               <div className="space-y-4">
@@ -70,10 +71,10 @@ export const DhanterasBanner: React.FC<DhanterasBannerProps> = ({
                     <span>Best Auspicious Time for Silver &amp; Utensils Buying</span>
                   </div>
                   <div className="text-xl sm:text-2xl font-serif font-bold text-amber-200 mt-1">
-                    {LIVE_SILVER_RATES.muhurat.timeWindow}
+                    {rates.muhurat.timeWindow}
                   </div>
                   <div className="text-[11px] text-stone-400 mt-1">
-                    Pradosh Kaal &amp; Vrishabha Lagna · {LIVE_SILVER_RATES.muhurat.tithi}
+                    Pradosh Kaal &amp; Vrishabha Lagna · {rates.muhurat.tithi}
                   </div>
                 </div>
 

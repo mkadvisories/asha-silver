@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layers, CheckCircle2, ShieldCheck, ArrowRight, Sparkles, Utensils, Coins, Gem } from 'lucide-react';
-import { LIVE_SILVER_RATES } from '../data/products';
+import { useSilverRates } from '../context/SilverRateContext';
 
 interface MetalByPuritySectionProps {
   onSelectPurityFilter: (purityCode: 'all' | '925' | '999' | '880') => void;
@@ -11,12 +11,13 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
   onSelectPurityFilter,
   onNavigateToCollection,
 }) => {
+  const { rates } = useSilverRates();
   const purities = [
     {
       code: '999' as const,
       title: '999 Fine Pure Silver',
       subtitle: '99.9% Metallurgical Fineness · MCX Spot + 3%',
-      rate: LIVE_SILVER_RATES.purity999,
+      rate: rates.purity999,
       icon: Coins,
       badge: 'MCX + 3% Pure Silver',
       description:
@@ -30,7 +31,7 @@ export const MetalByPuritySection: React.FC<MetalByPuritySectionProps> = ({
       code: '925' as const,
       title: '925 Sterling Silver',
       subtitle: '92.5% Fine Silverware · Utensils & Thalis: Price on Request',
-      rate: LIVE_SILVER_RATES.purity925,
+      rate: rates.purity925,
       icon: Utensils,
       badge: 'Utensils: Custom Quote',
       description:

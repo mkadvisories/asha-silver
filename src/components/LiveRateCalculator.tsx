@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Calculator, Sparkles, CheckCircle2, Info, ArrowUpRight } from 'lucide-react';
-import { LIVE_SILVER_RATES } from '../data/products';
+import { Calculator, Sparkles, CheckCircle2, Info, ArrowUpRight, Clock, RefreshCw } from 'lucide-react';
+import { useSilverRates } from '../context/SilverRateContext';
 
 interface LiveRateCalculatorProps {
   onSelectPoojaCategory: () => void;
@@ -9,11 +9,12 @@ interface LiveRateCalculatorProps {
 export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
   onSelectPoojaCategory,
 }) => {
-  const [purity, setPurity] = useState<'925' | '999'>('925');
+  const { rates, formattedCountdown, isRefreshing, refreshRates } = useSilverRates();
+  const [purity, setPurity] = useState<'925' | '999'>('999');
   const [weight, setWeight] = useState<number>(50);
   const [makingChargeRate, setMakingChargeRate] = useState<number>(20); // Rs per gram
 
-  const currentRatePerGram = purity === '999' ? LIVE_SILVER_RATES.purity999 : LIVE_SILVER_RATES.purity925;
+  const currentRatePerGram = purity === '999' ? rates.purity999 : rates.purity925;
   const silverBaseValue = weight * currentRatePerGram;
   const makingChargesTotal = weight * makingChargeRate;
   const subtotalBeforeGst = silverBaseValue + makingChargesTotal;
@@ -37,17 +38,36 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
             {/* Calculator Controls */}
             <div className="lg:col-span-7 p-6 sm:p-8 space-y-6">
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-900 uppercase">
-                  <Calculator className="w-4 h-4 text-amber-700" />
-                  <span>MCX Live Benchmark Value Engine</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-900 uppercase">
+                    <Calculator className="w-4 h-4 text-amber-700" />
+                    <span>MCX Live Benchmark Value Engine</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-stone-500">
+                    <Clock className="w-3 h-3 text-amber-700" />
+                    <span>Auto-refresh: {formattedCountdown}</span>
+                  </div>
                 </div>
+
                 <h2 className="font-serif text-2xl sm:text-3xl text-stone-900">
                   Live Silver Price Calculator
                 </h2>
-                <div className="inline-flex items-center gap-2 text-xs font-medium text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+
+                <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded-md border border-emerald-200">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>MCX Spot: ₹{LIVE_SILVER_RATES.mcxPerKg.toLocaleString('en-IN')}/kg · 999 Pure Silver (MCX + 3%): ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g</span>
+                  <span>
+                    MCX Spot: ₹{rates.mcxPerKg.toLocaleString('en-IN')}/kg · 999 Pure Silver (MCX + 3%): ₹{rates.purity999.toFixed(2)}/g
+                  </span>
+                  <button
+                    onClick={() => refreshRates()}
+                    disabled={isRefreshing}
+                    className="ml-auto text-[10px] text-emerald-900 underline font-semibold flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-2.5 h-2.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                    <span>{isRefreshing ? 'Updating...' : 'Refresh'}</span>
+                  </button>
                 </div>
+
                 <p className="text-stone-600 text-sm">
                   We believe in 100% price transparency. Calculate exact silver value based on today's official MCX benchmark rate (+3% formula for 999 Pure Silver).
                 </p>
@@ -79,21 +99,6 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setPurity('925')}
-                    className={`p-3 text-left rounded-lg border transition-all cursor-pointer ${
-                      purity === '925'
-                        ? 'border-stone-900 bg-stone-50/80 ring-1 ring-stone-900'
-                        : 'border-stone-200 hover:border-stone-300'
-                    }`}
-                  >
-                    <div className="font-semibold text-stone-900 text-sm">925 Sterling Silver</div>
-                    <div className="text-xs text-stone-500 mt-0.5">
-                      Raw Bullion Benchmark · Utensils &amp; Thalis custom quote on request
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
                     onClick={() => setPurity('999')}
                     className={`p-3 text-left rounded-lg border transition-all cursor-pointer ${
                       purity === '999'
@@ -103,7 +108,22 @@ export const LiveRateCalculator: React.FC<LiveRateCalculatorProps> = ({
                   >
                     <div className="font-semibold text-stone-900 text-sm">999 Fine Pure Silver (MCX + 3%)</div>
                     <div className="text-xs text-stone-500 mt-0.5">
-                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)}/g · Sacred Idols, Coins &amp; Bullion
+                      ₹{rates.purity999.toFixed(2)}/g · Sacred Idols, Coins &amp; Bullion
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPurity('925')}
+                    className={`p-3 text-left rounded-lg border transition-all cursor-pointer ${
+                      purity === '925'
+                        ? 'border-stone-900 bg-stone-50/80 ring-1 ring-stone-900'
+                        : 'border-stone-200 hover:border-stone-300'
+                    }`}
+                  >
+                    <div className="font-semibold text-stone-900 text-sm">925 Sterling Silver</div>
+                    <div className="text-xs text-stone-500 mt-0.5">
+                      ₹{rates.purity925.toFixed(2)}/g Raw Benchmark · Custom Utensils on Request
                     </div>
                   </button>
                 </div>

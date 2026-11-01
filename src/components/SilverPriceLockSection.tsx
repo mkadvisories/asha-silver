@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, ShieldCheck, PhoneCall, Sparkles, CheckCircle2, Calendar, FileText, ArrowRight, Printer, RefreshCw, Clock } from 'lucide-react';
-import { LIVE_SILVER_RATES } from '../data/products';
+import { useSilverRates } from '../context/SilverRateContext';
 import { SilverPriceLock } from '../types/cart';
 
 interface SilverPriceLockSectionProps {
@@ -18,6 +18,7 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
   onAddLockToCart,
   onLockGenerated,
 }) => {
+  const { rates } = useSilverRates();
   const purity: '999' = '999';
   const [grams, setGrams] = useState<number>(200); // 200g default
   const [durationDays, setDurationDays] = useState<number>(60);
@@ -29,7 +30,7 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [initiatedLock, setInitiatedLock] = useState<SilverPriceLock | null>(null);
 
-  const ratePerGram = LIVE_SILVER_RATES.purity999;
+  const ratePerGram = rates.purity999;
   const silverBaseValue = grams * ratePerGram;
   const gst = Math.round(silverBaseValue * 0.03);
   const totalEstimatedAmount = silverBaseValue + gst;
@@ -185,7 +186,7 @@ export const SilverPriceLockSection: React.FC<SilverPriceLockSectionProps> = ({
                   </div>
                   <div className="sm:text-right">
                     <div className="text-amber-300 font-mono font-bold text-lg">
-                      ₹{LIVE_SILVER_RATES.purity999.toFixed(2)} / g
+                      ₹{rates.purity999.toFixed(2)} / g
                     </div>
                     <div className="text-[10px] text-stone-400">MCX + 3% Benchmark</div>
                   </div>

@@ -446,7 +446,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <div className="text-[11px] text-stone-600 bg-white p-2.5 rounded-lg border border-stone-200 leading-relaxed">
                     ✓ Full payment is collected at your doorstep in cash or via courier delivery partner.<br />
                     ✓ Package is securely sealed and tamper-proof.<br />
-                    ✓ Confirmation email with complete order breakdown will be sent automatically.
+                    ✓ Order Received confirmation is generated instantly with reference number.
                   </div>
                 </div>
               </div>

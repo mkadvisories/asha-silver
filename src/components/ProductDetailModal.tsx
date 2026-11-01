@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, Heart, ShoppingBag, Sparkles, Truck, Check, Share2, Layers, Video } from 'lucide-react';
-import { Product, isPriceOnRequest, LIVE_SILVER_RATES } from '../data/products';
+import { X, ShieldCheck, Heart, ShoppingBag, Sparkles, Truck, Check, Share2, Layers, Video, Gift, PenTool } from 'lucide-react';
+import { Product, isPriceOnRequest, isGiftingProduct } from '../data/products';
+import { useSilverRates } from '../context/SilverRateContext';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -21,13 +22,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [giftBox, setGiftBox] = useState(true);
+  const [velvetBoxColor, setVelvetBoxColor] = useState<'Midnight Navy' | 'Crimson Velvet' | 'Imperial Emerald'>('Midnight Navy');
+  const [engravingText, setEngravingText] = useState('');
   const [giftNote, setGiftNote] = useState('');
   const [activeTab, setActiveTab] = useState<'details' | 'breakdown' | 'care'>('details');
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const { rates } = useSilverRates();
+
   if (!product) return null;
 
   const priceRemoved = isPriceOnRequest(product);
+  const isGifting = isGiftingProduct(product);
 
   const handleShare = () => {
     navigator.clipboard?.writeText?.(window.location.href);
@@ -35,7 +41,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const currentRate = product.purityCode === '999' ? LIVE_SILVER_RATES.purity999 : LIVE_SILVER_RATES.purity925;
+  const currentRate = product.purityCode === '999' ? rates.purity999 : rates.purity925;
   const silverMetalValue = product.weightGrams * currentRate;
   const totalMaking = product.weightGrams * product.makingChargesPerGram;
 
@@ -44,7 +50,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label={product.name}
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fade-in"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fade-in"
     >
       <div className="relative bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-hidden shadow-2xl flex flex-col border border-stone-200">
         {/* Modal Header */}
@@ -53,8 +59,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <span>Asha Silver</span>
             <span aria-hidden="true">/</span>
             <span>{product.categoryLabel}</span>
-            <span aria-hidden="true">/</span>
-            <span className="text-stone-900 font-semibold">{product.purity}</span>
+            {!isGifting && (
+              <>
+                <span aria-hidden="true">/</span>
+                <span className="text-stone-900 font-semibold">{product.purity}</span>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -89,7 +99,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               />
               <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded text-[11px] font-semibold text-stone-800 shadow-sm flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-800" />
-                <span>{product.purity} Guarantee</span>
+                <span>{isGifting ? 'Pure Silver Guarantee' : `${product.purity} Guarantee`}</span>
               </div>
             </div>
 
@@ -97,28 +107,40 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <div className="p-4 bg-white rounded-xl border border-stone-200 space-y-2 text-xs">
               <div className="font-semibold text-stone-900 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-700" />
-                <span>Asha Silver Purity Seal · Since 1989</span>
+                <span>Asha Silver Hallmark · Since 1989</span>
               </div>
               <p className="text-stone-600 leading-relaxed">
-                Started by Mahesh Agarwal in 1989. Handcrafted by master silversmiths with pure metal weight and honest gram-by-gram billing.
+                Founded by Mahesh Agarwal in 1989. Handcrafted by master silversmiths with authentic precious silver and honest craftsmanship.
               </p>
               <div className="flex items-center gap-4 pt-1 text-[11px] text-stone-500 font-medium">
-                <span>· 100% Pure Silver Weight</span>
+                <span>· 100% Genuine Precious Silver</span>
                 <span>· Lifetime Exchange</span>
-                <span>· Zero Deduction Buyback</span>
+                <span>· Insured Doorstep Delivery</span>
               </div>
             </div>
           </div>
 
           {/* Right: Contiguous Purchase Module */}
-          <div className="p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div className="p-6 sm:p-8 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               {/* Product Title & Hindi Subtitle */}
               <div>
                 <div className="flex items-center gap-2 text-xs font-semibold text-amber-900 tracking-wider uppercase mb-1">
-                  <span>{product.purity}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{product.weightGrams}g Weight</span>
+                  {!isGifting ? (
+                    <>
+                      <span>{product.purity}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{product.weightGrams}g Silver</span>
+                    </>
+                  ) : (
+                    <span>Luxury Gifting Studio</span>
+                  )}
+                  {product.craftStyle && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span className="text-stone-600 normal-case">{product.craftStyle}</span>
+                    </>
+                  )}
                 </div>
                 <h2 className="font-serif text-2xl font-semibold text-stone-900 leading-tight">
                   {product.name}
@@ -138,7 +160,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       Price on Request
                     </span>
                     <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                      Bespoke Utensil / Thali
+                      Bespoke Silverware Karigari
                     </span>
                   </div>
                   <p className="text-xs text-stone-500">
@@ -156,7 +178,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     </span>
                   )}
                   <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                    {product.purityCode === '999' ? '999 Pure Silver (MCX + 3%)' : 'Dhanteras Auspicious Offer'}
+                    {isGifting ? 'Curated Gift Benchmark Pricing' : product.purityCode === '999' ? '999 Pure Silver (MCX + 3%)' : 'Competitive Benchmark Pricing'}
                   </span>
                 </div>
               )}
@@ -201,8 +223,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     <p className="leading-relaxed">{product.description}</p>
                     <div className="grid grid-cols-2 gap-2 pt-2 border-t border-stone-100">
                       <div>
-                        <span className="text-stone-400 block">Gross Weight</span>
-                        <span className="font-medium text-stone-800">{product.weightGrams} grams</span>
+                        <span className="text-stone-400 block">{isGifting ? 'Craft Style' : 'Gross Weight'}</span>
+                        <span className="font-medium text-stone-800">
+                          {isGifting ? (product.craftStyle || 'Artisanal Karigari') : `${product.weightGrams} grams`}
+                        </span>
                       </div>
                       <div>
                         <span className="text-stone-400 block">Dimensions</span>
@@ -210,7 +234,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       </div>
                       <div>
                         <span className="text-stone-400 block">Occasion</span>
-                        <span className="font-medium text-stone-800">{product.occasion || 'Dhanteras & Daily Sacred Use'}</span>
+                        <span className="font-medium text-stone-800">{product.occasion || 'Weddings & Celebrations'}</span>
                       </div>
                       <div>
                         <span className="text-stone-400 block">Availability</span>
@@ -222,18 +246,40 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
                 {activeTab === 'breakdown' && (
                   <div className="space-y-2 text-xs text-stone-600 bg-stone-50 p-3 rounded-lg border border-stone-200">
-                    {priceRemoved ? (
+                    {isGifting ? (
+                      <>
+                        <div className="font-semibold text-stone-900 pb-1 border-b border-stone-200">
+                          Curated Gifting Benchmark Breakdown
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Handcrafted Pure Silver Curation:</span>
+                          <span className="font-semibold text-stone-800">
+                            ₹{Math.round((product.price || 0) * 0.85).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Master Karigari &amp; Presentation Case:</span>
+                          <span className="font-semibold text-stone-800">
+                            ₹{Math.round((product.price || 0) * 0.12).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex justify-between border-t border-stone-200 pt-1 font-semibold text-stone-900">
+                          <span>Net Inclusive of 3% GST:</span>
+                          <span>₹{product.price?.toLocaleString('en-IN')}</span>
+                        </div>
+                      </>
+                    ) : priceRemoved ? (
                       <>
                         <div className="font-semibold text-stone-900 pb-1 border-b border-stone-200">
                           Bespoke Silverware Pricing Philosophy
                         </div>
                         <p className="leading-relaxed">
-                          For pure 92.5 silver utensils, thali sets, and pitchers, prices are calculated transparently during live consultation:
+                          For pure 92.5 &amp; 880 silver utensils, thali sets, and pitchers, prices are calculated transparently during live consultation:
                         </p>
                         <div className="pt-1 space-y-1 text-stone-700">
                           <div>· <strong>Base Weight:</strong> ~{product.weightGrams}g genuine hallmarked sterling silver</div>
                           <div>· <strong>Karigari:</strong> Traditional hand-hammering &amp; royal nakshi engraving</div>
-                          <div>· <strong>Custom Quote:</strong> Fixed prices removed — quote tailored to your required pieces &amp; today's MCX rate via Video Call</div>
+                          <div>· <strong>Custom Quote:</strong> Quote tailored to your required piece count &amp; current MCX rate via Video Call</div>
                         </div>
                       </>
                     ) : (
@@ -241,7 +287,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         <div className="flex justify-between">
                           <span>
                             {product.purityCode === '999'
-                              ? `999 Pure Silver (${product.weightGrams}g @ MCX+3% ₹${LIVE_SILVER_RATES.purity999.toFixed(2)}/g):`
+                              ? `999 Pure Silver (${product.weightGrams}g @ MCX+3% ₹${rates.purity999.toFixed(2)}/g):`
                               : `Pure Silver (${product.weightGrams}g):`}
                           </span>
                           <span className="font-semibold text-stone-800">
@@ -266,10 +312,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 {activeTab === 'care' && (
                   <div className="space-y-2 text-xs text-stone-600">
                     <p>
-                      Asha Silver utensils, idols, and gift items are crafted from genuine precious silver. To maintain lasting shine:
+                      Asha Silver utensils, idols, hampers, and gift items are crafted from genuine precious silver. To maintain lasting shine:
                     </p>
                     <ul className="list-disc pl-4 space-y-1">
-                      <li>Store in the provided anti-tarnish velvet gift box when not in use.</li>
+                      <li>Store in the provided anti-tarnish gift box when not in use.</li>
                       <li>For silver utensils, wash with gentle warm water and mild liquid soap.</li>
                       <li>Wipe dry with a soft lint-free cotton cloth to preserve specular gleam.</li>
                     </ul>
@@ -277,35 +323,83 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 )}
               </div>
 
-              {/* Complimentary Gifting Option */}
-              <div className="pt-2 border-t border-stone-100 space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-700 font-medium">
-                  <input
-                    type="checkbox"
-                    checked={giftBox}
-                    onChange={(e) => setGiftBox(e.target.checked)}
-                    className="accent-stone-900 rounded cursor-pointer"
-                  />
-                  <span>Include Complimentary Red Velvet Box &amp; Dhanteras Sacred Roli-Chawal</span>
-                </label>
+              {/* Complimentary Gifting & Personalization Option */}
+              <div className="pt-2 border-t border-stone-100 space-y-3 bg-stone-50/70 p-3 rounded-xl border border-stone-200">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-800 font-semibold">
+                    <input
+                      type="checkbox"
+                      checked={giftBox}
+                      onChange={(e) => setGiftBox(e.target.checked)}
+                      className="accent-stone-900 rounded cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5">
+                      <Gift className="w-3.5 h-3.5 text-amber-800" />
+                      <span>{isGifting ? 'Complimentary Signature Gift Presentation' : 'Complimentary Velvet Presentation Box'}</span>
+                    </span>
+                  </label>
+                  <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-1.5 py-0.2 rounded">
+                    Free
+                  </span>
+                </div>
 
                 {giftBox && (
-                  <input
-                    type="text"
-                    placeholder="Add personalized Dhanteras blessings or gift note (optional)"
-                    value={giftNote}
-                    onChange={(e) => setGiftNote(e.target.value)}
-                    className="w-full text-xs px-3 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900"
-                    maxLength={100}
-                  />
+                  <div className="space-y-2 pt-1">
+                    {!isGifting && (
+                      <div className="flex items-center gap-2 text-[11px] text-stone-600">
+                        <span>Lining Color:</span>
+                        {(['Midnight Navy', 'Crimson Velvet', 'Imperial Emerald'] as const).map((color) => (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => setVelvetBoxColor(color)}
+                            className={`px-2 py-0.5 rounded text-[10px] border cursor-pointer ${
+                              velvetBoxColor === color
+                                ? 'bg-stone-900 text-white border-stone-900 font-bold'
+                                : 'bg-white text-stone-700 border-stone-200'
+                            }`}
+                          >
+                            {color}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {product.customEngravingAvailable && (
+                      <div className="space-y-1">
+                        <label htmlFor="pdp-engraving" className="text-[10px] text-stone-600 font-medium flex items-center gap-1">
+                          <PenTool className="w-3 h-3 text-amber-700" />
+                          <span>Custom Plaque / Monogram Engraving (Complimentary):</span>
+                        </label>
+                        <input
+                          id="pdp-engraving"
+                          type="text"
+                          placeholder="e.g. Ramesh &amp; Sunita · 2026"
+                          value={engravingText}
+                          onChange={(e) => setEngravingText(e.target.value)}
+                          className="w-full text-xs px-2.5 py-1.5 bg-white border border-stone-300 rounded focus:outline-none focus:ring-1 focus:ring-stone-900"
+                          maxLength={35}
+                        />
+                      </div>
+                    )}
+
+                    <input
+                      type="text"
+                      placeholder="Add blessings or gift note (optional)"
+                      value={giftNote}
+                      onChange={(e) => setGiftNote(e.target.value)}
+                      className="w-full text-xs px-2.5 py-1.5 bg-white border border-stone-300 rounded focus:outline-none focus:ring-1 focus:ring-stone-900"
+                      maxLength={100}
+                    />
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Contiguous Sticky Buy Action Module */}
-            <div className="pt-4 border-t border-stone-200 space-y-3">
+            <div className="pt-3 border-t border-stone-200 space-y-3">
               <div className="flex items-center gap-3">
-                {/* Quantity Stepper (only for priced products) */}
+                {/* Quantity Stepper */}
                 {!priceRemoved && (
                   <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden bg-stone-50">
                     <button
@@ -328,7 +422,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   </div>
                 )}
 
-                {/* Primary CTA: Schedule Video Call if price removed, else Add to Bag */}
+                {/* Primary CTA */}
                 {priceRemoved ? (
                   <button
                     onClick={() => {
@@ -345,7 +439,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 ) : (
                   <button
                     onClick={() => {
-                      onAddToCart(product, quantity, giftBox, giftNote);
+                      const finalNote = `${giftNote ? `${giftNote} ` : ''}${engravingText ? `[Engraving: "${engravingText}"] ` : ''}${!isGifting ? `[Box: ${velvetBoxColor}]` : ''}`.trim();
+                      onAddToCart(product, quantity, giftBox, finalNote);
                       onClose();
                     }}
                     className="flex-1 py-3 px-4 bg-stone-900 text-stone-50 font-medium text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
@@ -372,7 +467,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1">
                 <span className="flex items-center gap-1">
                   <Truck className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Free express delivery across India</span>
+                  <span>Free insured express delivery across India</span>
                 </span>
                 <span>Dispatch within 24 Hours</span>
               </div>

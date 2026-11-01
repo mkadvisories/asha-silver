@@ -1,6 +1,6 @@
 import React from 'react';
-import { Heart, Eye, ShoppingBag, ShieldCheck, Video } from 'lucide-react';
-import { Product, isPriceOnRequest } from '../data/products';
+import { Heart, Eye, ShoppingBag, ShieldCheck, Video, Gift, Sparkles, PenTool } from 'lucide-react';
+import { Product, isPriceOnRequest, isGiftingProduct } from '../data/products';
 
 interface ProductCardProps {
   product: Product;
@@ -20,10 +20,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onRequestQuote,
 }) => {
   const priceRemoved = isPriceOnRequest(product);
+  const isGifting = isGiftingProduct(product);
 
   return (
-    <article className="group bg-white rounded-xl border border-stone-200/90 overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-stone-300">
-      {/* Visual Image Container (65-75% visual prominence) */}
+    <article className="group bg-white rounded-xl border border-stone-200/90 overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-stone-300">
+      {/* Visual Image Container */}
       <div className="relative aspect-[4/3] bg-stone-100/70 overflow-hidden">
         <img
           src={product.image}
@@ -33,8 +34,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           referrerPolicy="no-referrer"
         />
 
-        {/* Quick actions overlay */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+        {/* Purity & Craft Style Badges: Suppress purity badge for gifting products */}
+        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+          {!isGifting && (
+            <span className="bg-stone-950/85 backdrop-blur-sm text-amber-200 text-[10px] font-semibold px-2.5 py-0.5 rounded shadow-sm">
+              {product.purity}
+            </span>
+          )}
+          {product.category === 'hampers' && (
+            <span className="bg-amber-100/95 text-amber-950 text-[9px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider flex items-center gap-1">
+              <Gift className="w-2.5 h-2.5 text-amber-900" />
+              <span>Luxury Hamper</span>
+            </span>
+          )}
+          {product.craftStyle && (
+            <span className="bg-white/90 backdrop-blur-sm text-stone-800 text-[9px] font-medium px-2 py-0.5 rounded shadow-sm hidden sm:inline-block">
+              {product.craftStyle}
+            </span>
+          )}
+        </div>
+
+        {/* Quick Wishlist Action */}
+        <div className="absolute top-2.5 right-2.5 flex flex-col gap-2 z-10">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -67,38 +88,58 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Card Content & Details (Zero-Pill Typography) */}
+      {/* Card Content & Details */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3">
         <div className="space-y-1.5">
-          {/* Quiet Unboxed Metadata */}
-          <div className="flex items-center gap-2 text-xs text-stone-500 font-medium">
-            <span>{product.purity}</span>
-            <span aria-hidden="true">·</span>
-            <span>{product.weightGrams}g Gross</span>
-            <span aria-hidden="true">·</span>
-            <span className="flex items-center gap-0.5 text-amber-900">
-              <ShieldCheck className="w-3 h-3" />
-              <span>100% Pure Silver</span>
+          {/* Metadata: Suppress gram weight for gifting products */}
+          <div className="flex items-center justify-between text-[11px] text-stone-500 font-medium">
+            <span className="text-amber-950 font-semibold uppercase tracking-wider text-[10px]">
+              {product.categoryLabel}
             </span>
+            {!isGifting && (
+              <span className="font-mono">~{product.weightGrams}g Silver</span>
+            )}
           </div>
 
           {/* Product Title */}
           <h3
             onClick={() => onQuickView(product)}
-            className="font-serif text-base sm:text-lg font-medium text-stone-900 line-clamp-2 hover:text-amber-950 cursor-pointer transition-colors"
+            className="font-serif text-base sm:text-lg font-medium text-stone-900 line-clamp-2 hover:text-amber-950 cursor-pointer transition-colors leading-snug"
             title={product.name}
           >
             {product.name}
           </h3>
 
+          {/* Key Value Proposition Feature Tags */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[10px]">
+            {!isGifting && product.includesVelvetBox && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200/70 font-medium">
+                <Gift className="w-2.5 h-2.5" />
+                <span>Velvet Box</span>
+              </span>
+            )}
+            {product.customEngravingAvailable && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 font-medium">
+                <PenTool className="w-2.5 h-2.5 text-stone-500" />
+                <span>Engraving Available</span>
+              </span>
+            )}
+            {product.antiTarnishProtected && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 font-medium">
+                <ShieldCheck className="w-2.5 h-2.5 text-emerald-600" />
+                <span>Anti-Tarnish</span>
+              </span>
+            )}
+          </div>
+
           {/* Brief auspicious context */}
-          <p className="text-xs text-stone-500 line-clamp-1">
+          <p className="text-xs text-stone-500 line-clamp-1 pt-0.5">
             {product.auspiciousSignificance}
           </p>
         </div>
 
         {/* Pricing & Cart Action */}
-        <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-3">
+        <div className="pt-2.5 border-t border-stone-100 flex items-center justify-between gap-3">
           {priceRemoved ? (
             <div>
               <div className="text-sm font-semibold text-stone-900">
@@ -111,7 +152,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ) : (
             <div>
               <div className="flex items-baseline gap-2">
-                <span className="text-base font-semibold text-stone-900 tabular-nums">
+                <span className="text-base font-bold text-stone-900 tabular-nums">
                   ₹{product.price?.toLocaleString('en-IN')}
                 </span>
                 {product.originalPrice && (
@@ -120,8 +161,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   </span>
                 )}
               </div>
-              <div className="text-[11px] text-stone-500">
-                {product.purityCode === '999' ? 'MCX + 3% · Incl. GST' : 'Inclusive of GST'}
+              <div className="text-[10px] text-stone-500">
+                {isGifting ? 'Inclusive of 3% GST' : product.purityCode === '999' ? 'MCX + 3% Formula' : 'Inclusive of 3% GST'}
               </div>
             </div>
           )}

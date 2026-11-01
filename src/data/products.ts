@@ -1,17 +1,27 @@
 import { ASSET_IMAGES } from '../assets/images';
 
+export type ProductCategory =
+  | 'hampers'
+  | 'home-decor'
+  | 'barware'
+  | 'desk'
+  | 'god-items'
+  | 'utensils'
+  | 'gifts'
+  | 'bullion';
+
 export interface Product {
   id: string;
   name: string;
   hindiName?: string;
-  category: 'utensils' | 'god-items' | 'gifts' | 'bullion';
+  category: ProductCategory;
   categoryLabel: string;
   purity: '925 Sterling Silver' | '999 Pure Silver' | '880 Traditional Silverware';
   purityCode: '925' | '999' | '880';
   weightGrams: number;
-  price?: number; // Optional: removed for 92.5 Utensils & Thalis (Price on Request)
+  price?: number; // Optional: removed for 92.5 & 880 Utensils & Thalis (Price on Request)
   originalPrice?: number;
-  priceOnRequest?: boolean; // True for 92.5 Utensil and Thali products
+  priceOnRequest?: boolean; // True for 92.5 & 880 Utensil and Thali products
   makingChargesPerGram: number;
   image: string;
   description: string;
@@ -21,13 +31,27 @@ export interface Product {
   featured?: boolean;
   isDhanterasSpecial?: boolean;
   occasion?: string;
+  giftingOccasion?: 'wedding' | 'housewarming' | 'corporate' | 'festive' | 'anniversary' | 'baby';
+  budgetTier?: 'under-2500' | '2500-5000' | '5000-15000' | 'above-15000';
+  customEngravingAvailable?: boolean;
+  includesVelvetBox?: boolean;
+  antiTarnishProtected?: boolean;
+  craftStyle?: string;
+  isGiftingItem?: boolean;
+}
+
+// Helper to determine if product belongs to gifting/hampers studio (no purity % or gram weight shown)
+export function isGiftingProduct(product: Product): boolean {
+  if (product.isGiftingItem) return true;
+  if (product.category === 'hampers' || product.category === 'gifts') return true;
+  return false;
 }
 
 // Helper to determine if product is a 92.5 Utensil or Thali with custom quote
 export function isPriceOnRequest(product: Product): boolean {
   if (product.priceOnRequest) return true;
   if (
-    product.purityCode === '925' &&
+    (product.purityCode === '925' || product.purityCode === '880') &&
     (product.category === 'utensils' ||
       product.name.toLowerCase().includes('thali') ||
       product.name.toLowerCase().includes('utensil') ||
@@ -40,6 +64,323 @@ export function isPriceOnRequest(product: Product): boolean {
 }
 
 export const PRODUCTS: Product[] = [
+  // 1. CURATED LUXURY GIFTING & HAMPERS
+  {
+    id: 'asha-lotus-tealight-pair',
+    name: 'Artisan Pure Silver Lotus Tealight Holders (Pair)',
+    hindiName: 'कमल पंखुड़ी शुद्ध चांदी दीप पात्र जोड़ी',
+    category: 'gifts',
+    categoryLabel: 'Silver Gift Studio',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 80,
+    price: 1850,
+    originalPrice: 2200,
+    makingChargesPerGram: 16,
+    image: ASSET_IMAGES.silverLotusTealight,
+    description: 'Bespoke pair of hand-hammered pure silver blooming lotus tealight holders. Handcrafted with layered floral petals that cast radiant celebratory warm light, making an exquisite festive and wedding favor gift.',
+    auspiciousSignificance: 'The sacred lotus evokes the presence of Goddess Lakshmi, radiating peace, purity, and spiritual luminescence.',
+    dimensions: 'Diameter: 4.2 inches each · Set of 2 Tealight Holders',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: true,
+    occasion: 'Diwali, Weddings, Housewarming & Festive Celebrations',
+    giftingOccasion: 'festive',
+    budgetTier: 'under-2500',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Hand-Hammered Petal Karigari',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-dry-fruit-keepsake-box',
+    name: 'Handcrafted Pure Silver Filigree Dry Fruit Keepsake Box',
+    hindiName: 'हस्तनिर्मित नक्काशीदार चांदी मेवा मंजूषा',
+    category: 'gifts',
+    categoryLabel: 'Silver Gift Studio',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 160,
+    price: 5800,
+    originalPrice: 6800,
+    makingChargesPerGram: 22,
+    image: ASSET_IMAGES.silverDryFruitBox,
+    description: 'Mastercrafted fine silver dry fruit and confectionery box featuring intricately embossed floral vine filigree on the lid and partitioned inner compartments. Ideal for wedding return gifting and VIP hospitality.',
+    auspiciousSignificance: 'Symbol of prosperity, sweet beginnings, and timeless Indian hospitality traditions.',
+    dimensions: 'Length: 7.5 inches · Width: 5 inches · Height: 2.5 inches',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: true,
+    occasion: 'Weddings, VIP Favors & Milestone Celebrations',
+    giftingOccasion: 'wedding',
+    budgetTier: '5000-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Royal Embossed Nakshi & Filigree',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-royal-wedding-hamper',
+    name: 'The Royal Grandeur Luxury Gifting Hamper',
+    hindiName: 'शाही राजसी विवाह उपहार मंजूषा',
+    category: 'hampers',
+    categoryLabel: 'Luxury Gifting Hampers',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 165,
+    price: 12500,
+    originalPrice: 14500,
+    makingChargesPerGram: 22,
+    image: ASSET_IMAGES.silverLuxuryHamper,
+    description: 'An opulent royal luxury hamper box housing an intricately pierced silver diya, an engraved silver dry-fruit katori bowl, an ornate keepsake box, and a consecrated pure silver coin with golden celebratory sash. Accompanied by bespoke greetings card with custom recipient calligraphy.',
+    auspiciousSignificance: 'The pinnacle of prestigious wedding return favors and milestone anniversary gifting, conveying eternal blessings and royal respect.',
+    dimensions: 'Hamper Box: 12 × 10 × 4 inches · Complete 4-Piece Silver Suite',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: true,
+    occasion: 'Weddings, VIP Anniversaries & Royal Celebrations',
+    giftingOccasion: 'wedding',
+    budgetTier: '5000-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Pierced Filigree & Repoussé Nakshi',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-graha-pravesh-blessing-hamper',
+    name: 'Graha Pravesh Shubh Vastu Blessing Gift Set',
+    hindiName: 'गृह प्रवेश शुभ वास्तु आशीर्वाद उपहार सेट',
+    category: 'hampers',
+    categoryLabel: 'Luxury Gifting Hampers',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 125,
+    price: 8900,
+    originalPrice: 10500,
+    makingChargesPerGram: 20,
+    image: ASSET_IMAGES.silverGiftItems,
+    description: 'Specialized housewarming hamper pairing a pure silver Vastu turtle on embossed plate, a consecrated silver kalash, and an artisan floral agarbatti burner in a custom satin-lined keepsake case.',
+    auspiciousSignificance: 'Formulated according to Vedic Vastu Shastra principles to purify new residential spaces, dissolve architectural doshas, and attract stable fortune.',
+    dimensions: 'Box: 9.5 × 7 inches · 3 Sanctified Pieces',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: false,
+    occasion: 'Housewarming (Graha Pravesh) & Office Inauguration',
+    giftingOccasion: 'housewarming',
+    budgetTier: '5000-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Vedic Repoussé Chasing',
+    isGiftingItem: true,
+  },
+
+  // 2. HOME & DECOR (Pichwai Frames, Vastu Decor, Tea-Light Holders)
+  {
+    id: 'asha-pichwai-lotus-photo-frame',
+    name: 'Heirloom Pichwai Lotus & Sacred Cow Pure Silver Photo Frame (5×7)',
+    hindiName: 'पिछवाई कमल व कामधेनु शुद्ध रजत चित्र पटल (५×७)',
+    category: 'home-decor',
+    categoryLabel: 'Home & Decor',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 95,
+    price: 3600,
+    originalPrice: 4200,
+    makingChargesPerGram: 18,
+    image: ASSET_IMAGES.silverPichwaiFrame,
+    description: 'Masterfully chased sterling silver photo frame inspired by traditional Nathdwara Pichwai art. Features high-relief Kamdhenu cows, sacred blooming lotuses, and royal floral vine borders with an easel back and crystal glass front.',
+    auspiciousSignificance: 'Honors sacred ancestry and beloved family memories with the divine protection of Lord Shrinathji and Kamdhenu.',
+    dimensions: 'Outer: 8.5 × 6.5 inches · Photo Aperture: 5 × 7 inches',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: true,
+    occasion: 'Festive Home Decor, Living Room & Gifting',
+    giftingOccasion: 'anniversary',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Pichwai Chasing & Fine Baari-ki',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-vastu-silver-tortoise-plate',
+    name: 'Auspicious Vastu Pure Silver Tortoise on Embossed Plate with Shree Yantra',
+    hindiName: 'वास्तु शुभ चांदी कछुआ व श्री यंत्र रजत थाली',
+    category: 'home-decor',
+    categoryLabel: 'Home & Decor',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 65,
+    price: 2100,
+    originalPrice: 2500,
+    makingChargesPerGram: 16,
+    image: ASSET_IMAGES.silverVastuTortoise,
+    description: 'Handcrafted pure silver Vastu Kurma (tortoise) with micro-engraved Shree Yantra upon its shell, resting on an etched lotus petal silver tray accompanied by an ornate silver tea-light holder. Place in water in the North direction for financial serenity.',
+    auspiciousSignificance: 'The Kurma Avatar of Lord Vishnu anchors financial stability, career elevation, and protects the household against volatile expenditures.',
+    dimensions: 'Plate Diameter: 5.5 inches · Tortoise Length: 3.2 inches',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Vastu Sanctification & Diwali Shubh Labh',
+    giftingOccasion: 'housewarming',
+    budgetTier: 'under-2500',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Hand-Cast Chased Repoussé',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-lotus-urli-tealight-pair',
+    name: 'Artisan Pure Silver Lotus Floating Urli & Tea-Light Holder (Pair)',
+    hindiName: 'कमल पंखुड़ी शुद्ध चांदी दीप पात्र जोड़ी',
+    category: 'home-decor',
+    categoryLabel: 'Home & Decor',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 80,
+    price: 3600,
+    originalPrice: 4200,
+    makingChargesPerGram: 16,
+    image: ASSET_IMAGES.diyaDeepam,
+    description: 'Pair of blooming multi-layered lotus petals crafted in sterling silver with mirror-polished interior to cast luminous festive shadows. Accommodates standard tea-lights, brass oil wicks, or scented floating blossoms.',
+    auspiciousSignificance: 'The lotus is Goddess Lakshmi’s divine seat. Welcomes ambient positive vibrations, festive glow, and spiritual warmth to your entryway.',
+    dimensions: 'Diameter: 4 inches each · Height: 1.8 inches each (Pair of 2)',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Deepotsav, Dining Table Centerpieces & Diwali',
+    giftingOccasion: 'festive',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Pierced Petal Chasing',
+    isGiftingItem: true,
+  },
+
+  // 3. BARWARE & FINE DINING TABLEWARE (Luxury Barware, Goblets, Decanters)
+  {
+    id: 'asha-royal-silver-wine-goblets-pair',
+    name: 'Rajwada Imperial Pure Silver Wine Goblets & Decanter Accent Set',
+    hindiName: 'राजसी शुद्ध चांदी मदिरा पात्र (युगल गोबलेट्स)',
+    category: 'barware',
+    categoryLabel: 'Barware & Tableware',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 220,
+    price: 14500,
+    originalPrice: 16800,
+    makingChargesPerGram: 24,
+    image: ASSET_IMAGES.silverBarwareGoblet,
+    description: 'Set of two heavy sterling silver wine chalices with hand-engraved acanthus scrolls on the bowl, flared baluster stems, and 24K gold-wash interior to prevent wine acidity reaction. Designed for connoisseurs celebrating life’s monumental milestones.',
+    auspiciousSignificance: 'Symbol of royal Indian hospitality, celebratory toasts, and heritage feasting traditions.',
+    dimensions: 'Height: 6.8 inches each · Capacity: 210ml each · Pair of 2 Chalices',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: false,
+    occasion: 'Cocktail Soirées, Luxury Bar Accents & Wedding Toasts',
+    giftingOccasion: 'wedding',
+    budgetTier: '5000-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Imperial Chasing & 24K Gold Vermeil Lining',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-silver-cocktail-stirrer-set',
+    name: 'Artisan Sterling Silver Cocktail Stirrers with Lotus Finials (Set of 4)',
+    hindiName: 'हस्तनिर्मित चांदी कॉकटेल स्टिरर सेट (४ का सेट)',
+    category: 'barware',
+    categoryLabel: 'Barware & Tableware',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 75,
+    price: 3200,
+    originalPrice: 3800,
+    makingChargesPerGram: 18,
+    image: ASSET_IMAGES.silverBarwareGoblet,
+    description: 'Four slender hand-twisted sterling silver cocktail stirrers capped with sculpted floral finials (lotus bud, peacock plume, royal elephant, and paisley). Perfect luxury accoutrement for home bars and cocktail gifting.',
+    auspiciousSignificance: 'Elevates everyday hosting into an artisanal ceremony of refined taste.',
+    dimensions: 'Length: 7.5 inches each · Set of 4 in Keepsake Case',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: false,
+    occasion: 'Bar Accessories & Modern Housewarming Gifts',
+    giftingOccasion: 'housewarming',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Twisted Wire & Cast Sculpting',
+    isGiftingItem: true,
+  },
+
+  // 4. EXECUTIVE & DESK ACCESSORIES (Bookmarks, Cardholders, Desk Accents)
+  {
+    id: 'asha-sterling-peacock-bookmark',
+    name: 'Handcrafted Sterling Silver Peacock Quill Bookmark',
+    hindiName: 'मयूर पंख शुद्ध चांदी पुस्तक चिन्ह (बुकमार्क)',
+    category: 'desk',
+    categoryLabel: 'Executive & Desk',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 28,
+    price: 1250,
+    originalPrice: 1500,
+    makingChargesPerGram: 15,
+    image: ASSET_IMAGES.silverDeskAccessories,
+    description: 'Delicately filigreed sterling silver bookmark modeled after a dancing peacock feather with subtle midnight-blue enamel accents and crimson silk tassel. Slides gracefully into sacred scriptures, diaries, or executive journals.',
+    auspiciousSignificance: 'The peacock feather symbolizes Goddess Saraswati’s wisdom, eloquence, and intellectual refinement.',
+    dimensions: 'Length: 5.5 inches · Premium Presentation Box',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: false,
+    occasion: 'Literary Connoisseurs, Teachers & Corporate Favors',
+    giftingOccasion: 'corporate',
+    budgetTier: 'under-2500',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Precision Filigree & Meenakari Enameling',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-executive-visiting-card-case',
+    name: 'Regal Chased Sterling Silver Business Card Case & Pen Stand',
+    hindiName: 'राजसी चांदी विज़िटिंग कार्ड धारक व लेखनी स्टैंड',
+    category: 'desk',
+    categoryLabel: 'Executive & Desk',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 70,
+    price: 2850,
+    originalPrice: 3400,
+    makingChargesPerGram: 18,
+    image: ASSET_IMAGES.silverDeskAccessories,
+    description: 'Solid sterling silver desktop business card cradle with Victorian acanthus borders and dual pen slot, lacquered to preserve its showroom sheen without routine polishing. Personalized initials engraving included upon request.',
+    auspiciousSignificance: 'Anchors authoritative presence, prosperous enterprise, and noble commerce on your executive workstation.',
+    dimensions: 'Width: 3.8 inches · Depth: 2.2 inches · Height: 2 inches',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: false,
+    occasion: 'Executive Promotion, Milestone Gifting & Leadership',
+    giftingOccasion: 'corporate',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Embossed Scroll Chasing',
+    isGiftingItem: true,
+  },
+
+  // 5. SACRED MANDIR & DEITIES (Asha Silver Heritage Lineage)
   {
     id: 'asha-lakshmi-ganesh-sinhasan',
     name: 'Shree Mahalakshmi & Ganesha on Royal Nakshi Sinhasan with Silver Ghanti',
@@ -49,7 +390,6 @@ export const PRODUCTS: Product[] = [
     purity: '999 Pure Silver',
     purityCode: '999',
     weightGrams: 280,
-    // 999 Pure Silver: MCX Spot (₹212.45) + 3% = ₹218.82/g. Total = 280 * 218.82 + 280 * 24 making = ₹67,990
     price: 67990,
     originalPrice: 75500,
     makingChargesPerGram: 24,
@@ -61,7 +401,96 @@ export const PRODUCTS: Product[] = [
     featured: true,
     isDhanterasSpecial: true,
     occasion: 'Dhanteras Puja & Divine Mandir Sanctification',
+    giftingOccasion: 'festive',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Master Hand Chasing (Nakshi)',
   },
+  {
+    id: 'asha-lakshmi-ganesh-single-chowki',
+    name: 'Divine Lakshmi & Ganesha Pure Silver Idols on Lotus Chowki',
+    hindiName: 'महालक्ष्मी व श्री गणेश कमल चौकी मूर्ति',
+    category: 'god-items',
+    categoryLabel: 'Silver Items of God',
+    purity: '999 Pure Silver',
+    purityCode: '999',
+    weightGrams: 145,
+    price: 34780,
+    originalPrice: 38500,
+    makingChargesPerGram: 21,
+    image: ASSET_IMAGES.lakshmiIdol,
+    description: 'Pure 999 fine silver Lakshmi and Ganesha deities resting upon an embossed lotus pedestal. Compact and reverent, perfect for household altars, sacred lockers, and daily abhishek.',
+    auspiciousSignificance: 'Brings peace, removal of hurdles, and perpetual financial stability on Dhanteras.',
+    dimensions: 'Height: 3.5 inches · Base: 4.2 inches diameter',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Mandir Sthapana & Dhanteras Puja',
+    giftingOccasion: 'festive',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Solid Casting & Mirror Buffing',
+  },
+  {
+    id: 'asha-silver-kamakshi-diya-pair',
+    name: 'Traditional Heavy Kamakshi Deepam Pure Silver Diya (Pair)',
+    hindiName: 'पारंपरिक कामाक्षी दीपम शुद्ध चांदी दीपक जोड़ी',
+    category: 'god-items',
+    categoryLabel: 'Silver Items of God',
+    purity: '999 Pure Silver',
+    purityCode: '999',
+    weightGrams: 120,
+    price: 28660,
+    originalPrice: 31800,
+    makingChargesPerGram: 20,
+    image: ASSET_IMAGES.diyaDeepam,
+    description: 'Pair of heavy pure 999 silver Kamakshi deepams with engraved Gajalakshmi motifs on the crest, oil reservoir, and stable base. Cast to radiate warm, auspicious illumination during evening aarti and festival pujas.',
+    auspiciousSignificance: 'Lighting pure silver deepams on Dhanteras night dispels negative planetary influences and welcomes prosperity into the doorway.',
+    dimensions: 'Height: 4.5 inches each · Oil Capacity: 40ml each',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Diwali Deepotsav & Mandir Nitya Aarti',
+    giftingOccasion: 'festive',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Gajalakshmi Crest Casting',
+  },
+  {
+    id: 'asha-charan-paduka-box',
+    name: 'Consecrated Mahalakshmi & Vishnu Charan Padukas in Silver Shrine Box',
+    hindiName: 'श्री महालक्ष्मी व विष्णु चरण पादुका रजत मंजूषा',
+    category: 'god-items',
+    categoryLabel: 'Silver Items of God',
+    purity: '999 Pure Silver',
+    purityCode: '999',
+    weightGrams: 55,
+    price: 4200,
+    originalPrice: 4900,
+    makingChargesPerGram: 18,
+    image: ASSET_IMAGES.silverGodItems,
+    description: 'Deeply etched 999 pure silver footprints of Goddess Lakshmi and Lord Vishnu embossed with sacred Vayu, Shankha, Chakra, and Padma symbols. Encased in a gold-embossed crimson velvet shrine box with see-through glass.',
+    auspiciousSignificance: 'Installs the permanent divine footprints of Lakshmi inside home cash boxes, corporate safes, and puja altars.',
+    dimensions: 'Paduka Length: 3.2 inches · Shrine Box: 5 × 4 inches',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Mandir Sanctum, Lockers & Diwali Gifting',
+    giftingOccasion: 'festive',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Sacred Iconographic Relief',
+  },
+
+  // 6. ROYAL SILVER UTENSILS & DINING (925 & 880 Purity - Custom Quote on Request)
   {
     id: 'asha-royal-dining-thali-set',
     name: 'Rajwada Pure Silver Pooja & Royal Dining Thali Set',
@@ -71,7 +500,6 @@ export const PRODUCTS: Product[] = [
     purity: '925 Sterling Silver',
     purityCode: '925',
     weightGrams: 480,
-    // Price removed for 92.5 Utensils & Thalis (Custom Quote on Request)
     priceOnRequest: true,
     makingChargesPerGram: 25,
     image: ASSET_IMAGES.silverUtensilsThali,
@@ -82,6 +510,12 @@ export const PRODUCTS: Product[] = [
     featured: true,
     isDhanterasSpecial: true,
     occasion: 'Dhanteras Shubh Muhurat Utensil Purchase',
+    giftingOccasion: 'wedding',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Heirloom Hammered & Chased Border',
   },
   {
     id: 'asha-pure-silver-pitcher-tumbler',
@@ -92,7 +526,6 @@ export const PRODUCTS: Product[] = [
     purity: '925 Sterling Silver',
     purityCode: '925',
     weightGrams: 390,
-    // Price removed for 92.5 Utensils & Thalis (Custom Quote on Request)
     priceOnRequest: true,
     makingChargesPerGram: 25,
     image: ASSET_IMAGES.silverUtensilsPitcher,
@@ -103,7 +536,41 @@ export const PRODUCTS: Product[] = [
     featured: true,
     isDhanterasSpecial: false,
     occasion: 'Ayurvedic Wellness & Heritage Dining',
+    giftingOccasion: 'wedding',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Ayurvedic Hand Hammering',
   },
+  {
+    id: 'asha-traditional-880-dinner-plate',
+    name: '880 Purity Traditional Royal Indian Feasting Plate & Katoris',
+    hindiName: '८८० शुद्धता पारंपरिक राजसी थाली व कटोरी सेट',
+    category: 'utensils',
+    categoryLabel: 'Silver Utensils',
+    purity: '880 Traditional Silverware',
+    purityCode: '880',
+    weightGrams: 620,
+    priceOnRequest: true,
+    makingChargesPerGram: 22,
+    image: ASSET_IMAGES.heroBanner,
+    description: 'Heavy traditional 88% silverware dining plate engineered specifically for daily Indian feasting and royal banquets. Its metallurgical formulation provides extraordinary rigidity, dent resistance, and lifelong heirloom durability.',
+    auspiciousSignificance: 'The historic hallmark alloy of royal Rajputana feasting and Ayurvedic dining.',
+    dimensions: 'Thali Diameter: 12.5 inches · Plate Weight: ~620g',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: false,
+    occasion: 'Royal Dining & Daily Ayurvedic Feasting',
+    giftingOccasion: 'wedding',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: false,
+    craftStyle: 'Traditional 880 Heavy Forging',
+  },
+
+  // 7. COINS & BULLION (Investment Tokens & Gifting)
   {
     id: 'asha-dhanteras-lakshmi-ganesh-coin',
     name: 'Shubh Dhanteras 999 Pure Silver Commemorative Coin (50g)',
@@ -113,18 +580,50 @@ export const PRODUCTS: Product[] = [
     purity: '999 Pure Silver',
     purityCode: '999',
     weightGrams: 50,
-    // 999 Pure Silver: MCX Spot (₹212.45) + 3% = ₹218.82/g. Total = 50 * 218.82 + 50 * 15 making = ₹11,690
     price: 11690,
     originalPrice: 13000,
     makingChargesPerGram: 15,
     image: ASSET_IMAGES.silverCoin,
-    description: 'High-relief mint coin struck in pure 999 fine silver displaying Goddess Lakshmi seated on a lotus with Lord Ganesha on the obverse, and the auspicious Shree Yantra with Shubh Labh inscription on the reverse. Presented in a capsule and velvet display box.',
+    description: 'High-relief mint coin struck in pure 999 fine silver displaying Goddess Lakshmi seated on a lotus with Lord Ganesha on the obverse, and the auspicious Shree Yantra with Shubh Labh inscription on the reverse. Presented in an acrylic capsule and royal velvet display box.',
     auspiciousSignificance: 'The classic Dhanteras investment token. Stored in safes, cash boxes, and puja mandirs to attract perpetual wealth and positive financial flow.',
     dimensions: 'Diameter: 44mm · Thickness: 3.8mm · 50.00g Precise Weight',
     inStock: true,
     featured: false,
     isDhanterasSpecial: true,
     occasion: 'Auspicious Dhanteras Token & Corporate Gifting',
+    giftingOccasion: 'corporate',
+    budgetTier: '5000-15000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Proof Mint Struck 999 Bullion',
+  },
+  {
+    id: 'asha-10g-silver-coin-capsule',
+    name: 'Divine Shubh Labh 999 Pure Silver Coin Capsule (10g)',
+    hindiName: 'शुभ लाभ ९९९ शुद्ध चांदी सिक्का (१० ग्राम)',
+    category: 'gifts',
+    categoryLabel: 'Silver Gift Items',
+    purity: '999 Pure Silver',
+    purityCode: '999',
+    weightGrams: 10,
+    price: 2350,
+    originalPrice: 2650,
+    makingChargesPerGram: 16,
+    image: ASSET_IMAGES.silverCoin,
+    description: 'Minted in pure 999 fine silver featuring embossed Lord Ganesha and Goddess Lakshmi, housed in a tamper-proof crystal acrylic protective capsule with celebratory golden foil greeting sleeve.',
+    auspiciousSignificance: 'Perfect for auspicious gifting to wedding guests, corporate teams, and festive visitors on Dhanteras.',
+    dimensions: 'Diameter: 32mm · Weight: 10.00g Assayed',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Wedding Return Favors & Bulk Corporate Gifting',
+    giftingOccasion: 'corporate',
+    budgetTier: 'under-2500',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Mint Proof Finish',
   },
   {
     id: 'asha-nakshi-silver-gift-box',
@@ -146,109 +645,105 @@ export const PRODUCTS: Product[] = [
     featured: false,
     isDhanterasSpecial: true,
     occasion: 'Weddings & Dhanteras Prestige Gifting',
+    giftingOccasion: 'wedding',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Repoussé Floral Nakshi Chasing',
   },
   {
-    id: 'asha-silver-kamakshi-diya-pair',
-    name: 'Traditional Heavy Kamakshi Deepam Pure Silver Diya (Pair)',
-    hindiName: 'पारंपरिक कामाक्षी दीपम शुद्ध चांदी दीपक जोड़ी',
-    category: 'god-items',
-    categoryLabel: 'Silver Items of God',
-    purity: '999 Pure Silver',
-    purityCode: '999',
-    weightGrams: 120,
-    // 999 Pure Silver: MCX Spot (₹212.45) + 3% = ₹218.82/g. Total = 120 * 218.82 + 120 * 20 making = ₹28,660
-    price: 28660,
-    originalPrice: 31800,
-    makingChargesPerGram: 20,
-    image: ASSET_IMAGES.diyaDeepam,
-    description: 'Pair of heavy pure 999 silver Kamakshi deepams with engraved Gajalakshmi motifs on the crest, oil reservoir, and stable base. Cast to radiate warm, auspicious illumination during evening aarti and festival pujas.',
-    auspiciousSignificance: 'Lighting pure silver deepams on Dhanteras night dispels negative planetary influences and welcomes prosperity into the doorway.',
-    dimensions: 'Height: 4.5 inches each · Oil Capacity: 40ml each',
-    inStock: true,
-    featured: false,
-    isDhanterasSpecial: true,
-    occasion: 'Diwali Deepotsav & Mandir Nitya Aarti',
-  },
-  {
-    id: 'asha-lakshmi-ganesh-single-chowki',
-    name: 'Divine Lakshmi & Ganesha Pure Silver Idols on Lotus Chowki',
-    hindiName: 'महालक्ष्मी व श्री गणेश कमल चौकी मूर्ति',
-    category: 'god-items',
-    categoryLabel: 'Silver Items of God',
-    purity: '999 Pure Silver',
-    purityCode: '999',
-    weightGrams: 145,
-    // 999 Pure Silver: MCX Spot (₹212.45) + 3% = ₹218.82/g. Total = 145 * 218.82 + 145 * 21 making = ₹34,780
-    price: 34780,
-    originalPrice: 38500,
-    makingChargesPerGram: 21,
-    image: ASSET_IMAGES.lakshmiIdol,
-    description: 'Pure 999 fine silver Lakshmi and Ganesha deities resting upon an embossed lotus pedestal. Compact and reverent, perfect for household altars, sacred lockers, and daily abhishek.',
-    auspiciousSignificance: 'Brings peace, removal of hurdles, and perpetual financial stability on Dhanteras.',
-    dimensions: 'Height: 3.5 inches · Base: 4.2 inches diameter',
-    inStock: true,
-    featured: false,
-    isDhanterasSpecial: true,
-    occasion: 'Mandir Sthapana & Dhanteras Puja',
-  },
-  {
-    id: 'asha-dhanteras-puja-dining-suite-grand',
-    name: 'Grand Dhanteras Mahotsav Pure Silver Utensils & Deity Ensemble',
-    hindiName: 'श्री धनतेरस महामहोत्सव संपूर्ण रजत पात्र व देव थाल',
-    category: 'utensils',
-    categoryLabel: 'Silver Utensils',
+    id: 'asha-baby-bowl-spoon-set',
+    name: 'Artisanal Pure Silver Baby Feeding Bowl & Paladai Spoon Set',
+    hindiName: 'हस्तनिर्मित शुद्ध चांदी बाल कटोरी व चम्मच उपहार सेट',
+    category: 'hampers',
+    categoryLabel: 'New Born & Baby Gifts',
     purity: '925 Sterling Silver',
     purityCode: '925',
-    weightGrams: 550,
-    // Price removed for 92.5 Utensils & Thalis (Custom Quote on Request)
-    priceOnRequest: true,
-    makingChargesPerGram: 25,
-    image: ASSET_IMAGES.heroBanner,
-    description: 'The ultimate Dhanteras ensemble comprising an embossed silver thali, pure silver drinking glass, prasad katoris, silver spoon, pure silver Lakshmi-Ganesha idols on silver base, lit silver diya, and pure silver Dhanteras coins.',
-    auspiciousSignificance: 'Everything required to celebrate an auspicious, prosperous Dhanteras and Diwali in a single heirloom suite.',
-    dimensions: 'Grand Thali 12.5 inches · Full 10-piece suite · 550g pure silver weight',
+    weightGrams: 90,
+    price: 3450,
+    originalPrice: 3950,
+    makingChargesPerGram: 0,
+    image: ASSET_IMAGES.silverBabyGiftSet,
+    description: 'Exquisite solid silver baby dining set comprising a rounded ergonomic feeding bowl and traditional paladai-style spoon. Crafted with rounded, non-scratch edges to ensure absolute baby safety and hygienic feeding.',
+    auspiciousSignificance: 'A sacred Vedic blessing for Annaprashan (first rice feeding) and Namkaran ceremonies, symbolizing lifelong health, pure nourishment, and prosperity.',
+    dimensions: 'Bowl: 3.2" Diameter · Spoon: 4.5" Length · Satin Gift Presentation Box',
     inStock: true,
     featured: true,
-    isDhanterasSpecial: true,
-    occasion: 'Dhanteras Mahotsav Grand Utensils',
-  }
+    occasion: 'New Born & Baby Milestones (Annaprashan & Namkaran)',
+    giftingOccasion: 'baby',
+    budgetTier: '2500-5000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Smooth Mirror Polish with Baby-Safe Beveled Rims',
+    isGiftingItem: true,
+  },
+  {
+    id: 'asha-baby-rattle-nazariya-set',
+    name: 'Auspicious Pure Silver Heirloom Baby Rattle & Nazariya Kada Set',
+    hindiName: 'पारंपरिक शुद्ध चांदी झुनझुना व नजरिया कड़ा सेट',
+    category: 'gifts',
+    categoryLabel: 'New Born & Baby Gifts',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 55,
+    price: 2400,
+    originalPrice: 2800,
+    makingChargesPerGram: 0,
+    image: ASSET_IMAGES.silverBabyGiftSet,
+    description: 'Hand-tuned silver rattle emitting a gentle melodious chime, accompanied by a pair of smooth protective silver nazariya bangles with black bead accents to ward off negative energies.',
+    auspiciousSignificance: 'Traditional heirloom birth and baby shower gift given by grandparents and loved ones to invoke protective blessings and cheerfulness.',
+    dimensions: 'Rattle: 4" Length · Bangles: Adjustable Infant Fit · Festive Presentation Case',
+    inStock: true,
+    featured: false,
+    occasion: 'New Born & Baby Shower Gifting',
+    giftingOccasion: 'baby',
+    budgetTier: 'under-2500',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Chime Tuned Bell Work & Hand-set Nazariya',
+    isGiftingItem: true,
+  },
 ];
 
 // Authentic Live MCX India Silver Rates & Market Benchmarks
 // RULE: For 999 Pure Silver, add 3% on MCX to show the price
 export const LIVE_SILVER_RATES = {
   // MCX Spot & Futures Wholesale Benchmark (1 Kilogram base)
-  mcxPerKg: 212450.00,        // ₹2,12,450 per 1 kg on MCX
-  mcxPer100g: 21245.00,       // ₹21,245 per 100 grams
-  mcxPer10g: 2124.50,         // ₹2,124.50 per 10 grams
-  mcxPerGram: 212.45,         // ₹212.45 per gram base MCX
+  mcxPerKg: 183500.0, // ₹1,83,500 per 1 kg on MCX
+  mcxPer100g: 18350.0, // ₹18,350 per 100 grams
+  mcxPer10g: 1835.0, // ₹1,835.00 per 10 grams
+  mcxPerGram: 183.5, // ₹183.50 per gram base MCX
 
-  // 999 Pure Silver: ADD 3% ON MCX TO SHOW THE PRICE (₹212.45 * 1.03 = ₹218.82/g)
-  mcxAddPercentFor999: 3,     // 3% added on MCX
-  purity999: 218.82,          // ₹218.82 / gram (999 Pure Silver = MCX Spot + 3%)
-  purity999PerKg: 218823.50,  // ₹2,18,823.50 per kg (MCX ₹2,12,450 + 3%)
-  purity999Per10g: 2188.24,   // ₹2,188.24 per 10 grams (MCX ₹2,124.50 + 3%)
+  // 999 Pure Silver: ADD 3% ON MCX TO SHOW THE PRICE (₹183.50 * 1.03 = ₹189.01/g)
+  mcxAddPercentFor999: 3, // 3% added on MCX
+  purity999: 189.01, // ₹189.01 / gram (999 Pure Silver = MCX Spot + 3%)
+  purity999PerKg: 189005.0, // ₹1,89,005.00 per kg (MCX ₹1,83,500 + 3%)
+  purity999Per10g: 1890.05, // ₹1,890.05 per 10 grams (MCX ₹1,835.00 + 3%)
   purity999Formula: 'MCX Spot + 3%',
 
   // 925 Sterling Silver & Utensils
-  purity925: 196.50,          // Raw 925 bullion metal rate: ₹196.50 / gram
-  utensilsNotice: '92.5 Utensils & Thalis: Price on Request (Custom Weight & Design)',
+  purity925: 169.74, // Raw 925 bullion metal rate: ₹169.74 / gram
+  utensilsNotice: '92.5 & 880 Utensils: Price on Request (Custom Weight & Karigari)',
 
   // 880 Traditional Silverware (88% Silver)
-  purity880: 186.95,          // ₹186.95 / gram (880 Traditional Silverware)
-  purity880PerKg: 186950.00,  // ₹1,86,950 per kg (880 Traditional Silverware)
+  purity880: 161.48, // ₹161.48 / gram (880 Traditional Silverware)
+  purity880PerKg: 161480.0, // ₹1,61,480 per kg (880 Traditional Silverware)
 
   // MCX Market Trading Metrics
   exchange: 'MCX (Multi Commodity Exchange of India)',
   contract: 'SILVER 1KG ACTIVE FUTURES & SPOT',
-  dayChange: 1180.00,         // +₹1,180.00
-  dayChangePercent: 0.56,     // +0.56%
-  dayHigh: 213850.00,         // ₹2,13,850.00 / kg
-  dayLow: 210920.00,          // ₹2,10,920.00 / kg
-  openRate: 211400.00,        // ₹2,11,400.00 / kg
-  prevClose: 211270.00,       // ₹2,11,270.00 / kg
+  dayChange: 1180.0, // +₹1,180.00
+  dayChangePercent: 0.65, // +0.65%
+  dayHigh: 213850.0, // ₹2,13,850.00 / kg
+  dayLow: 210920.0, // ₹2,10,920.00 / kg
+  openRate: 211400.0, // ₹2,11,400.00 / kg
+  prevClose: 211270.0, // ₹2,11,270.00 / kg
   marketStatus: 'MCX Market Open',
-  lastUpdated: 'Live MCX Commodity Feed · Updated 1 min ago',
+  lastUpdated: 'Live MCX Commodity Feed · Auto-refreshes every 1 hr',
+  lastUpdatedDate: 'Just now',
   city: 'National Bullion Benchmark',
 
   muhurat: {
@@ -256,5 +751,5 @@ export const LIVE_SILVER_RATES = {
     date: 'Shubh Dhanteras 2026',
     timeWindow: '06:12 PM to 08:35 PM IST (Pradosh Kaal)',
     tithi: 'Kartik Krishna Trayodashi (Lakshmi-Kubera Puja & Utensils Buying)',
-  }
+  },
 };
