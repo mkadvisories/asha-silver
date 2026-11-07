@@ -83,12 +83,12 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <button
                   onClick={() => {
-                    onSelectCategory('barware');
+                    onSelectCategory('gift-studio');
                     onNavigateToSection('collection');
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Barware &amp; Fine Dining Goblets
+                  Gift Studio Curations
                 </button>
               </li>
               <li>
@@ -99,7 +99,7 @@ export const Footer: React.FC<FooterProps> = ({
                   }}
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
-                  Items of God (Mandir Idols &amp; Diyas)
+                  Mandir Idols &amp; God Articles
                 </button>
               </li>
               <li>
@@ -111,17 +111,6 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-amber-300 transition-colors cursor-pointer text-left"
                 >
                   Silver Utensils (Thali Sets &amp; Pitchers)
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    onSelectCategory('desk');
-                    onNavigateToSection('collection');
-                  }}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
-                >
-                  Executive Desk Accessories &amp; Bookmarks
                 </button>
               </li>
               <li>

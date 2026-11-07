@@ -194,49 +194,23 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Navigation Links with Competitive Benchmarking Categories */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-xs xl:text-sm font-medium text-stone-600">
-            {/* Gifting & Hampers with Badge */}
+          {/* Navigation Links - Streamlined without Barware or Executive Desk */}
+          <nav className="hidden lg:flex items-center gap-3.5 xl:gap-5 text-xs xl:text-sm font-medium text-stone-600 shrink min-w-0">
+            {/* Gift Studio Tab */}
             <button
               onClick={() => {
-                onSelectCategory('hampers');
+                onSelectCategory('gift-studio');
                 onNavigateToSection('collection');
               }}
               className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                activeCategory === 'hampers' ? 'text-stone-950 font-bold' : ''
+                activeCategory === 'gift-studio' ? 'text-stone-950 font-bold' : ''
               }`}
             >
               <Gift className="w-3.5 h-3.5 text-amber-700" />
-              <span>Gifting &amp; Hampers</span>
+              <span>Gift Studio</span>
               <span className="text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded uppercase">
                 Curated
               </span>
-            </button>
-
-            {/* Home Decor & Frames */}
-            <button
-              onClick={() => {
-                onSelectCategory('home-decor');
-                onNavigateToSection('collection');
-              }}
-              className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                activeCategory === 'home-decor' ? 'text-stone-950 font-bold' : ''
-              }`}
-            >
-              Home &amp; Decor
-            </button>
-
-            {/* Barware & Dining */}
-            <button
-              onClick={() => {
-                onSelectCategory('barware');
-                onNavigateToSection('collection');
-              }}
-              className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                activeCategory === 'barware' ? 'text-stone-950 font-bold' : ''
-              }`}
-            >
-              Barware
             </button>
 
             {/* Sacred Mandir & Deities */}
@@ -249,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
                 activeCategory === 'god-items' ? 'text-stone-950 font-bold' : ''
               }`}
             >
-              Mandir Idols
+              Mandir Idols &amp; Articles
             </button>
 
             {/* Silver Utensils */}
@@ -265,17 +239,17 @@ export const Header: React.FC<HeaderProps> = ({
               Silver Utensils
             </button>
 
-            {/* Executive Desk */}
+            {/* Home Decor & Frames */}
             <button
               onClick={() => {
-                onSelectCategory('desk');
+                onSelectCategory('home-decor');
                 onNavigateToSection('collection');
               }}
               className={`hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                activeCategory === 'desk' ? 'text-stone-950 font-bold' : ''
+                activeCategory === 'home-decor' ? 'text-stone-950 font-bold' : ''
               }`}
             >
-              Executive Desk
+              Home &amp; Decor
             </button>
 
             {/* Rate Lock */}
@@ -295,29 +269,18 @@ export const Header: React.FC<HeaderProps> = ({
               About us
             </button>
 
-            {/* Contact Us */}
+            {/* Contact Us - Protected inside nav boundary */}
             <button
               onClick={onOpenContact}
-              className="px-3 py-1.5 rounded-lg bg-amber-100/80 hover:bg-amber-200/80 text-amber-950 font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 border border-amber-300/60"
+              className="px-3 py-1.5 rounded-lg bg-amber-100/90 hover:bg-amber-200 text-amber-950 font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 border border-amber-300 shadow-2xs"
             >
               <Video className="w-3.5 h-3.5 text-amber-800" />
               <span>Contact Us</span>
             </button>
           </nav>
 
-          {/* Action triggers: Gifting Concierge, Search, Wishlist, Bag */}
+          {/* Action triggers: Search, Wishlist, Bag */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {onOpenConcierge && (
-              <button
-                onClick={onOpenConcierge}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-                title="Open Bespoke Gifting & Hamper Studio"
-              >
-                <Gift className="w-3.5 h-3.5 text-amber-800" />
-                <span>Gift Studio</span>
-              </button>
-            )}
-
             <button
               onClick={onOpenSearch}
               className="p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer"
@@ -392,34 +355,14 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => {
-                onSelectCategory('hampers');
+                onSelectCategory('gift-studio');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
               className="text-left py-1.5 hover:text-stone-950 cursor-pointer font-semibold text-amber-950 flex items-center justify-between"
             >
-              <span>Luxury Gifting &amp; Hampers</span>
-              <span className="text-[10px] bg-amber-100 px-1.5 py-0.5 rounded">Wedding &amp; Festive</span>
-            </button>
-            <button
-              onClick={() => {
-                onSelectCategory('home-decor');
-                onNavigateToSection('collection');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left py-1.5 hover:text-stone-950 cursor-pointer"
-            >
-              Home Decor &amp; Pichwai Frames
-            </button>
-            <button
-              onClick={() => {
-                onSelectCategory('barware');
-                onNavigateToSection('collection');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left py-1.5 hover:text-stone-950 cursor-pointer"
-            >
-              Barware &amp; Fine Dining Goblets
+              <span>🎁 Gift Studio</span>
+              <span className="text-[10px] bg-amber-100 px-1.5 py-0.5 rounded font-bold text-amber-900">Curated Hampers</span>
             </button>
             <button
               onClick={() => {
@@ -429,7 +372,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="text-left py-1.5 hover:text-stone-950 cursor-pointer"
             >
-              Sacred Mandir (Lakshmi-Ganesh Idols)
+              Mandir Idols &amp; God Articles
             </button>
             <button
               onClick={() => {
@@ -443,13 +386,13 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => {
-                onSelectCategory('desk');
+                onSelectCategory('home-decor');
                 onNavigateToSection('collection');
                 setMobileMenuOpen(false);
               }}
               className="text-left py-1.5 hover:text-stone-950 cursor-pointer"
             >
-              Executive Desk Accessories
+              Home Decor &amp; Pichwai Frames
             </button>
             <button
               onClick={() => {

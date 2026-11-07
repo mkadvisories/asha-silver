@@ -126,10 +126,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
               <button
                 onClick={onExploreCollection}
-                className="px-6 py-3.5 bg-stone-900 text-stone-50 text-sm font-medium rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center gap-2 group cursor-pointer whitespace-nowrap"
+                className="px-5 sm:px-6 py-3 bg-stone-900 text-stone-50 text-xs sm:text-sm font-medium rounded-lg hover:bg-stone-800 transition-colors shadow-sm flex items-center gap-2 group cursor-pointer whitespace-nowrap"
               >
                 <span>Explore Silverware</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform text-amber-300" />
@@ -138,27 +138,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {onOpenConcierge && (
                 <button
                   onClick={onOpenConcierge}
-                  className="px-5 py-3.5 bg-amber-50 border border-amber-300 text-amber-950 text-sm font-semibold rounded-lg hover:bg-amber-100 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5"
+                  className="px-4 sm:px-5 py-3 bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm font-semibold rounded-lg hover:bg-amber-100 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
                 >
                   <Gift className="w-4 h-4 text-amber-800" />
-                  <span>Bespoke Gifting Studio</span>
+                  <span>Gift Studio</span>
                 </button>
               )}
 
               <button
                 onClick={onOpenPriceLock}
-                className="px-4 py-3.5 bg-stone-100 border border-stone-300 text-stone-800 text-sm font-medium rounded-lg hover:bg-stone-200 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5"
+                className="px-3.5 sm:px-4 py-3 bg-stone-100 border border-stone-300 text-stone-800 text-xs sm:text-sm font-medium rounded-lg hover:bg-stone-200 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5"
               >
                 <Lock className="w-3.5 h-3.5 text-stone-700" />
-                <span>Initiate Rate Lock</span>
+                <span>Lock Rate</span>
               </button>
 
               {onOpenContact && (
                 <button
                   onClick={onOpenContact}
-                  className="px-4 py-3.5 border border-stone-300 text-stone-800 text-sm font-medium rounded-lg hover:bg-stone-100 transition-colors cursor-pointer whitespace-nowrap"
+                  className="px-3.5 sm:px-4 py-3 border border-stone-300 text-stone-800 text-xs sm:text-sm font-medium rounded-lg hover:bg-stone-100 transition-colors cursor-pointer whitespace-nowrap"
                 >
-                  Schedule Video Call
+                  Contact Us
                 </button>
               )}
             </div>

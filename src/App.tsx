@@ -15,7 +15,7 @@ import { HeritageSection } from './components/HeritageSection';
 import { ContactUsSection } from './components/ContactUsSection';
 import { ContactUsModal, VideoCallBooking } from './components/ContactUsModal';
 import { Footer } from './components/Footer';
-import { PRODUCTS, Product, ProductCategory } from './data/products';
+import { PRODUCTS, Product, ProductCategory, isGiftingProduct } from './data/products';
 import { ASSET_IMAGES } from './assets/images';
 import { CartItem, CustomerOrder, SilverPriceLock } from './types/cart';
 import { SilverRateProvider } from './context/SilverRateContext';
@@ -222,7 +222,11 @@ export default function App() {
     let result = products;
 
     // Filter by primary category
-    if (activeCategory === 'dhanteras-special') {
+    if (activeCategory === 'gift-studio') {
+      result = result.filter(
+        (p) => isGiftingProduct(p) || p.category === 'hampers' || p.category === 'gifts' || p.isGiftingItem
+      );
+    } else if (activeCategory === 'dhanteras-special') {
       result = result.filter((p) => p.isDhanterasSpecial);
     } else if (activeCategory !== 'all') {
       result = result.filter((p) => p.category === activeCategory);
@@ -258,7 +262,7 @@ export default function App() {
     }
 
     return [...result].sort((a, b) => {
-      if (occasionFilter === 'mandir-god-articles') {
+      if (occasionFilter === 'mandir-god-articles' || activeCategory === 'god-items') {
         if (a.id === 'asha-ganesh-lakshmi-consecrated-pair') return -1;
         if (b.id === 'asha-ganesh-lakshmi-consecrated-pair') return 1;
       }
@@ -361,7 +365,7 @@ export default function App() {
                       <Gift className="w-4 h-4 text-amber-400" />
                       <span>Asha Silver Bespoke Studio</span>
                       <span className="text-stone-400">·</span>
-                      <span className="text-stone-300 font-normal">Luxury Hampers, Barware &amp; Decor</span>
+                      <span className="text-stone-300 font-normal">Luxury Silver Hampers &amp; Keepsakes</span>
                     </div>
                     <h3 className="font-serif text-2xl sm:text-3xl font-semibold leading-tight">
                       Curated Silver Hampers &amp; Heirloom Keepsakes
@@ -433,18 +437,15 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Primary Category Filter Tabs (Competitive Reference Navigation) */}
+              {/* Primary Category Filter Tabs */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
                 {[
                   { id: 'all', label: 'All Collections' },
-                  { id: 'hampers', label: 'Luxury Hampers & Gift Sets' },
+                  { id: 'gift-studio', label: '🎁 Gift Studio' },
+                  { id: 'god-items', label: 'Mandir Idols & God Articles' },
+                  { id: 'utensils', label: 'Silver Utensils & Thalis' },
                   { id: 'home-decor', label: 'Home Decor & Pichwai Frames' },
-                  { id: 'barware', label: 'Barware & Fine Dining' },
-                  { id: 'god-items', label: 'Items of God (Mandir Idols)' },
-                  { id: 'utensils', label: 'Silver Utensils (Thalis & Pitchers)' },
-                  { id: 'desk', label: 'Executive Desk & Accessories' },
                   { id: 'gifts', label: '999 Pure Coins & Tokens' },
-                  { id: 'dhanteras-special', label: 'Dhanteras Specials' },
                 ].map((tab) => (
                   <button
                     key={tab.id}
