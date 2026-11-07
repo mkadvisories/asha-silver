@@ -194,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Navigation Links - Streamlined without Barware or Executive Desk */}
+          {/* Navigation Links - Pure Product Discovery */}
           <nav className="hidden lg:flex items-center gap-3.5 xl:gap-5 text-xs xl:text-sm font-medium text-stone-600 shrink min-w-0">
             {/* Gift Studio Tab */}
             <button
@@ -208,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Gift className="w-3.5 h-3.5 text-amber-700" />
               <span>Gift Studio</span>
-              <span className="text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded uppercase">
+              <span className="hidden xl:inline text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded uppercase">
                 Curated
               </span>
             </button>
@@ -223,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
                 activeCategory === 'god-items' ? 'text-stone-950 font-bold' : ''
               }`}
             >
-              Mandir Idols &amp; Articles
+              Mandir Idols
             </button>
 
             {/* Silver Utensils */}
@@ -239,7 +239,7 @@ export const Header: React.FC<HeaderProps> = ({
               Silver Utensils
             </button>
 
-            {/* Home Decor & Frames */}
+            {/* Home Decor */}
             <button
               onClick={() => {
                 onSelectCategory('home-decor');
@@ -249,41 +249,44 @@ export const Header: React.FC<HeaderProps> = ({
                 activeCategory === 'home-decor' ? 'text-stone-950 font-bold' : ''
               }`}
             >
-              Home &amp; Decor
+              Home Decor
             </button>
 
-            {/* Rate Lock */}
+            {/* Rate Lock (shown on xl+) */}
             <button
               onClick={() => onNavigateToSection('price-lock')}
-              className="text-amber-900 hover:text-amber-950 font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
+              className="hidden xl:inline-flex items-center gap-1 text-amber-900 hover:text-amber-950 font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Lock className="w-3.5 h-3.5 text-amber-700" />
               <span>Lock Rate</span>
             </button>
 
-            {/* About us */}
+            {/* About us (shown on xl+) */}
             <button
               onClick={() => onNavigateToSection('about-us')}
-              className="hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer font-medium"
+              className="hidden xl:inline-block hover:text-stone-950 transition-colors whitespace-nowrap shrink-0 cursor-pointer font-medium"
             >
               About us
             </button>
-
-            {/* Contact Us - Protected inside nav boundary */}
-            <button
-              onClick={onOpenContact}
-              className="px-3 py-1.5 rounded-lg bg-amber-100/90 hover:bg-amber-200 text-amber-950 font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 border border-amber-300 shadow-2xs"
-            >
-              <Video className="w-3.5 h-3.5 text-amber-800" />
-              <span>Contact Us</span>
-            </button>
           </nav>
 
-          {/* Action triggers: Search, Wishlist, Bag */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Action triggers: Contact Us, Search, Wishlist, Bag */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Contact Us Video Consultation Button */}
+            <button
+              onClick={onOpenContact}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100/90 text-amber-950 font-semibold text-xs transition-all border border-amber-300/90 shadow-2xs whitespace-nowrap cursor-pointer shrink-0"
+              title="Schedule Video Call or Inquire"
+            >
+              <Video className="w-3.5 h-3.5 text-amber-800 shrink-0" />
+              <span>Contact Us</span>
+            </button>
+
+            <span className="hidden sm:inline-block h-5 w-px bg-stone-300/80 mx-0.5 shrink-0" />
+
             <button
               onClick={onOpenSearch}
-              className="p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer"
+              className="p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer shrink-0"
               title="Search silver collection"
               aria-label="Search"
             >
@@ -292,7 +295,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={onOpenWishlist}
-              className="relative p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer"
+              className="relative p-2 text-stone-700 hover:text-stone-950 transition-colors cursor-pointer shrink-0"
               title="Saved items"
               aria-label="Wishlist"
             >
@@ -306,15 +309,15 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={onOpenCart}
-              className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 bg-stone-900 text-stone-50 rounded-lg hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap shrink-0 cursor-pointer group"
+              className="flex items-center gap-2 px-3.5 sm:px-4 py-2 bg-stone-900 text-stone-50 rounded-lg hover:bg-stone-800 transition-colors shadow-sm whitespace-nowrap shrink-0 cursor-pointer group"
               aria-label="View shopping bag"
             >
-              <ShoppingBag className="w-4 h-4 text-amber-300 group-hover:scale-105 transition-transform" />
+              <ShoppingBag className="w-4 h-4 text-amber-300 group-hover:scale-105 transition-transform shrink-0" />
               <span className="text-xs font-medium tracking-wide">
                 Bag {cartCount > 0 && `(${cartCount})`}
               </span>
               {cartTotal > 0 && (
-                <span className="hidden sm:inline text-xs text-stone-400 font-mono">
+                <span className="hidden md:inline text-xs text-stone-400 font-mono">
                   · ₹{cartTotal.toLocaleString()}
                 </span>
               )}
