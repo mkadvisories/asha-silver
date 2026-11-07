@@ -235,7 +235,13 @@ export default function App() {
 
     // Filter by gifting occasion
     if (occasionFilter !== 'all') {
-      result = result.filter((p) => p.giftingOccasion === occasionFilter);
+      if (occasionFilter === 'mandir-god-articles') {
+        result = result.filter(
+          (p) => p.giftingOccasion === 'mandir-god-articles' || p.category === 'god-items'
+        );
+      } else {
+        result = result.filter((p) => p.giftingOccasion === occasionFilter);
+      }
     }
 
     // Filter by budget benchmark
@@ -252,6 +258,10 @@ export default function App() {
     }
 
     return [...result].sort((a, b) => {
+      if (occasionFilter === 'mandir-god-articles') {
+        if (a.id === 'asha-ganesh-lakshmi-consecrated-pair') return -1;
+        if (b.id === 'asha-ganesh-lakshmi-consecrated-pair') return 1;
+      }
       if (sortBy === 'price-asc') return (a.price || 0) - (b.price || 0);
       if (sortBy === 'price-desc') return (b.price || 0) - (a.price || 0);
       if (sortBy === 'weight-desc') return b.weightGrams - a.weightGrams;
@@ -459,15 +469,20 @@ export default function App() {
                   </span>
                   {[
                     { id: 'all', label: 'All Occasions' },
+                    { id: 'mandir-god-articles', label: '🕉️ Mandir Idols & God Articles' },
                     { id: 'baby', label: '👶 New Born & Baby' },
                     { id: 'wedding', label: '💍 Wedding & Anniversary' },
                     { id: 'housewarming', label: '🏡 Graha Pravesh' },
                     { id: 'corporate', label: '💼 Corporate Milestones' },
-                    { id: 'festive', label: '🪔 Diwali & Dhanteras' },
                   ].map((occ) => (
                     <button
                       key={occ.id}
-                      onClick={() => setOccasionFilter(occ.id)}
+                      onClick={() => {
+                        setOccasionFilter(occ.id);
+                        if (occ.id === 'mandir-god-articles' && activeCategory !== 'all' && activeCategory !== 'god-items') {
+                          setActiveCategory('all');
+                        }
+                      }}
                       className={`px-2.5 py-1 rounded-md transition-colors whitespace-nowrap cursor-pointer text-xs ${
                         occasionFilter === occ.id
                           ? 'bg-amber-100 text-amber-950 font-bold border border-amber-300'

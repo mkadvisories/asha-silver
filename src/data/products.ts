@@ -16,7 +16,7 @@ export interface Product {
   hindiName?: string;
   category: ProductCategory;
   categoryLabel: string;
-  purity: '925 Sterling Silver' | '999 Pure Silver' | '880 Traditional Silverware';
+  purity: '925 Sterling Silver' | '92.5 Sterling Silver' | '999 Pure Silver' | '880 Traditional Silverware';
   purityCode: '925' | '999' | '880';
   weightGrams: number;
   price?: number; // Optional: removed for 92.5 & 880 Utensils & Thalis (Price on Request)
@@ -31,17 +31,21 @@ export interface Product {
   featured?: boolean;
   isDhanterasSpecial?: boolean;
   occasion?: string;
-  giftingOccasion?: 'wedding' | 'housewarming' | 'corporate' | 'festive' | 'anniversary' | 'baby';
+  giftingOccasion?: 'wedding' | 'housewarming' | 'corporate' | 'festive' | 'anniversary' | 'baby' | 'mandir-god-articles';
   budgetTier?: 'under-2500' | '2500-5000' | '5000-15000' | 'above-15000';
   customEngravingAvailable?: boolean;
   includesVelvetBox?: boolean;
   antiTarnishProtected?: boolean;
   craftStyle?: string;
   isGiftingItem?: boolean;
+  isApproximatePrice?: boolean;
 }
 
 // Helper to determine if product belongs to gifting/hampers studio (no purity % or gram weight shown)
 export function isGiftingProduct(product: Product): boolean {
+  if (product.giftingOccasion === 'mandir-god-articles' || product.category === 'god-items') {
+    return false;
+  }
   if (product.isGiftingItem) return true;
   if (product.category === 'hampers' || product.category === 'gifts') return true;
   return false;
@@ -382,6 +386,61 @@ export const PRODUCTS: Product[] = [
 
   // 5. SACRED MANDIR & DEITIES (Asha Silver Heritage Lineage)
   {
+    id: 'asha-ganesh-lakshmi-consecrated-pair',
+    name: 'Auspicious Shree Ganesh & Lakshmi Ji 92.5 Pure Silver Murti Pair',
+    hindiName: 'श्री गणेश एवं महालक्ष्मी जी ९२.५ शुद्ध चांदी विग्रह युगल (~१९३ ग्राम)',
+    category: 'god-items',
+    categoryLabel: 'Mandir Idols & God Articles',
+    purity: '92.5 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 193,
+    price: 37900,
+    originalPrice: 41500,
+    isApproximatePrice: true,
+    makingChargesPerGram: 22,
+    image: ASSET_IMAGES.silverGaneshLakshmiPair,
+    description: 'Masterfully sculpted divine 92.5 pure sterling silver pair of Goddess Lakshmi and Lord Ganesha seated on embossed lotus thrones with radiant prabhavali haloes. Features meticulous hand-carved ornamentation, auspicious mudras, and protective shrink-wrapped packaging. Combined weight of ~193 gm with approximate pricing based on active bullion benchmark, crafted specifically for sacred home mandir sthapana, griha pravesh puja, and divine milestone gifting.',
+    auspiciousSignificance: 'Worshipped together in sacred altars to invoke perpetual abundance and fortune (Mahalakshmi) combined with intellect, wisdom, and obstacle removal (Lord Ganesha).',
+    dimensions: 'Height: 3.8 inches each · Base Diameter: 2.8 inches each · Combined Weight: ~193 gm',
+    inStock: true,
+    featured: true,
+    isDhanterasSpecial: true,
+    occasion: 'Mandir Idols, Daily Altar Worship & Divine Gifting',
+    giftingOccasion: 'mandir-god-articles',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: false,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Fine Temple Sculpture with Nakshi Halo & Lotus Base',
+  },
+  {
+    id: 'asha-bal-gopal-silver-jhula-khilona',
+    name: 'Pure Silver Bal Gopal Jhula & Sacred God Articles & Toys Set',
+    hindiName: 'शुद्ध चांदी बाल गोपाल झूला व देव खिलौना सेट',
+    category: 'god-items',
+    categoryLabel: 'Mandir Idols & God Articles',
+    purity: '925 Sterling Silver',
+    purityCode: '925',
+    weightGrams: 110,
+    price: 18500,
+    originalPrice: 21000,
+    makingChargesPerGram: 20,
+    image: ASSET_IMAGES.silverGodItems,
+    description: 'Handcrafted pure silver swing (jhula) with suspended chain and bell charms, accompanied by miniature traditional silver god articles including a silver flute, silver rattle, and sacred cow toy for Bal Gopal seva and temple adornment.',
+    auspiciousSignificance: 'Brings joyous innocence, divine protection, and celebratory blessings of Lord Krishna to household altars and children.',
+    dimensions: 'Swing Height: 5.2 inches · Width: 4.0 inches · Miniature Toys Included',
+    inStock: true,
+    featured: false,
+    isDhanterasSpecial: true,
+    occasion: 'Bal Gopal Seva, Janmashtami & Sacred Mandir Articles',
+    giftingOccasion: 'mandir-god-articles',
+    budgetTier: 'above-15000',
+    customEngravingAvailable: true,
+    includesVelvetBox: true,
+    antiTarnishProtected: true,
+    craftStyle: 'Traditional Filigree Swing with Bell Charms',
+  },
+  {
     id: 'asha-lakshmi-ganesh-sinhasan',
     name: 'Shree Mahalakshmi & Ganesha on Royal Nakshi Sinhasan with Silver Ghanti',
     hindiName: 'श्री महालक्ष्मी गणेश सिंहासन व रजत घंटी सेट',
@@ -400,8 +459,8 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: true,
     isDhanterasSpecial: true,
-    occasion: 'Dhanteras Puja & Divine Mandir Sanctification',
-    giftingOccasion: 'festive',
+    occasion: 'Mandir Idols & God Articles, Dhanteras Puja & Sanctification',
+    giftingOccasion: 'mandir-god-articles',
     budgetTier: 'above-15000',
     customEngravingAvailable: false,
     includesVelvetBox: true,
@@ -427,8 +486,8 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: false,
     isDhanterasSpecial: true,
-    occasion: 'Mandir Sthapana & Dhanteras Puja',
-    giftingOccasion: 'festive',
+    occasion: 'Mandir Sthapana & Daily Altar Puja',
+    giftingOccasion: 'mandir-god-articles',
     budgetTier: 'above-15000',
     customEngravingAvailable: false,
     includesVelvetBox: true,
@@ -455,7 +514,7 @@ export const PRODUCTS: Product[] = [
     featured: false,
     isDhanterasSpecial: true,
     occasion: 'Diwali Deepotsav & Mandir Nitya Aarti',
-    giftingOccasion: 'festive',
+    giftingOccasion: 'mandir-god-articles',
     budgetTier: 'above-15000',
     customEngravingAvailable: false,
     includesVelvetBox: true,
@@ -481,8 +540,8 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     featured: false,
     isDhanterasSpecial: true,
-    occasion: 'Mandir Sanctum, Lockers & Diwali Gifting',
-    giftingOccasion: 'festive',
+    occasion: 'Mandir Sanctum, Lockers & Divine Puja Gifting',
+    giftingOccasion: 'mandir-god-articles',
     budgetTier: '2500-5000',
     customEngravingAvailable: false,
     includesVelvetBox: true,

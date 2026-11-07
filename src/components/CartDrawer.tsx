@@ -295,7 +295,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </div>
 
                           <div className="font-semibold text-stone-900 text-sm tabular-nums">
-                            ₹{((item.product.price || 0) * item.quantity).toLocaleString('en-IN')}
+                            {item.product.isApproximatePrice ? '~₹' : '₹'}{((item.product.price || 0) * item.quantity).toLocaleString('en-IN')}
                           </div>
                         </div>
                       </div>

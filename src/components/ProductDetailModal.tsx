@@ -130,7 +130,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     <>
                       <span>{product.purity}</span>
                       <span aria-hidden="true">·</span>
-                      <span>{product.weightGrams}g Silver</span>
+                      <span>
+                        {product.id === 'asha-ganesh-lakshmi-consecrated-pair'
+                          ? 'Combined Weight ~193 gm'
+                          : `${product.weightGrams}g Silver`}
+                      </span>
                     </>
                   ) : (
                     <span>Luxury Gifting Studio</span>
@@ -170,15 +174,21 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               ) : (
                 <div className="flex items-baseline gap-3 pb-3 border-b border-stone-200">
                   <span className="font-serif text-3xl font-semibold text-stone-900 tabular-nums">
-                    ₹{product.price?.toLocaleString('en-IN')}
+                    {product.isApproximatePrice ? '~₹' : '₹'}{product.price?.toLocaleString('en-IN')}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-stone-400 line-through tabular-nums">
-                      ₹{product.originalPrice.toLocaleString('en-IN')}
+                      {product.isApproximatePrice ? '~₹' : '₹'}{product.originalPrice.toLocaleString('en-IN')}
                     </span>
                   )}
                   <span className="text-xs font-medium text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                    {isGifting ? 'Curated Gift Benchmark Pricing' : product.purityCode === '999' ? '999 Pure Silver (MCX + 3%)' : 'Competitive Benchmark Pricing'}
+                    {product.isApproximatePrice
+                      ? 'Approx. Estimate (~193 gm @ 92.5 Silver)'
+                      : isGifting
+                      ? 'Curated Gift Benchmark Pricing'
+                      : product.purityCode === '999'
+                      ? '999 Pure Silver (MCX + 3%)'
+                      : 'Competitive Benchmark Pricing'}
                   </span>
                 </div>
               )}
@@ -225,7 +235,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       <div>
                         <span className="text-stone-400 block">{isGifting ? 'Craft Style' : 'Gross Weight'}</span>
                         <span className="font-medium text-stone-800">
-                          {isGifting ? (product.craftStyle || 'Artisanal Karigari') : `${product.weightGrams} grams`}
+                          {product.id === 'asha-ganesh-lakshmi-consecrated-pair'
+                            ? '~193 gm (Combined Weight)'
+                            : isGifting
+                            ? (product.craftStyle || 'Artisanal Karigari')
+                            : `${product.weightGrams} grams`}
                         </span>
                       </div>
                       <div>
@@ -302,7 +316,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         </div>
                         <div className="flex justify-between border-t border-stone-200 pt-1 font-semibold text-stone-900">
                           <span>Net Inclusive of GST:</span>
-                          <span>₹{product.price?.toLocaleString('en-IN')}</span>
+                          <span>{product.isApproximatePrice ? '~₹' : '₹'}{product.price?.toLocaleString('en-IN')}</span>
                         </div>
                       </>
                     )}

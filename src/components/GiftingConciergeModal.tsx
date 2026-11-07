@@ -21,13 +21,12 @@ export const GiftingConciergeModal: React.FC<GiftingConciergeModalProps> = ({
   const [recipientNote, setRecipientNote] = useState<string>('Wishing you eternal prosperity, joy, and sacred abundance.');
 
   if (!isOpen) return null;
-
   const occasions = [
+    { id: 'mandir-god-articles', label: 'Mandir Idols & God Articles', icon: '🕉️', desc: 'Consecrated Ganesh & Lakshmi Ji idols, dev chowkis & god toys' },
     { id: 'baby', label: 'New Born & Baby Shower', icon: '👶', desc: 'Silver feeding spoons, bowls, rattles & nazariya kadas' },
     { id: 'wedding', label: 'Wedding & Anniversary', icon: '💍', desc: 'Prestige return favors & couple blessing hampers' },
     { id: 'housewarming', label: 'Graha Pravesh', icon: '🏡', desc: 'Vastu silver turtles, kalash & sanctification sets' },
     { id: 'corporate', label: 'Executive & Corporate', icon: '💼', desc: 'Handcrafted desk accessories, bookmarks & cardholders' },
-    { id: 'festive', label: 'Diwali & Dhanteras', icon: '🪔', desc: 'Artisan lotus tealights, deepams & keepsake boxes' },
   ];
 
   const budgetTiers = [

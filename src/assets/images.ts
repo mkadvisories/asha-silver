@@ -16,6 +16,7 @@ import silverVastuTortoise from './images/silver_vastu_tortoise_1793451178969.jp
 import silverLotusTealight from './images/silver_lotus_tealight_1793538487801.jpg';
 import silverDryFruitBox from './images/silver_dryfruit_box_1793538501828.jpg';
 import silverBabyGiftSet from './images/silver_baby_gift_set_1793540287858.jpg';
+import silverGaneshLakshmiPair from './images/silver_ganesh_lakshmi_pair.jpeg';
 
 export const ASSET_IMAGES = {
   heroBanner,
@@ -35,5 +36,6 @@ export const ASSET_IMAGES = {
   silverLotusTealight,
   silverDryFruitBox,
   silverBabyGiftSet,
+  silverGaneshLakshmiPair,
 };
 

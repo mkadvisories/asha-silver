@@ -97,7 +97,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               {product.categoryLabel}
             </span>
             {!isGifting && (
-              <span className="font-mono">~{product.weightGrams}g Silver</span>
+              <span className="font-mono text-stone-700 font-semibold">
+                {product.id === 'asha-ganesh-lakshmi-consecrated-pair'
+                  ? 'Combined: ~193 gm'
+                  : `~${product.weightGrams}g Silver`}
+              </span>
             )}
           </div>
 
@@ -153,16 +157,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <div>
               <div className="flex items-baseline gap-2">
                 <span className="text-base font-bold text-stone-900 tabular-nums">
-                  ₹{product.price?.toLocaleString('en-IN')}
+                  {product.isApproximatePrice ? '~₹' : '₹'}{product.price?.toLocaleString('en-IN')}
                 </span>
                 {product.originalPrice && (
                   <span className="text-xs text-stone-400 line-through tabular-nums">
-                    ₹{product.originalPrice.toLocaleString('en-IN')}
+                    {product.isApproximatePrice ? '~₹' : '₹'}{product.originalPrice.toLocaleString('en-IN')}
                   </span>
                 )}
               </div>
               <div className="text-[10px] text-stone-500">
-                {isGifting ? 'Inclusive of 3% GST' : product.purityCode === '999' ? 'MCX + 3% Formula' : 'Inclusive of 3% GST'}
+                {product.isApproximatePrice ? 'Approx. based on ~193 gm weight' : isGifting ? 'Inclusive of 3% GST' : product.purityCode === '999' ? 'MCX + 3% Formula' : 'Inclusive of 3% GST'}
               </div>
             </div>
           )}
