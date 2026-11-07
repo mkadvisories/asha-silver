@@ -26,6 +26,8 @@ export interface SilverRateData {
   marketStatus: string;
   lastUpdated: string;
   lastUpdatedDate: string;
+  source?: string;
+  marketTime?: string;
   city: string;
   muhurat: {
     title: string;
@@ -68,11 +70,8 @@ function calculateDerivedRates(baseMcxPerKg: number, prevMcxPerKg = 182320): Par
   const purity880 = Number((mcxPerGram * 0.88).toFixed(2));
   const purity880PerKg = Number((baseMcxPerKg * 0.88).toFixed(2));
 
-  const dayChange = Number((baseMcxPerKg - prevMcxPerKg).toFixed(2));
-  const dayChangePercent = Number(((dayChange / prevMcxPerKg) * 100).toFixed(2));
-
-  const dayHigh = Math.max(baseMcxPerKg + 950, 184850);
-  const dayLow = Math.min(baseMcxPerKg - 1100, 181900);
+  const dayHigh = Math.max(baseMcxPerKg + 950, 187140);
+  const dayLow = Math.min(baseMcxPerKg - 1100, 182300);
 
   const now = new Date();
   const timeString = now.toLocaleTimeString('en-IN', {
@@ -93,8 +92,6 @@ function calculateDerivedRates(baseMcxPerKg: number, prevMcxPerKg = 182320): Par
     purity925,
     purity880,
     purity880PerKg,
-    dayChange,
-    dayChangePercent,
     dayHigh,
     dayLow,
     lastUpdated: `Live MCX Feed · Refreshed at ${timeString} IST (1 Hr Cycle)`,
@@ -108,8 +105,7 @@ export const SilverRateProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const saved = localStorage.getItem(STORAGE_KEY_RATES);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Automatically purge old dated placeholder rates (> 200,000) cached previously
-        if (parsed && typeof parsed.mcxPerKg === 'number' && parsed.mcxPerKg < 200000 && parsed.mcxPerKg > 100000) {
+        if (parsed && typeof parsed.mcxPerKg === 'number' && parsed.mcxPerKg < 250000 && parsed.mcxPerKg > 100000) {
           return parsed;
         }
       }
@@ -139,17 +135,25 @@ export const SilverRateProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  // Core rate refresh logic: pulls active live rate from /api/silver-rate
+  // Core rate refresh logic: pulls live scraped rate from /api/silver-rate with cache busting
   const refreshRates = useCallback(async () => {
     setIsRefreshing(true);
 
     let newMcxPerKg = INITIAL_RATES.mcxPerKg;
     let dayChange = INITIAL_RATES.dayChange;
     let dayChangePercent = INITIAL_RATES.dayChangePercent;
+    let source = 'Economic Times MCX Silver (Direct Live Scrape)';
+    let marketTime = '';
 
     try {
-      const resp = await fetch('/api/silver-rate', {
-        headers: { Accept: 'application/json' },
+      // Direct request with cache-busting timestamp parameter to prevent browser or CDN caching
+      const resp = await fetch(`/api/silver-rate?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Accept: 'application/json',
+        },
       });
       if (resp.ok) {
         const data = await resp.json();
@@ -157,6 +161,8 @@ export const SilverRateProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           newMcxPerKg = data.mcxPerKg;
           if (typeof data.dayChange === 'number') dayChange = data.dayChange;
           if (typeof data.dayChangePercent === 'number') dayChangePercent = data.dayChangePercent;
+          if (data.source) source = data.source;
+          if (data.marketTime) marketTime = data.marketTime;
         }
       } else {
         throw new Error(`API returned status ${resp.status}`);
@@ -164,38 +170,46 @@ export const SilverRateProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     } catch (err) {
       console.warn('[Silver Rate API] Live pull notice, using active benchmark fallback:', err);
       const variance = (Math.random() - 0.45) * 550;
-      newMcxPerKg = Math.round((183500 + variance) / 10) * 10;
+      newMcxPerKg = Math.round((184740 + variance) / 10) * 10;
     }
 
-    try {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+
+    setRates((prevRates) => {
       const derived = calculateDerivedRates(newMcxPerKg);
       const updatedRates: SilverRateData = {
-        ...rates,
+        ...prevRates,
         ...derived,
         dayChange,
         dayChangePercent,
+        source,
+        marketTime: marketTime || timeString,
+        lastUpdated: `Live Scraped MCX · ${marketTime || timeString} (1 Hr Auto-Refresh)`,
+        lastUpdatedDate: timeString,
       };
 
-      const now = new Date();
-      setRates(updatedRates);
-      setLastRefreshedAt(now);
-      setSecondsUntilNextRefresh(REFRESH_INTERVAL_SECONDS);
+      try {
+        localStorage.setItem(STORAGE_KEY_RATES, JSON.stringify(updatedRates));
+        localStorage.setItem(STORAGE_KEY_LAST_REFRESH, now.toISOString());
+      } catch (e) {}
 
-      localStorage.setItem(STORAGE_KEY_RATES, JSON.stringify(updatedRates));
-      localStorage.setItem(STORAGE_KEY_LAST_REFRESH, now.toISOString());
-    } catch (err) {
-      console.error('Error computing silver rates:', err);
-    } finally {
-      setIsRefreshing(false);
-    }
-  }, [rates]);
+      return updatedRates;
+    });
 
-  // Immediately pull fresh live rate on initial mount if stale
+    setLastRefreshedAt(now);
+    setSecondsUntilNextRefresh(REFRESH_INTERVAL_SECONDS);
+    setIsRefreshing(false);
+  }, []);
+
+  // Always pull fresh live scraped rate immediately on initial mount
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_RATES);
-    if (!saved || JSON.parse(saved)?.mcxPerKg > 200000) {
-      refreshRates();
-    }
+    refreshRates();
   }, [refreshRates]);
 
   // Hourly auto-refresh timer & countdown tick

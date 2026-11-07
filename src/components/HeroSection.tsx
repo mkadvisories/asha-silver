@@ -76,11 +76,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       onClick={() => refreshRates()}
                       disabled={isRefreshing}
                       className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-stone-200/80 hover:bg-stone-300 text-stone-800 transition-all cursor-pointer text-[10px] font-semibold disabled:opacity-50 active:scale-95 shadow-2xs"
-                      title="Pull latest live rate from MCX"
+                      title="Pull latest live rate directly from MCX"
                       aria-label="Refresh MCX spot rate"
                     >
                       <RefreshCw className={`w-2.5 h-2.5 text-amber-800 ${isRefreshing ? 'animate-spin' : ''}`} />
-                      <span>{isRefreshing ? 'Pulling...' : 'Refresh'}</span>
+                      <span>{isRefreshing ? 'Scraping...' : 'Refresh'}</span>
                     </button>
                   </div>
                   <div className="text-xl font-bold font-mono text-stone-900 tabular-nums mt-0.5">
@@ -100,7 +100,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     {Math.abs(rates.dayChange).toLocaleString('en-IN')}{' '}
                     ({rates.dayChange < 0 ? '' : '+'}{rates.dayChangePercent}%)
                   </span>
-                  <div className="text-[10px] text-stone-400 mt-0.5">MCX Active Feed (1 Hr Auto-Refresh)</div>
+                  <div className="text-[10px] text-stone-400 mt-0.5">
+                    {rates.marketTime ? `MCX Live: ${rates.marketTime}` : 'MCX Active Feed (1 Hr Auto-Refresh)'}
+                  </div>
                 </div>
               </div>
 

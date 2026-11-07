@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
                 aria-label="Refresh MCX spot rate"
               >
                 <RefreshCw className={`w-3 h-3 text-emerald-300 ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span>{isRefreshing ? 'Pulling...' : 'Refresh'}</span>
+                <span>{isRefreshing ? 'Scraping...' : 'Refresh'}</span>
               </button>
             </div>
 
